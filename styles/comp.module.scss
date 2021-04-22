@@ -1,0 +1,82 @@
+$orange: #fb4f14;
+
+/*Layout*/
+.container {
+  display: grid;
+  grid-template-columns: 170px auto;
+  grid-template-rows: 65px auto 40px;
+  grid-template-areas:
+    "sidebar nav"
+    "sidebar content"
+    "sidebar footer";
+  background-color: #e9ebee;
+}
+.sidebar {
+  display: grid;
+  grid-template-areas: "icon" "navmenu";
+  grid-template-rows: 65px auto;
+  grid-area: sidebar;
+  background-color: #e9ebee;
+  font-size: 22px;
+  font-weight: 400;
+  text-align: center;
+  border: solid 1px black;
+}
+.sidebar button {
+  font-size: 22px;
+  font-weight: 400;
+  text-align: center;
+  border: none;
+  outline: none;
+  width: 100%;
+  height: 100%;
+}
+.sidebar button:hover {
+  cursor: pointer;
+}
+.nav {
+  display: grid;
+  grid-template-areas: "space user";
+  grid-area: nav;
+  background-color: #03256c;
+  grid-template-columns: auto 200px;
+  border: solid 1px black;
+}
+.content {
+  grid-area: content;
+  background-color: #e9ebee;
+  min-height: calc(100vh - 100px);
+}
+.footer {
+  grid-area: footer;
+  background-color: #03256c;
+  border: solid 1px black;
+  color: white;
+  font-size: 20px;
+  font-weight: 400;
+  text-align: center;
+}
+.user {
+  /*รอปรับ min marginleft*/
+  grid-area: user;
+  background-color: #03256c;
+  border: solid 1px black;
+}
+.side_icon {
+  grid-area: icon;
+  background-color: e9ebee;
+  border: solid 1px black;
+}
+.sidenav {
+  margin-top: 5px;
+  grid-area: navmenu;
+  background-color: #e9ebee;
+}
+.menu_item {
+  padding: 10px;
+}
+.menu_item_active
+/* Dropdown system*/
+.dpdwn_container {
+  display: none;
+}
