@@ -10,6 +10,7 @@ npm run dev
 yarn dev
 #than
 npm i
+#and
 npm i sass
 ```
 
