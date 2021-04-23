@@ -13,6 +13,7 @@ export default function layout({ children }) {
   var farm = [
     { name: "Farm1", node: ["Node1", "Node2"] },
     { name: "Farm2", node: ["Node1", "Node2", "Node3"] },
+    { name: "Farm3", node: ["Node1", "Node2"] },
   ];
   function activebar(id) {
     if (id == "home" || id == "organiz") {
