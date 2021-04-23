@@ -1,7 +1,8 @@
-$orange: #fb4f14;
+$col_orange: #fb4f14;
 
 /*Layout*/
 .container {
+  user-select: none;
   display: grid;
   grid-template-columns: 170px auto;
   grid-template-rows: 65px auto 40px;
@@ -19,13 +20,11 @@ $orange: #fb4f14;
   background-color: #e9ebee;
   font-size: 22px;
   font-weight: 400;
-  text-align: center;
   border: solid 1px black;
 }
 .sidebar button {
   font-size: 22px;
   font-weight: 400;
-  text-align: center;
   border: none;
   outline: none;
   width: 100%;
@@ -75,8 +74,28 @@ $orange: #fb4f14;
 .menu_item {
   padding: 10px;
 }
-.menu_item_active
+.menu_item:hover {
+  cursor: pointer;
+  color: $col_orange;
+}
+
 /* Dropdown system*/
 .dpdwn_container {
   display: none;
 } /*master had recent pushes 4 minutes ago*/
+.dropdown_item_1rem {
+  text-indent: 1rem;
+  padding: 10px;
+}
+.dropdown_item_1rem:hover {
+  cursor: pointer;
+  color: $col_orange;
+}
+.dropdown_item_2rem {
+  text-indent: 2rem;
+  padding: 10px;
+}
+.dropdown_item_2rem:hover {
+  cursor: pointer;
+  color: $col_orange;
+}
