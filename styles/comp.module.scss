@@ -4,7 +4,7 @@ $col_orange: #fb4f14;
 .container {
   user-select: none;
   display: grid;
-  grid-template-columns: 170px auto;
+  grid-template-columns: 200px auto;
   grid-template-rows: 65px auto 40px;
   grid-template-areas:
     "sidebar nav"
@@ -74,28 +74,64 @@ $col_orange: #fb4f14;
 .menu_item {
   padding: 10px;
 }
+.menu_item label {
+  margin-left: 5px;
+}
+.menu_item label:hover {
+  cursor: pointer;
+}
 .menu_item:hover {
   cursor: pointer;
   color: $col_orange;
+}
+.menu_item_active {
+  border-left: $col_orange solid 4px;
 }
 
 /* Dropdown system*/
 .dpdwn_container {
   display: none;
 } /*master had recent pushes 4 minutes ago*/
+
 .dropdown_item_1rem {
   text-indent: 1rem;
   padding: 10px;
+}
+.dropdown_item_1rem label {
+  margin-left: 5px;
+}
+.dropdown_item_1rem label:hover {
+  color: $col_orange;
+  cursor: pointer;
 }
 .dropdown_item_1rem:hover {
   cursor: pointer;
   color: $col_orange;
 }
+/**/
 .dropdown_item_2rem {
   text-indent: 2rem;
-  padding: 10px;
+  padding: 5px;
+}
+.dropdown_item_2rem label {
+  margin-left: 5px;
+}
+.dropdown_item_2rem label:hover {
+  color: $col_orange;
+  cursor: pointer;
 }
 .dropdown_item_2rem:hover {
   cursor: pointer;
   color: $col_orange;
+}
+.sidebtn {
+  display: grid;
+  grid-template-columns: 20px auto;
+  grid-template-areas: "svg text";
+}
+.sidebtn_svg {
+  grid-area: svg;
+}
+.sidebtn_text {
+  grid-area: text;
 }
