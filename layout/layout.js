@@ -26,6 +26,9 @@ export default function layout({ children }) {
     for (let index = 0; index < farm.length; index++) {
       const farms = farm[index];
       const farmname = farms.name;
+      document.getElementById(farmname).style.borderLeft = "none";
+      document.getElementById(farmname).style.color = "";
+      document.getElementById(farmname).style.fontWeight = "400";
       for (let j = 0; j < farms.node.length; j++) {
         const nodename = farms.node[j];
         document.getElementById(farmname + nodename).style.borderLeft = "none";
@@ -56,6 +59,10 @@ export default function layout({ children }) {
       }
     } else {
       dropdown.style.display = "block";
+      for (let index = 0; index < farm.length; index++) {
+        const element = farm[index];
+        document.getElementById(element.name).style.display = "block";
+      }
     }
   }
   function nodelist(parm) {
@@ -67,8 +74,21 @@ export default function layout({ children }) {
     }
   }
 
+  function activebar_dd(id, func) {
+    if (func == farmlist) {
+      farmlist();
+      activebar(id);
+    } else if (func == nodelist) {
+      nodelist(id + "node");
+      activebar(id);
+    }
+  }
   function overview(id) {
     farmlist();
+    activebar(id);
+  }
+  function farmactive(id) {
+    nodelist(id + "node");
     activebar(id);
   }
 
@@ -96,7 +116,7 @@ export default function layout({ children }) {
             <div
               id="over"
               className={styles.menu_item}
-              onClick={() => overview("over")}
+              onClick={() => activebar_dd("over", farmlist)}
             >
               <div>
                 <OverviewSvg />
@@ -110,27 +130,36 @@ export default function layout({ children }) {
               {farm.map((val) => {
                 return (
                   <>
+                    <div
+                      key={val.name}
+                      id={val.name}
+                      className={styles.dropdown_item_1rem}
+                      onClick={() => activebar_dd(val.name, nodelist)}
+                    >
+                      <Link href="/farm">
+                        <div>
+                          <FarmSvg />
+                          <label>{val.name}</label>
+                          <DownSvg />
+                        </div>
+                      </Link>
+                    </div>
+
                     <div>
                       <div
-                        className={styles.dropdown_item_1rem}
-                        onClick={() => nodelist(val.name)}
+                        id={val.name + "node"}
+                        className={styles.dpdwn_container}
                       >
-                        <FarmSvg />
-                        <label>{val.name}</label>
-                        <DownSvg />
-                      </div>
-                    </div>
-                    <div>
-                      <div id={val.name} className={styles.dpdwn_container}>
                         {val.node.map((nodes) => {
                           return (
                             <div
+                              key={nodes}
                               id={val.name + nodes}
                               className={styles.dropdown_item_2rem}
                               onClick={() => activebar(val.name + nodes)}
                             >
                               <Link href="/node">
-                                <div className={styles.dropdown_item_2rem}>
+                                <div>
                                   <NodeSvg />
                                   <label>{nodes}</label>
                                 </div>
