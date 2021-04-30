@@ -4,7 +4,7 @@ $col_orange: #fb4f14;
 .container {
   user-select: none;
   display: grid;
-  grid-template-columns: 200px auto;
+  grid-template-columns: 170px auto;
   grid-template-rows: 65px auto 40px;
   grid-template-areas:
     "sidebar nav"
@@ -17,9 +17,10 @@ $col_orange: #fb4f14;
   grid-template-areas: "icon" "navmenu";
   grid-template-rows: 65px auto;
   grid-area: sidebar;
-  background-color: #e9ebee;
+  background-color: #fff;
   font-size: 22px;
   font-weight: 400;
+  box-shadow: 0 0 8px #ccc;
 }
 .sidebar button {
   font-size: 22px;
@@ -63,14 +64,17 @@ $col_orange: #fb4f14;
 }
 .side_icon {
   grid-area: icon;
-  background-color: e9ebee;
-  border: solid 1px black;
+  background-color: #fff;
+  box-shadow: 0 0 8px #555;
+  text-align: center;
 }
 .sidenav {
-  display: block;
   grid-area: navmenu;
-  background-color: #e9ebee;
-  border-right: black solid 1px;
+  background-color: #fff;
+  //border-right: black solid 1px;
+  box-shadow: 2px 0px 0px #55555514;
+  z-index: 1;
+  font-size: 18px;
 }
 .menu_item {
   padding: 10px;

@@ -16,12 +16,12 @@ export default function Home() {
               height="80"
             />
           </div>
-          <div className={styles.Head_name}>Farm Name: Green Land</div>
+          <div className={styles.Head_name}>Farm Name: </div>
         </div>
         <div className={styles.box}>
           <p>
             <label className={styles.title}>Custommer Detail</label>
-            <label className={styles.create_date}>Create: 2021-04-29</label>
+            <label className={styles.create_date}>Create: xxxx-xx-xx</label>
           </p>
           <p>Customer Name:</p>
           <p>Package:</p>
@@ -29,7 +29,7 @@ export default function Home() {
           <p className={styles.highlight}>GateWay:</p>
           <p className={styles.highlight}>Analytics:</p>
           <p className={styles.highlight}>Block Chain:</p>
-          <p>Expired Date: 2022-04-29</p>
+          <p>Expired Date: xxxx-xx-xx</p>
         </div>
         <div className={styles.box}>
           <p>

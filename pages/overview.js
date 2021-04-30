@@ -6,7 +6,7 @@ import styles from "../styles/overview.module.scss";
 export default function overview() {
   var farm = [
     {
-      name: "Farm1",
+      name: "Green Farm",
       node: ["Node1", "Node2"],
       numnode: "2",
       numparam: "xx",
@@ -17,7 +17,7 @@ export default function overview() {
       created: "2021-04-29",
     },
     {
-      name: "Farm2",
+      name: "Red Farm",
       node: ["Node1", "Node2", "Node3"],
       numnode: "3",
       numparam: "xx",
@@ -28,7 +28,7 @@ export default function overview() {
       created: "2021-04-29",
     },
     {
-      name: "Farm3",
+      name: "Blue Farm",
       node: ["Node1", "Node2"],
       numnode: "2",
       numparam: "xx",
@@ -39,7 +39,18 @@ export default function overview() {
       created: "2021-04-29",
     },
     {
-      name: "Farm4",
+      name: "Pink Farm",
+      node: ["Node1", "Node2"],
+      numnode: "2",
+      numparam: "xx",
+      numdashb: "xx",
+      gateway: "no",
+      analytic: "no",
+      blockchain: "no",
+      created: "2021-04-29",
+    },
+    {
+      name: "Orange Farm",
       node: ["Node1", "Node2"],
       numnode: "2",
       numparam: "xx",

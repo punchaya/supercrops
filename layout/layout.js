@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "../styles/layout.module.scss";
 import Link from "next/link";
+import Image from "next/image";
 import HomeSvg from "../public/home.svg";
 import OverviewSvg from "../public/overview.svg";
 import OrganizSvg from "../public/organiz.svg";
@@ -11,9 +12,61 @@ import DownSvg from "../public/down.svg";
 
 export default function layout({ children }) {
   var farm = [
-    { name: "Farm1", node: ["Node1", "Node2"] },
-    { name: "Farm2", node: ["Node1", "Node2", "Node3"] },
-    { name: "Farm3", node: ["Node1", "Node2"] },
+    {
+      name: "Green Farm",
+      node: ["Node1", "Node2"],
+      numnode: "2",
+      numparam: "xx",
+      numdashb: "xx",
+      gateway: "yes",
+      analytic: "yes",
+      blockchain: "no",
+      created: "2021-04-29",
+    },
+    {
+      name: "Red Farm",
+      node: ["Node1", "Node2", "Node3"],
+      numnode: "3",
+      numparam: "xx",
+      numdashb: "xx",
+      gateway: "yes",
+      analytic: "no",
+      blockchain: "no",
+      created: "2021-04-29",
+    },
+    {
+      name: "Blue Farm",
+      node: ["Node1", "Node2"],
+      numnode: "2",
+      numparam: "xx",
+      numdashb: "xx",
+      gateway: "yes",
+      analytic: "yes",
+      blockchain: "yes",
+      created: "2021-04-29",
+    },
+    {
+      name: "Pink Farm",
+      node: ["Node1", "Node2"],
+      numnode: "2",
+      numparam: "xx",
+      numdashb: "xx",
+      gateway: "no",
+      analytic: "no",
+      blockchain: "no",
+      created: "2021-04-29",
+    },
+    {
+      name: "Orange Farm",
+      node: ["Node1", "Node2"],
+      numnode: "2",
+      numparam: "xx",
+      numdashb: "xx",
+      gateway: "no",
+      analytic: "no",
+      blockchain: "no",
+      created: "2021-04-29",
+    },
   ];
   function activebar(id) {
     if (id == "home" || id == "organiz") {
@@ -76,6 +129,14 @@ export default function layout({ children }) {
 
   function activebar_dd(id, func) {
     if (func == farmlist) {
+      for (let i = 0; i < farm.length; i++) {
+        const afarm = farm[i];
+        var farmname = afarm.name;
+        var nodeStyle = document.getElementById(farmname + "node");
+        if (nodeStyle != null) {
+          nodeStyle.style.display = "none";
+        }
+      }
       farmlist();
       activebar(id);
     } else if (func == nodelist) {
@@ -91,7 +152,9 @@ export default function layout({ children }) {
           <div className={styles.user}></div>
         </div>
         <div className={styles.sidebar}>
-          <div className={styles.side_icon}>icon</div>
+          <div className={styles.side_icon}>
+            <Image src="/supercrops.png" height="65px" width="65px" />
+          </div>
           <div className={styles.sidenav}>
             <div
               id="home"
@@ -185,7 +248,7 @@ export default function layout({ children }) {
         </div>
         <div className={styles.content}>{children}</div>
         <div className={styles.footer}>
-          Copyright © 2021-2025 Create by KITFORWARD
+          ©2021 KITFORWARD.CO.,LTD. All Rights Reserved.
         </div>
       </div>
     </div>

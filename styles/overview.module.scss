@@ -1,9 +1,10 @@
 .body {
   display: grid;
   grid-template-columns: 600px 600px;
-  font-size: 22px;
+  font-size: 16px;
   font-weight: 500;
   grid-gap: 20px;
+  margin-bottom: 20px;
 }
 
 .box {
@@ -20,7 +21,7 @@
 }
 .box label.title {
   font-weight: bold;
-  font-size: 23px;
+  font-size: 18px;
 }
 .box label.create_date {
   color: #969696;

@@ -8,9 +8,17 @@ export default function firebasepage() {
     );
     recaptchaVerifier.render();
   });
+  function setPhone(num) {
+    var phonenum = "+66";
+    for (let i = 1; i < num.length; i++) {
+      const element = num[i];
+      phonenum = phonenum + element;
+    }
+    return phonenum;
+  }
   function phoneAuth() {
     var receptcha = window.recaptchaVerifier;
-    var phoneNumber = document.getElementById("phone").value;
+    var phoneNumber = setPhone(document.getElementById("phone").value);
     firebase
       .auth()
       .signInWithPhoneNumber(phoneNumber, receptcha)
@@ -18,7 +26,7 @@ export default function firebasepage() {
         window.confResult = confResult;
         var coderesult = confResult;
         console.log(coderesult);
-        alert("Message sent");
+        alert("Message sent to " + document.getElementById("phone").value);
       })
       .catch(function (err) {
         alert(err.message);
@@ -66,10 +74,6 @@ export default function firebasepage() {
       <p>Verification Code</p>
       <input type="text" id="verifier"></input>
       <button onClick={codeVerfier}>Verfier</button>
-
-      <p>Test</p>
-      <label></label>
-      <button onClick={test}>Test</button>
     </div>
   );
 }
