@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import firebase from "./firebase";
+import firebase from "../assets/firebase";
 
 export default function firebasepage() {
   useEffect(() => {
