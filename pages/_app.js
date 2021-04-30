@@ -2,6 +2,7 @@ import React from "react";
 import "../styles/globals.css";
 import Head from "next/head";
 import Layout from "../layout/layout";
+import firebase from "./firebase";
 
 function MyApp({ Component, pageProps }) {
   const Layout = Component.Layout ? Component.Layout : React.Fragment;

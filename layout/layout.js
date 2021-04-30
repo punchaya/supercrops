@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../styles/comp.module.scss";
+import styles from "../styles/layout.module.scss";
 import Link from "next/link";
 import HomeSvg from "../public/home.svg";
 import OverviewSvg from "../public/overview.svg";
@@ -83,14 +83,6 @@ export default function layout({ children }) {
       activebar(id);
     }
   }
-  function overview(id) {
-    farmlist();
-    activebar(id);
-  }
-  function farmactive(id) {
-    nodelist(id + "node");
-    activebar(id);
-  }
 
   return (
     <div>
@@ -118,16 +110,18 @@ export default function layout({ children }) {
               className={styles.menu_item}
               onClick={() => activebar_dd("over", farmlist)}
             >
-              <div>
-                <OverviewSvg />
-                <label>Overview</label>
-                <DownSvg />
-              </div>
+              <Link href="/overview">
+                <div>
+                  <OverviewSvg />
+                  <label>Overview</label>
+                  <DownSvg />
+                </div>
+              </Link>
             </div>
 
             <div id="farmlist" className={styles.dpdwn_container}>
               {/*map farmname from farmlist json*/}
-              {farm.map((val) => {
+              {farm.map((val, index) => {
                 return (
                   <>
                     <div
@@ -136,10 +130,10 @@ export default function layout({ children }) {
                       className={styles.dropdown_item_1rem}
                       onClick={() => activebar_dd(val.name, nodelist)}
                     >
-                      <Link href="/farm">
+                      <Link href={"/farm/" + (index + 1)}>
                         <div>
                           <FarmSvg />
-                          <label>{val.name}</label>
+                          <label>Farm{index + 1}</label>
                           <DownSvg />
                         </div>
                       </Link>
@@ -178,7 +172,7 @@ export default function layout({ children }) {
               className={styles.menu_item}
               onClick={() => activebar("organiz")}
             >
-              <div>
+              <div /*className="test"*/>
                 <Link href="/organiz">
                   <div>
                     <OrganizSvg />

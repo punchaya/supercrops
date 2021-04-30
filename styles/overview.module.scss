@@ -1,0 +1,30 @@
+.body {
+  display: grid;
+  grid-template-columns: 600px 600px;
+  font-size: 22px;
+  font-weight: 500;
+  grid-gap: 20px;
+}
+
+.box {
+  background-color: white;
+  padding-left: 10px;
+  box-shadow: #00000038 5px 3px 3px;
+  line-height: 15px;
+}
+.box:hover {
+  cursor: pointer;
+}
+.box p.highlight {
+  color: #fb4f14;
+}
+.box label.title {
+  font-weight: bold;
+  font-size: 23px;
+}
+.box label.create_date {
+  color: #969696;
+  font-weight: 500;
+  float: right;
+  margin-right: 10px;
+}

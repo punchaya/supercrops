@@ -20,7 +20,6 @@ $col_orange: #fb4f14;
   background-color: #e9ebee;
   font-size: 22px;
   font-weight: 400;
-  border: solid 1px black;
 }
 .sidebar button {
   font-size: 22px;
@@ -45,6 +44,8 @@ $col_orange: #fb4f14;
   grid-area: content;
   background-color: #e9ebee;
   min-height: calc(100vh - 100px);
+  padding-left: 100px;
+  padding-top: 20px;
 }
 .footer {
   grid-area: footer;
@@ -56,7 +57,6 @@ $col_orange: #fb4f14;
   text-align: center;
 }
 .user {
-  /*รอปรับ min marginleft*/
   grid-area: user;
   background-color: #03256c;
   border: solid 1px black;
@@ -67,9 +67,10 @@ $col_orange: #fb4f14;
   border: solid 1px black;
 }
 .sidenav {
-  margin-top: 5px;
+  display: block;
   grid-area: navmenu;
   background-color: #e9ebee;
+  border-right: black solid 1px;
 }
 .menu_item {
   padding: 10px;

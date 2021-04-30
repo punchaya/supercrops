@@ -1,0 +1,54 @@
+.body {
+  display: grid;
+  grid-template-areas:
+    "title"
+    "cDetail"
+    "fDetail";
+  grid-gap: 10px;
+  margin: 30px;
+  width: 1000px;
+  font-size: 22px;
+  font-weight: 500;
+}
+.Head {
+  grid-area: title;
+  display: grid;
+  grid-template-areas: "logo name";
+  grid-template-columns: 80px auto;
+  grid-gap: 20px;
+}
+.Head_logo {
+  background-color: white;
+  width: 80px;
+  height: 80px;
+  box-shadow: #00000038 5px 3px 3px;
+  border-radius: 50%;
+}
+.Head_logo_image {
+  border-radius: 50%;
+}
+.Head_name {
+  background-color: white;
+  box-shadow: #00000038 5px 3px 3px;
+  font-size: 28px;
+  padding: 21px 10px;
+}
+.box {
+  background-color: white;
+  padding-left: 10px;
+  box-shadow: #00000038 5px 3px 3px;
+  line-height: 15px;
+}
+.box p.highlight {
+  color: #fb4f14;
+}
+.box label.title {
+  font-weight: bold;
+  font-size: 23px;
+}
+.box label.create_date {
+  color: #969696;
+  font-weight: 500;
+  float: right;
+  margin-right: 10px;
+}
