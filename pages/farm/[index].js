@@ -101,8 +101,12 @@ export default function farm(props) {
             <button>GateWay</button>
           </div>
           <div className={styles.node}>
-            {Farm.node.map((val) => {
-              return <button>{val}</button>;
+            {Farm.node.map((val, index) => {
+              return (
+                <div>
+                  <button>{val}</button>
+                </div>
+              );
             })}
           </div>
         </div>

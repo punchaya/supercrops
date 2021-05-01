@@ -8,6 +8,14 @@
   margin-bottom: 20px;
   width: 1100px;
 }
+.nodebox {
+  position: absolute;
+  background-color: white;
+  padding-left: 10px;
+  box-shadow: #00000038 5px 3px 3px;
+  line-height: 15px;
+  padding: 10px;
+}
 
 .box {
   background-color: white;
@@ -35,6 +43,10 @@
 .box label.head {
   line-height: 40px;
   font-size: 24px;
+}
+.node {
+  position: absolute;
+  top: 30%;
 }
 .node button {
   background-color: #00b0f0;
