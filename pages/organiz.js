@@ -53,13 +53,11 @@ export default function organiz() {
 
   function editUser() {
     let editArr = [...user];
-    console.log(editArr);
     var new_name = document.getElementById("modal_edit_username").value;
     var new_role = document.getElementById("modal_edit_role").value;
     var old_name = document.getElementById("hiden_value").value;
     editArr.find((v) => v.name === old_name).role = new_role;
     editArr.find((v) => v.name === old_name).name = new_name;
-    console.log(editArr);
     setUser(editArr);
     modalOff("editUser");
   }
