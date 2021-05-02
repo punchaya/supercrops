@@ -6,21 +6,38 @@ import Image from "next/image";
 export default function organiz() {
   const [user, setUser] = useState([
     {
+      id: "C7iXvxXl8yPFHABi",
       name: "Kridtin",
       role: "Admin",
       picSrc: "/user.png",
     },
     {
+      id: "rA6Zo6BjLvhPe1FE",
       name: "Soontorn",
       role: "View",
       picSrc: "/user.png",
     },
     {
+      id: "qcEaTL7rC4Klybv4",
       name: "Prasit",
       role: "Editor",
       picSrc: "/user.png",
     },
   ]);
+
+  function genid(length) {
+    var result = [];
+    var characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result.push(
+        characters.charAt(Math.floor(Math.random() * charactersLength))
+      );
+    }
+    return result.join("");
+  }
+
   var admin = [];
   var editor = [];
   var view = [];
@@ -37,10 +54,21 @@ export default function organiz() {
       norole.push(element.name);
     }
   }
-  function addUser() {
+  function addUser(func) {
     var name = document.getElementById("newUsername").value;
     var role = document.getElementById("newUserrole").value;
-    var newuser = { name: name, role: role, picSrc: "/user.png" };
+    var genid = 1;
+    while (genid) {
+      var newid = func(16);
+      for (let i = 0; i < user.length; i++) {
+        if (user[i].id === newid) {
+          genid = 1;
+        }
+      }
+      genid = 0;
+    }
+    var newuser = { id: newid, name: name, role: role, picSrc: "/user.png" };
+
     if (name !== undefined && role !== undefined) {
       setUser((user) => [...user, newuser]);
       document.getElementById("newUsername").value = "";
@@ -55,21 +83,21 @@ export default function organiz() {
     let editArr = [...user];
     var new_name = document.getElementById("modal_edit_username").value;
     var new_role = document.getElementById("modal_edit_role").value;
-    var old_name = document.getElementById("hiden_value").value;
-    editArr.find((v) => v.name === old_name).role = new_role;
-    editArr.find((v) => v.name === old_name).name = new_name;
+    var id = document.getElementById("hiden_value").value;
+    editArr.find((v) => v.id === id).role = new_role;
+    editArr.find((v) => v.id === id).name = new_name;
     setUser(editArr);
     modalOff("editUser");
   }
-  function removeUser(name) {
-    setUser(user.filter((value) => value.name !== name));
+  function removeUser(id) {
+    setUser(user.filter((value) => value.id !== id));
   }
 
   function modalOn(id, attr) {
     if (attr == 0) {
       document.getElementById(id).style.display = "block";
     } else {
-      document.getElementById("hiden_value").value = attr.name;
+      document.getElementById("hiden_value").value = attr.id;
       document.getElementById("modal_edit_username").value = attr.name;
       document.getElementById(id).style.display = "block";
     }
@@ -114,12 +142,16 @@ export default function organiz() {
               <div className={styles.menu_btn}>
                 <button
                   onClick={() =>
-                    modalOn("editUser", { name: val.name, role: val.role })
+                    modalOn("editUser", {
+                      id: val.id,
+                      name: val.name,
+                      role: val.role,
+                    })
                   }
                 >
                   Edit
                 </button>
-                <button onClick={() => removeUser(val.name)}>Remove</button>
+                <button onClick={() => removeUser(val.id)}>Remove</button>
               </div>
             </div>
           );
@@ -163,7 +195,7 @@ export default function organiz() {
             </select>
           </div>
           <div className={styles.modal_btn}>
-            <button onClick={addUser}>Save</button>
+            <button onClick={() => addUser(genid)}>Save</button>
             <button onClick={() => modalOff("createUser")}>Cancel</button>
           </div>
         </div>
@@ -187,7 +219,7 @@ export default function organiz() {
               <option>---</option>
               <option>Admin</option>
               <option>Editor</option>
-              <option>Viewer</option>
+              <option>View</option>
             </select>
           </div>
           <div className={styles.modal_btn}>
