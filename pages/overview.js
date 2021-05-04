@@ -51,8 +51,8 @@ export default function overview() {
     },
     {
       name: "Orange Farm",
-      node: ["Node1", "Node2"],
-      numnode: "2",
+      node: ["Node1"],
+      numnode: "1",
       numparam: "xx",
       numdashb: "xx",
       gateway: "no",

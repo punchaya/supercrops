@@ -58,7 +58,7 @@ export default function layout({ children }) {
     },
     {
       name: "Orange Farm",
-      node: ["Node1", "Node2"],
+      node: ["Node1"],
       numnode: "2",
       numparam: "xx",
       numdashb: "xx",

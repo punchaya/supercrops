@@ -53,7 +53,7 @@ export default function farm(props) {
     },
     {
       name: "Orange Farm",
-      node: ["Node1", "Node2"],
+      node: ["Node1"],
       numnode: "2",
       numparam: "xx",
       numdashb: "xx",
@@ -96,19 +96,16 @@ export default function farm(props) {
           <label className={styles.head}>Dashboard</label>
         </div>
         <div className={styles.box}>
+          <button id="gateway" className={stylesGateway}>
+            GateWay
+          </button>
           <Image src="/farm.png" width="800px" height="500px" />
-          <div id="gateway" className={stylesGateway}>
-            <button>GateWay</button>
-          </div>
-          <div className={styles.node}>
-            {Farm.node.map((val, index) => {
-              return (
-                <div>
-                  <button>{val}</button>
-                </div>
-              );
-            })}
-          </div>
+
+          {Farm.node.map((val, index) => {
+            var i = index + 1;
+            var nodeStyle = "node_" + i; //ใช้ styles จาก global.css
+            return <button className={nodeStyle}>{val}</button>;
+          })}
         </div>
         <div className={styles.box}>
           <p>
