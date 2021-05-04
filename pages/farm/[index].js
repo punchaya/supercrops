@@ -77,7 +77,19 @@ export default function farm(props) {
     created: "2021-04-29",
   };
   //
-
+  function nodeModal(id) {
+    console.log(id);
+    console.log(document.getElementById(id).style.display);
+    if (document.getElementById(id).style.display) {
+      if (document.getElementById(id).style.display == "none") {
+        document.getElementById(id).style.display = "block";
+      } else {
+        document.getElementById(id).style.display = "none";
+      }
+    } else {
+      document.getElementById(id).style.display = "block";
+    }
+  }
   if (Index >= 0) {
     Farm = farmList[Index];
     if (Farm.gateway == "yes") {
@@ -104,7 +116,36 @@ export default function farm(props) {
           {Farm.node.map((val, index) => {
             var i = index + 1;
             var nodeStyle = "node_" + i; //ใช้ styles จาก global.css
-            return <button className={nodeStyle}>{val}</button>;
+            return (
+              <div className={nodeStyle}>
+                <button onClick={() => nodeModal(Farm.name + "_node" + i)}>
+                  {val}
+                </button>
+                <div id={Farm.name + "_node" + i} className={styles.nodebox}>
+                  <button>Edit</button>
+                  <button
+                    className={styles.close}
+                    onClick={() => nodeModal(Farm.name + "_node" + i)}
+                  >
+                    X
+                  </button>
+                  <p>Node : {i}</p>
+                  <p>Updatte Time : xx-xx-xxxx</p>
+                  <p>Create : xx-xx-xxxx</p>
+                  <p>Status : Online</p>
+                  <p>Temp : xx</p>
+                  <p>Humi : xx</p>
+                  <p>Light : xx</p>
+                  <p>Mois : xx</p>
+                  <p>EC: xx</p>
+                  <p>Relay 1 :On</p>
+                  <p>Relay 2 :On</p>
+                  <p>Relay 3 :On</p>
+                  <p>On/Off on Time : On</p>
+                  <p>On/Off on Date : On</p>
+                </div>
+              </div>
+            );
           })}
         </div>
         <div className={styles.box}>

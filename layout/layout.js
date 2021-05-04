@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "../styles/layout.module.scss";
 import Link from "next/link";
 import Image from "next/image";
@@ -68,6 +68,7 @@ export default function layout({ children }) {
       created: "2021-04-29",
     },
   ];
+
   function activebar(id) {
     if (id == "home" || id == "organiz") {
       document.getElementById("farmlist").style.display = "none";
@@ -144,7 +145,9 @@ export default function layout({ children }) {
       activebar(id);
     }
   }
-
+  function test() {
+    alert("test");
+  }
   return (
     <div>
       <div className={styles.container}>

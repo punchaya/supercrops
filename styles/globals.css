@@ -20,6 +20,10 @@ a {
 .node_1 {
   position: relative;
   z-index: 1;
+  left: 25%;
+  top: -35%;
+}
+.node_1 button {
   background-color: #00b0f0;
   color: white;
   font-size: 20px;
@@ -31,16 +35,18 @@ a {
   line-height: 35px;
   box-shadow: #00000038 5px 3px 3px;
   border-radius: 5px;
-  left: 25%;
-  top: -35%;
 }
-.node_1:hover {
+.node_1 button:hover {
   cursor: pointer;
   background-color: #ed7d31;
 }
 .node_2 {
   position: relative;
   z-index: 1;
+  left: 65%;
+  top: -50%;
+}
+.node_2 button {
   background-color: #00b0f0;
   color: white;
   font-size: 20px;
@@ -52,16 +58,18 @@ a {
   line-height: 35px;
   box-shadow: #00000038 5px 3px 3px;
   border-radius: 5px;
-  left: 48%;
-  top: -45%;
 }
-.node_2:hover {
+.node_2 button:hover {
   cursor: pointer;
   background-color: #ed7d31;
 }
 .node_3 {
   position: relative;
   z-index: 1;
+  left: 75%;
+  top: -80%;
+}
+.node_3 button {
   background-color: #00b0f0;
   color: white;
   font-size: 20px;
@@ -73,10 +81,8 @@ a {
   line-height: 35px;
   box-shadow: #00000038 5px 3px 3px;
   border-radius: 5px;
-  left: 50%;
-  top: -65%;
 }
-.node_3:hover {
+.node_3 button:hover {
   cursor: pointer;
   background-color: #ed7d31;
 }

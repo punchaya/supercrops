@@ -9,12 +9,44 @@
   width: 1100px;
 }
 .nodebox {
+  display: none;
   position: absolute;
-  background-color: white;
+  background-color: #00bcdf;
   padding-left: 10px;
   box-shadow: #00000038 5px 3px 3px;
-  line-height: 15px;
+  line-height: 5px;
   padding: 10px;
+  font-size: 16px;
+  font-weight: 400;
+  left: -250px;
+  top: -200px;
+  width: 250px;
+}
+.nodebox button {
+  position: absolute;
+  height: 30px;
+  line-height: 20px;
+  font-size: 18px;
+  width: 80px;
+  left: 45%;
+  background-color: #ed7d31;
+}
+.nodebox button.close {
+  position: absolute;
+  line-height: 20px;
+  font-size: 18px;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  background-color: #cf2e2e;
+  font-weight: 800;
+  left: 83%;
+}
+.nodebox button:hover {
+  background-color: #ec9256;
+}
+.nodebox button.close:hover {
+  background-color: #c75353;
 }
 
 .box {
@@ -23,6 +55,7 @@
   box-shadow: #00000038 5px 3px 3px;
   line-height: 15px;
   padding: 10px;
+  max-height: 600px;
 }
 .box p.highlight {
   color: #fb4f14;
