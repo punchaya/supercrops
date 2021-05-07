@@ -86,3 +86,24 @@ a {
   cursor: pointer;
   background-color: #ed7d31;
 }
+.node_4 {
+  position: relative;
+  z-index: 1;
+}
+.node_4 button {
+  background-color: #00b0f0;
+  color: white;
+  font-size: 20px;
+  text-align: center;
+  width: 100px;
+  height: 40px;
+  outline: none;
+  border: none;
+  line-height: 35px;
+  box-shadow: #00000038 5px 3px 3px;
+  border-radius: 5px;
+}
+.node_4 button:hover {
+  cursor: pointer;
+  background-color: #ed7d31;
+}

@@ -6,6 +6,7 @@ import styles from "../../styles/farm.module.scss";
 
 export default function farm(props) {
   const router = useRouter();
+
   var farmList = [
     {
       name: "Green Farm",
@@ -20,7 +21,7 @@ export default function farm(props) {
     },
     {
       name: "Red Farm",
-      node: ["Node1", "Node2", "Node3"],
+      node: ["Node1", "Node2", "Node3", "Node4", "Node5"],
       numnode: "3",
       numparam: "xx",
       numdashb: "xx",
@@ -65,21 +66,9 @@ export default function farm(props) {
   ];
   const Data = router.query;
   var Index = parseInt(Data.index) - 1;
-  var Farm = {
-    name: "Orange Farm",
-    node: ["Node1", "Node2"],
-    numnode: "2",
-    numparam: "xx",
-    numdashb: "xx",
-    gateway: "no",
-    analytic: "no",
-    blockchain: "no",
-    created: "2021-04-29",
-  };
+
   //
   function nodeModal(id) {
-    console.log(id);
-    console.log(document.getElementById(id).style.display);
     if (document.getElementById(id).style.display) {
       if (document.getElementById(id).style.display == "none") {
         document.getElementById(id).style.display = "block";
@@ -91,7 +80,15 @@ export default function farm(props) {
     }
   }
   if (Index >= 0) {
-    Farm = farmList[Index];
+    farmList.map((farm) => {
+      farm.node.map((node, i) => {
+        if (document.getElementById(farm.name + "_node" + (i + 1))) {
+          document.getElementById(farm.name + "_node" + (i + 1)).style.display =
+            "none";
+        }
+      });
+    });
+    var Farm = farmList[Index];
     if (Farm.gateway == "yes") {
       var stylesGateway = styles.gatewayon;
     } else {
@@ -129,7 +126,7 @@ export default function farm(props) {
                   >
                     X
                   </button>
-                  <p>Node : {i}</p>
+                  <p>Node :{i}</p>
                   <p>Updatte Time : xx-xx-xxxx</p>
                   <p>Create : xx-xx-xxxx</p>
                   <p>Status : Online</p>
