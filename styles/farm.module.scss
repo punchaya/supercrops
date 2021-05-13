@@ -1,6 +1,9 @@
 .body {
   display: grid;
   grid-template-columns: auto 300px;
+  grid-template-areas:
+    "pic btn"
+    "pic detail";
   grid-template-rows: 65px auto;
   font-size: 16px;
   font-weight: 500;
@@ -48,7 +51,16 @@
 .nodebox button.close:hover {
   background-color: #c75353;
 }
-
+.boxpic {
+  grid-area: pic;
+  background-color: white;
+  padding-left: 10px;
+  box-shadow: #00000038 5px 3px 3px;
+  line-height: 15px;
+  padding: 10px;
+  max-height: 600px;
+  min-height: 600px;
+}
 .box {
   background-color: white;
   padding-left: 10px;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../styles/layout.module.scss";
 import Link from "next/link";
 import Image from "next/image";
@@ -11,6 +11,13 @@ import UpSvg from "../public/up.svg";
 import DownSvg from "../public/down.svg";
 
 export default function layout({ children }) {
+  const [txtTitle, settxtTitle] = useState("");
+  useEffect(() => {
+    if (sessionStorage.title != undefined) {
+      settxtTitle(sessionStorage.title);
+    }
+  });
+
   var farm = [
     {
       name: "Green Farm",
@@ -127,8 +134,11 @@ export default function layout({ children }) {
       dropdown.style.display = "block";
     }
   }
+  function setTitle(text) {
+    settxtTitle(text);
+  }
 
-  function activebar_dd(id, func) {
+  function activebar_dd(id, func, title) {
     if (func == farmlist) {
       for (let i = 0; i < farm.length; i++) {
         const afarm = farm[i];
@@ -138,11 +148,15 @@ export default function layout({ children }) {
           nodeStyle.style.display = "none";
         }
       }
+      settxtTitle(title);
+      sessionStorage.title = title;
       farmlist();
       activebar(id);
     } else if (func == nodelist) {
       nodelist(id + "node");
       activebar(id);
+      settxtTitle(title);
+      sessionStorage.title = title;
     }
   }
   function test() {
@@ -152,6 +166,7 @@ export default function layout({ children }) {
     <div>
       <div className={styles.container}>
         <div className={styles.nav}>
+          <div className={styles.title}>{txtTitle}</div>
           <div className={styles.user}></div>
         </div>
         <div className={styles.sidebar}>
@@ -165,7 +180,7 @@ export default function layout({ children }) {
               className={styles.menu_item}
             >
               <Link href="/">
-                <div>
+                <div onClick={() => setTitle("")}>
                   <HomeSvg />
                   <label>Home</label>
                 </div>
@@ -174,7 +189,7 @@ export default function layout({ children }) {
             <div
               id="over"
               className={styles.menu_item}
-              onClick={() => activebar_dd("over", farmlist)}
+              onClick={() => activebar_dd("over", farmlist, "")}
             >
               <Link href="/overview">
                 <div>
@@ -194,7 +209,13 @@ export default function layout({ children }) {
                       key={val.name}
                       id={val.name}
                       className={styles.dropdown_item_1rem}
-                      onClick={() => activebar_dd(val.name, nodelist)}
+                      onClick={() =>
+                        activebar_dd(
+                          val.name,
+                          nodelist,
+                          "Farm " + (index + 1) + " : " + val.name
+                        )
+                      }
                     >
                       <Link href={"/farm/" + (index + 1)}>
                         <div>
@@ -219,7 +240,13 @@ export default function layout({ children }) {
                               onClick={() => activebar(val.name + nodes)}
                             >
                               <Link href="/node">
-                                <div>
+                                <div
+                                  onClick={() =>
+                                    setTitle(
+                                      "Farm " + (index + 1) + " : " + val.name
+                                    )
+                                  }
+                                >
                                   <NodeSvg />
                                   <label>{nodes}</label>
                                 </div>
@@ -240,7 +267,7 @@ export default function layout({ children }) {
             >
               <div /*className="test"*/>
                 <Link href="/organiz">
-                  <div>
+                  <div onClick={() => setTitle("")}>
                     <OrganizSvg />
                     <label>Organization</label>
                   </div>

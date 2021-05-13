@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import styles from "../../styles/farm.module.scss";
 
-export default function farm(props) {
+export default function farm() {
   const router = useRouter();
 
   var farmList = [
@@ -21,7 +21,7 @@ export default function farm(props) {
     },
     {
       name: "Red Farm",
-      node: ["Node1", "Node2", "Node3", "Node4", "Node5"],
+      node: ["Node1", "Node2", "Node3"],
       numnode: "3",
       numparam: "xx",
       numdashb: "xx",
@@ -47,7 +47,7 @@ export default function farm(props) {
       numnode: "2",
       numparam: "xx",
       numdashb: "xx",
-      gateway: "no",
+      gateway: "yes",
       analytic: "no",
       blockchain: "no",
       created: "2021-04-29",
@@ -58,7 +58,7 @@ export default function farm(props) {
       numnode: "2",
       numparam: "xx",
       numdashb: "xx",
-      gateway: "no",
+      gateway: "yes",
       analytic: "no",
       blockchain: "no",
       created: "2021-04-29",
@@ -68,6 +68,16 @@ export default function farm(props) {
   var Index = parseInt(Data.index) - 1;
 
   //
+  function reload() {
+    router.reload();
+  }
+  function goSite(url) {
+    window.open(url);
+  }
+  const [test, settest] = useState(0);
+  function testplus() {
+    settest(test + 1);
+  }
   function nodeModal(id) {
     if (document.getElementById(id).style.display) {
       if (document.getElementById(id).style.display == "none") {
@@ -80,6 +90,7 @@ export default function farm(props) {
     }
   }
   if (Index >= 0) {
+    setTimeout(testplus, 1000);
     farmList.map((farm) => {
       farm.node.map((node, i) => {
         if (document.getElementById(farm.name + "_node" + (i + 1))) {
@@ -98,13 +109,14 @@ export default function farm(props) {
       <div className={styles.body}>
         <div className={styles.box}>
           <label className={styles.head}>
-            Farm {Index + 1}: {Farm.name}
+            <button onClick={reload}>Refresh</button>
+            <button onClick={() => goSite("https://google.com")}>
+              Dashboard
+            </button>
+            {test}
           </label>
         </div>
-        <div className={styles.box}>
-          <label className={styles.head}>Dashboard</label>
-        </div>
-        <div className={styles.box}>
+        <div className={styles.boxpic}>
           <button id="gateway" className={stylesGateway}>
             GateWay
           </button>

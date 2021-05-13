@@ -1,0 +1,121 @@
+.body {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-rows: auto auto auto auto;
+  grid-template-areas:
+    "title title"
+    "status status"
+    "sensor sensor"
+    "relay relay";
+  width: 1200px;
+}
+.title {
+  grid-area: title;
+  display: grid;
+  grid-template-columns: 30px auto;
+  grid-template-areas: "icon text";
+  background-color: white;
+  padding: 10px;
+  box-shadow: #00000038 5px 3px 3px;
+}
+.title_icon {
+  grid-area: icon;
+}
+.title_text {
+  text-indent: 5px;
+  grid-area: text;
+  font-size: 20px;
+}
+.title_text label.titlehead {
+  font-weight: 600;
+}
+.title_text label.date {
+  font-weight: 600;
+  color: gray;
+  float: right;
+}
+.status {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-area: status;
+  grid-gap: 10px;
+}
+.update {
+  grid-area: update;
+}
+.sensor {
+  display: grid;
+  grid-area: sensor;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 10px;
+}
+.relay {
+  display: grid;
+  grid-area: relay;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
+}
+.box {
+  background-color: white;
+  padding-left: 10px;
+  box-shadow: #00000038 5px 3px 3px;
+  line-height: 15px;
+  padding: 10px;
+  max-height: 600px;
+  line-height: 10px;
+  font-weight: 500;
+}
+.box_flex {
+  display: flex;
+  background-color: white;
+  padding-left: 10px;
+  box-shadow: #00000038 5px 3px 3px;
+  padding: 10px;
+  max-height: 600px;
+  font-weight: 500;
+  align-items: center;
+
+  label {
+    margin-left: 10px;
+  }
+  label.online {
+    color: green;
+  }
+  label.offline {
+    color: red;
+  }
+}
+.box p.highlight {
+  color: #fb4f14;
+}
+.box label.title {
+  font-weight: bold;
+  font-size: 18px;
+  margin-top: 10px;
+}
+.box label.create_date {
+  color: #969696;
+  font-weight: 500;
+  float: right;
+  margin-right: 10px;
+}
+.box label.head {
+  line-height: 40px;
+  font-size: 24px;
+  align-items: center;
+}
+.sensor_box {
+  display: grid;
+  background-color: white;
+  padding-left: 10px;
+  box-shadow: #00000038 5px 3px 3px;
+  line-height: 15px;
+  padding: 10px;
+  max-height: 600px;
+  grid-template-columns: 30px auto;
+  grid-gap: 5px;
+}
+.sensor_box label {
+  margin-left: 10px;
+  line-height: 25px;
+}

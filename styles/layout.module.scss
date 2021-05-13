@@ -41,6 +41,12 @@ $col_orange: #fb4f14;
   grid-template-columns: auto 200px;
   border: solid 1px black;
 }
+.title {
+  padding: 10px;
+  padding-left: 30px;
+  color: white;
+  font-size: 24px;
+}
 .content {
   grid-area: content;
   background-color: #e9ebee;
