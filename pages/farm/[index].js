@@ -38,14 +38,15 @@ export default function farm(props) {
     }
   }
   const [updateTime, setupdateTime] = useState(5000);
-  function updateTimer(id) {
+  var timeout = setTimeout(reload, updateTime);
+  async function updateTimer(id) {
     if (document.getElementById(id)) {
+      await clearTimeout(timeout);
       var milisec = document.getElementById(id).value * 60 * 1000;
       setupdateTime(milisec);
     }
   }
   if (Data.index != undefined) {
-    setTimeout(reload, updateTime);
     useEffect(() => {
       farmList.map((farm) => {
         farm.node.map((node, i) => {
@@ -75,7 +76,9 @@ export default function farm(props) {
               <option value={1} selected={true} disabled>
                 select
               </option>
+              <option value={0.016}>1s</option>
               <option value={0.05}>3s</option>
+              <option value={0.1}>6s</option>
               <option value={1}>1min</option>
               <option value={5}>5min</option>
               <option value={10}>10min</option>

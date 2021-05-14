@@ -16,6 +16,7 @@ export default function node(props) {
   const router = useRouter();
   const Data = router.query;
   const [farmList, setFarmList] = useState(props.fetchedData);
+  const [updateTime, setupdateTime] = useState(5000);
 
   async function reload() {
     const refreshedProps = await fetchData();
@@ -33,20 +34,21 @@ export default function node(props) {
       }
     }
   }
+  var timeout = setTimeout(reload, updateTime);
+  async function updateTimer(id) {
+    if (document.getElementById(id)) {
+      await clearTimeout(timeout);
+      await console.log("time out clear");
+      var milisec = document.getElementById(id).value * 60 * 1000;
+      await setupdateTime(milisec);
+    }
+  }
 
   if (Data.node != undefined) {
     var FarmIndex = parseInt(Data.node[0] - 1);
     var nodeIndex = parseInt(Data.node[1]) - 1;
     var Farm = farmList[FarmIndex];
     var Node = Farm.nodelist[nodeIndex];
-    const [updateTime, setupdateTime] = useState(5000);
-    function updateTimer(id) {
-      if (document.getElementById(id)) {
-        var milisec = document.getElementById(id).value * 60 * 1000;
-        setupdateTime(milisec);
-      }
-    }
-    setTimeout(reload, updateTime);
     return (
       <div className={styles.body}>
         <div className={styles.title}>
@@ -213,9 +215,18 @@ export default function node(props) {
                     <span className={styles.slider}></span>
                   </label>
                 </p>
-                <p>Time 1 :</p>
-                <p>Time 2 :</p>
-                <p>Time 3 :</p>
+                <p>
+                  Time 1 : On: <input type="time" />
+                  Off: <input type="time" />
+                </p>
+                <p>
+                  Time 2 : On: <input type="time" />
+                  Off: <input type="time" />
+                </p>
+                <p>
+                  Time 3 : On: <input type="time" />
+                  Off: <input type="time" />
+                </p>
                 <p>
                   <labe>On/Off on Data : </labe>
                   <label className={styles.switch}>

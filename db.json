@@ -14,7 +14,7 @@
           "temp": -15,
           "humid": 33,
           "mois": 50,
-          "ec": 10,
+          "ec": 100,
           "Light": 20,
           "relay": [
             { "id": 1, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
@@ -54,7 +54,7 @@
         "plant_date": "xxxx-xx-xx",
         "havest_date": "xxxx-xx-xx",
         "fertilizer": "ปุ๋ยอินทรีย์",
-        "amount": "50",
+        "amount": "70",
         "havest_amount": "40",
         "sell_price": "110",
         "market_price": "220"
