@@ -4,79 +4,27 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import styles from "../../styles/farm.module.scss";
 
-export default function farm() {
-  const router = useRouter();
+async function fetchData() {
+  const response = await fetch("http://localhost:3001/farms");
+  const fetchedData = await response.json();
 
-  var farmList = [
-    {
-      name: "Green Farm",
-      node: ["Node1", "Node2"],
-      numnode: "2",
-      numparam: "xx",
-      numdashb: "xx",
-      gateway: "yes",
-      analytic: "yes",
-      blockchain: "no",
-      created: "2021-04-29",
-    },
-    {
-      name: "Red Farm",
-      node: ["Node1", "Node2", "Node3"],
-      numnode: "3",
-      numparam: "xx",
-      numdashb: "xx",
-      gateway: "yes",
-      analytic: "no",
-      blockchain: "no",
-      created: "2021-04-29",
-    },
-    {
-      name: "Blue Farm",
-      node: ["Node1", "Node2"],
-      numnode: "2",
-      numparam: "xx",
-      numdashb: "xx",
-      gateway: "yes",
-      analytic: "yes",
-      blockchain: "yes",
-      created: "2021-04-29",
-    },
-    {
-      name: "Pink Farm",
-      node: ["Node1", "Node2"],
-      numnode: "2",
-      numparam: "xx",
-      numdashb: "xx",
-      gateway: "yes",
-      analytic: "no",
-      blockchain: "no",
-      created: "2021-04-29",
-    },
-    {
-      name: "Orange Farm",
-      node: ["Node1"],
-      numnode: "2",
-      numparam: "xx",
-      numdashb: "xx",
-      gateway: "yes",
-      analytic: "no",
-      blockchain: "no",
-      created: "2021-04-29",
-    },
-  ];
+  return { fetchedData };
+}
+
+export default function farm(props) {
+  const router = useRouter();
+  const [farmList, setFarmList] = useState(props.fetchedData);
+
   const Data = router.query;
   var Index = parseInt(Data.index) - 1;
 
   //
-  function reload() {
-    router.reload();
+  async function reload() {
+    const refreshedProps = await fetchData();
+    setFarmList(refreshedProps.fetchedData);
   }
   function goSite(url) {
     window.open(url);
-  }
-  const [test, settest] = useState(0);
-  function testplus() {
-    settest(test + 1);
   }
   function nodeModal(id) {
     if (document.getElementById(id).style.display) {
@@ -89,16 +37,27 @@ export default function farm() {
       document.getElementById(id).style.display = "block";
     }
   }
-  if (Index >= 0) {
-    setTimeout(testplus, 1000);
-    farmList.map((farm) => {
-      farm.node.map((node, i) => {
-        if (document.getElementById(farm.name + "_node" + (i + 1))) {
-          document.getElementById(farm.name + "_node" + (i + 1)).style.display =
-            "none";
-        }
+  const [updateTime, setupdateTime] = useState(5000);
+  function updateTimer(id) {
+    if (document.getElementById(id)) {
+      var milisec = document.getElementById(id).value * 60 * 1000;
+      setupdateTime(milisec);
+    }
+  }
+  if (Data.index != undefined) {
+    setTimeout(reload, updateTime);
+    useEffect(() => {
+      farmList.map((farm) => {
+        farm.node.map((node, i) => {
+          if (document.getElementById(farm.name + "_node" + (i + 1))) {
+            document.getElementById(
+              farm.name + "_node" + (i + 1)
+            ).style.display = "none";
+          }
+        });
       });
-    });
+    }, []);
+
     var Farm = farmList[Index];
     if (Farm.gateway == "yes") {
       var stylesGateway = styles.gatewayon;
@@ -109,11 +68,25 @@ export default function farm() {
       <div className={styles.body}>
         <div className={styles.box}>
           <label className={styles.head}>
+            <select
+              id="updateEvery"
+              onChange={() => updateTimer("updateEvery")}
+            >
+              <option value={1} selected={true} disabled>
+                select
+              </option>
+              <option value={0.05}>3s</option>
+              <option value={1}>1min</option>
+              <option value={5}>5min</option>
+              <option value={10}>10min</option>
+              <option value={20}>20min</option>
+              <option value={30}>30min</option>
+              <option value={60}>60min</option>
+            </select>
             <button onClick={reload}>Refresh</button>
             <button onClick={() => goSite("https://google.com")}>
               Dashboard
             </button>
-            {test}
           </label>
         </div>
         <div className={styles.boxpic}>
@@ -161,14 +134,14 @@ export default function farm() {
           <p>
             <label className={styles.title}>Detail Farm</label>
           </p>
-          <p>ประเภทพืช:</p>
-          <p>ปลูกเมื่อ:</p>
-          <p>วันที่จะต้องเก็บเกี่ยว:</p>
-          <p>ประเภทปุ๋ย:</p>
-          <p>จำนวน:</p>
-          <p>ยอดเก็บเกี่ยว:</p>
-          <p>ราคาขาย:</p>
-          <p>ราคาตลาด:</p>
+          <p>ประเภทพืช: {Farm.detail.type}</p>
+          <p>ปลูกเมื่อ: {Farm.detail.plant_date}</p>
+          <p>วันที่จะต้องเก็บเกี่ยว: {Farm.detail.havest_date}</p>
+          <p>ประเภทปุ๋ย: {Farm.detail.fertilizer}</p>
+          <p>จำนวน: {Farm.detail.amount}</p>
+          <p>ยอดเก็บเกี่ยว: {Farm.detail.havest_amount}</p>
+          <p>ราคาขาย: {Farm.detail.sell_price}</p>
+          <p>ราคาตลาด: {Farm.detail.market_price}</p>
         </div>
       </div>
     );
@@ -177,3 +150,4 @@ export default function farm() {
   }
 }
 farm.Layout = Layout;
+farm.getInitialProps = fetchData;

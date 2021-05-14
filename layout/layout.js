@@ -166,7 +166,10 @@ export default function layout({ children }) {
     <div>
       <div className={styles.container}>
         <div className={styles.nav}>
-          <div className={styles.title}>{txtTitle}</div>
+          <div className={styles.title}>
+            {txtTitle}
+            {children.page}
+          </div>
           <div className={styles.user}></div>
         </div>
         <div className={styles.sidebar}>
@@ -231,7 +234,7 @@ export default function layout({ children }) {
                         id={val.name + "node"}
                         className={styles.dpdwn_container}
                       >
-                        {val.node.map((nodes) => {
+                        {val.node.map((nodes, ni) => {
                           return (
                             <div
                               key={nodes}
@@ -239,7 +242,7 @@ export default function layout({ children }) {
                               className={styles.dropdown_item_2rem}
                               onClick={() => activebar(val.name + nodes)}
                             >
-                              <Link href="/node">
+                              <Link href={"/node/" + (index + 1) + (ni + 1)}>
                                 <div
                                   onClick={() =>
                                     setTitle(

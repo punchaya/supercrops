@@ -1,0 +1,303 @@
+{
+  "farms": [
+    {
+      "name": "Green Farm",
+      "node": ["Node1", "Node2"],
+      "nodelist": [
+        {
+          "index": 0,
+          "id": "Node1",
+          "createDate": "2021-10-18",
+          "status": "online",
+          "updateTime": "2021-05-06",
+          "updateEvery": 30000,
+          "temp": -15,
+          "humid": 33,
+          "mois": 50,
+          "ec": 10,
+          "Light": 20,
+          "relay": [
+            { "id": 1, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
+            { "id": 2, "status": "on", "OnOffTime": "off", "OnOffData": "on" },
+            { "id": 3, "status": "off", "OnOffTime": "on", "OnOffData": "off" }
+          ]
+        },
+        {
+          "index": 1,
+          "id": "Node2",
+          "createDate": "2021-10-18",
+          "status": "online",
+          "updateTime": "xxxx-xx-xx",
+          "updateEvery": 30000,
+          "temp": 30,
+          "humid": 33,
+          "mois": 40,
+          "ec": 10,
+          "Light": 20,
+          "relay": [
+            { "id": 1, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
+            { "id": 2, "status": "on", "OnOffTime": "off", "OnOffData": "on" },
+            { "id": 3, "status": "on", "OnOffTime": "on", "OnOffData": "on" }
+          ]
+        }
+      ],
+      "numnode": "2",
+      "numparam": "1",
+      "numdashb": "1",
+      "gateway": "yes",
+      "analytic": "yes",
+      "blockchain": "no",
+      "created": "2021-04-29",
+      "timer": 5000,
+      "detail": {
+        "type": "ทุเรียน",
+        "plant_date": "xxxx-xx-xx",
+        "havest_date": "xxxx-xx-xx",
+        "fertilizer": "ปุ๋ยอินทรีย์",
+        "amount": "50",
+        "havest_amount": "40",
+        "sell_price": "110",
+        "market_price": "220"
+      }
+    },
+    {
+      "name": "red Farm",
+      "node": ["Node1", "Node2", "Node3"],
+      "nodelist": [
+        {
+          "index": 0,
+          "id": "Node1",
+          "createDate": "2021-10-18",
+          "status": "online",
+          "updateTime": "xxxx-xx-xx",
+          "updateEvery": 300,
+          "temp": 30,
+          "humid": 33,
+          "mois": 40,
+          "ec": 10,
+          "Light": 20,
+          "relay": [
+            { "id": 1, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
+            { "id": 2, "status": "on", "OnOffTime": "off", "OnOffData": "on" },
+            { "id": 3, "status": "on", "OnOffTime": "on", "OnOffData": "on" }
+          ]
+        },
+        {
+          "index": 1,
+          "id": "Node2",
+          "createDate": "2021-10-18",
+          "status": "online",
+          "updateTime": "xxxx-xx-xx",
+          "updateEvery": 300,
+          "temp": 30,
+          "humid": 33,
+          "mois": 40,
+          "ec": 10,
+          "Light": 20,
+          "relay": [
+            { "id": 1, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
+            { "id": 2, "status": "on", "OnOffTime": "off", "OnOffData": "on" },
+            { "id": 3, "status": "on", "OnOffTime": "on", "OnOffData": "on" }
+          ]
+        },
+        {
+          "index": 2,
+          "id": "Node3",
+          "createDate": "2021-10-18",
+          "status": "online",
+          "updateTime": "xxxx-xx-xx",
+          "updateEvery": 300,
+          "temp": 30,
+          "humid": 33,
+          "mois": 40,
+          "ec": 10,
+          "Light": 20,
+          "relay": [
+            { "id": 1, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
+            { "id": 2, "status": "on", "OnOffTime": "off", "OnOffData": "on" },
+            { "id": 3, "status": "on", "OnOffTime": "on", "OnOffData": "on" }
+          ]
+        }
+      ],
+      "numnode": "3",
+      "numparam": "1",
+      "numdashb": "0",
+      "gateway": "yes",
+      "analytic": "yes",
+      "blockchain": "no",
+      "created": "2021-04-29",
+      "detail": {
+        "type": "ข้าวหอมมะลิ",
+        "plant_date": "xxxx-xx-xx",
+        "havest_date": "xxxx-xx-xx",
+        "fertilizer": "ปุ๋ยอินทรีย์",
+        "amount": "1000",
+        "havest_amount": "500",
+        "sell_price": "50000",
+        "market_price": "60"
+      }
+    },
+    {
+      "name": "blue Farm",
+      "node": ["Node1", "Node2"],
+      "numnode": "2",
+      "nodelist": [
+        {
+          "index": 0,
+          "id": "Node1",
+          "createDate": "2021-10-18",
+          "status": "online",
+          "updateTime": "xxxx-xx-xx",
+          "updateEvery": 300,
+          "temp": 30,
+          "humid": 33,
+          "mois": 40,
+          "ec": 10,
+          "Light": 20,
+          "relay": [
+            { "id": 1, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
+            { "id": 2, "status": "on", "OnOffTime": "off", "OnOffData": "on" },
+            { "id": 3, "status": "on", "OnOffTime": "on", "OnOffData": "on" }
+          ]
+        },
+        {
+          "index": 1,
+          "id": "Node2",
+          "createDate": "2021-10-18",
+          "status": "online",
+          "updateTime": "xxxx-xx-xx",
+          "updateEvery": 300,
+          "temp": 30,
+          "humid": 33,
+          "mois": 40,
+          "ec": 10,
+          "Light": 20,
+          "relay": [
+            { "id": 1, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
+            { "id": 2, "status": "on", "OnOffTime": "off", "OnOffData": "on" }
+          ]
+        }
+      ],
+      "numparam": "xx",
+      "numdashb": "xx",
+      "gateway": "yes",
+      "analytic": "yes",
+      "blockchain": "yes",
+      "created": "2021-04-29",
+      "detail": {
+        "type": "ผักกาด",
+        "plant_date": "2021-01-01",
+        "havest_date": "2021-02-15",
+        "fertilizer": "ปุ๋ยตราม้าบิน",
+        "amount": "300 ต้น",
+        "havest_amount": "300 ต้น",
+        "sell_price": "10 บาท",
+        "market_price": "15 บาท"
+      }
+    },
+    {
+      "name": "pink Farm",
+      "node": ["Node1", "Node2"],
+      "nodelist": [
+        {
+          "index": 0,
+          "id": "Node1",
+          "createDate": "2021-10-18",
+          "status": "online",
+          "updateTime": "xxxx-xx-xx",
+          "updateEvery": 300,
+          "temp": 30,
+          "humid": 33,
+          "mois": 40,
+          "ec": 10,
+          "Light": 20,
+          "relay": [
+            { "id": 1, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
+            { "id": 2, "status": "on", "OnOffTime": "off", "OnOffData": "on" },
+            { "id": 3, "status": "on", "OnOffTime": "on", "OnOffData": "on" }
+          ]
+        },
+        {
+          "index": 1,
+          "id": "Node2",
+          "createDate": "2021-10-18",
+          "status": "online",
+          "updateTime": "xxxx-xx-xx",
+          "updateEvery": 300,
+          "temp": 30,
+          "humid": 33,
+          "mois": 40,
+          "ec": 10,
+          "Light": 20,
+          "relay": [
+            { "id": 1, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
+            { "id": 2, "status": "on", "OnOffTime": "off", "OnOffData": "on" },
+            { "id": 3, "status": "on", "OnOffTime": "on", "OnOffData": "on" }
+          ]
+        }
+      ],
+      "numnode": "2",
+      "numparam": "xx",
+      "numdashb": "xx",
+      "gateway": "yes",
+      "analytic": "yes",
+      "blockchain": "yes",
+      "created": "2021-04-29",
+      "detail": {
+        "type": "ลองกอง",
+        "plant_date": "2021-05-06",
+        "havest_date": "2021-12-12",
+        "fertilizer": "ปุ๋ยอินทรีย์",
+        "amount": "50 ต้น",
+        "havest_amount": "30 ต้น",
+        "sell_price": "20 บาท ",
+        "market_price": "30 บาท"
+      }
+    },
+    {
+      "name": "Orange Farm",
+      "node": ["Node1"],
+      "nodelist": [
+        {
+          "index": 0,
+          "id": "Node1",
+          "createDate": "2021-10-18",
+          "status": "online",
+          "updateTime": "xxxx-xx-xx",
+          "updateEvery": 300,
+          "temp": 30,
+          "humid": 33,
+          "mois": 40,
+          "ec": 10,
+          "Light": 20,
+          "relay": [
+            { "id": 1, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
+            { "id": 2, "status": "on", "OnOffTime": "off", "OnOffData": "on" },
+            { "id": 3, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
+            { "id": 4, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
+            { "id": 5, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
+            { "id": 6, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
+            { "id": 7, "status": "on", "OnOffTime": "on", "OnOffData": "on" }
+          ]
+        }
+      ],
+      "numnode": "1",
+      "numparam": "xx",
+      "numdashb": "xx",
+      "gateway": "yes",
+      "analytic": "yes",
+      "blockchain": "yes",
+      "created": "2021-04-29",
+      "detail": {
+        "type": "มะเขือเทศ",
+        "plant_date": "2021-01-01",
+        "havest_date": "2021-03-01",
+        "fertilizer": "ปุ๋ยดำตราเสือดาว",
+        "amount": "100 ต้น",
+        "havest_amount": "100 ต้น",
+        "sell_price": "10 บาท",
+        "market_price": "12 บาท"
+      }
+    }
+  ]
+}

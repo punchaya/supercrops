@@ -2,7 +2,6 @@ import React from "react";
 import styles from "../styles/home.module.scss";
 import Layout from "../layout/layout";
 import Image from "next/image";
-
 export default function Home() {
   return (
     <>
