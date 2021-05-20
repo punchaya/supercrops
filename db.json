@@ -11,8 +11,8 @@
           "status": "online",
           "updateTime": "2021-05-06",
           "updateEvery": 30000,
-          "temp": -15,
-          "humid": 33,
+          "temp": -250,
+          "humid": 3123,
           "mois": 50,
           "ec": 100,
           "Light": 20,
@@ -20,6 +20,44 @@
             { "id": 1, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
             { "id": 2, "status": "on", "OnOffTime": "off", "OnOffData": "on" },
             { "id": 3, "status": "off", "OnOffTime": "on", "OnOffData": "off" }
+          ],
+          "RelayList": [
+            {
+              "id": 1,
+              "name": "Relay1",
+              "status": true,
+              "function_time": false,
+              "time1": ["time_on", "time_off", 1, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": true,
+              "data1": [50, 20],
+              "data2": [40, 30]
+            },
+            {
+              "id": 2,
+              "name": "Relay2",
+              "status": false,
+              "function_time": true,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": true,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            },
+            {
+              "id": 3,
+              "name": "Relay3",
+              "status": true,
+              "function_time": true,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": false,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            }
           ]
         },
         {
@@ -29,7 +67,7 @@
           "status": "online",
           "updateTime": "xxxx-xx-xx",
           "updateEvery": 30000,
-          "temp": 30,
+          "temp": 34,
           "humid": 33,
           "mois": 40,
           "ec": 10,
@@ -38,6 +76,44 @@
             { "id": 1, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
             { "id": 2, "status": "on", "OnOffTime": "off", "OnOffData": "on" },
             { "id": 3, "status": "on", "OnOffTime": "on", "OnOffData": "on" }
+          ],
+          "RelayList": [
+            {
+              "id": 1,
+              "name": "Relay1",
+              "status": true,
+              "function_time": false,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": true,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            },
+            {
+              "id": 2,
+              "name": "Relay2",
+              "status": false,
+              "function_time": true,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": true,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            },
+            {
+              "id": 3,
+              "name": "Relay3",
+              "status": true,
+              "function_time": true,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": false,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            }
           ]
         }
       ],
@@ -80,6 +156,44 @@
             { "id": 1, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
             { "id": 2, "status": "on", "OnOffTime": "off", "OnOffData": "on" },
             { "id": 3, "status": "on", "OnOffTime": "on", "OnOffData": "on" }
+          ],
+          "RelayList": [
+            {
+              "id": 1,
+              "name": "Relay1",
+              "status": true,
+              "function_time": false,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": true,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            },
+            {
+              "id": 2,
+              "name": "Relay2",
+              "status": false,
+              "function_time": true,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": true,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            },
+            {
+              "id": 3,
+              "name": "Relay3",
+              "status": true,
+              "function_time": true,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": false,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            }
           ]
         },
         {
@@ -98,6 +212,44 @@
             { "id": 1, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
             { "id": 2, "status": "on", "OnOffTime": "off", "OnOffData": "on" },
             { "id": 3, "status": "on", "OnOffTime": "on", "OnOffData": "on" }
+          ],
+          "RelayList": [
+            {
+              "id": 1,
+              "name": "Relay1",
+              "status": true,
+              "function_time": false,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": true,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            },
+            {
+              "id": 2,
+              "name": "Relay2",
+              "status": false,
+              "function_time": true,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": true,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            },
+            {
+              "id": 3,
+              "name": "Relay3",
+              "status": true,
+              "function_time": true,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": false,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            }
           ]
         },
         {
@@ -116,6 +268,44 @@
             { "id": 1, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
             { "id": 2, "status": "on", "OnOffTime": "off", "OnOffData": "on" },
             { "id": 3, "status": "on", "OnOffTime": "on", "OnOffData": "on" }
+          ],
+          "RelayList": [
+            {
+              "id": 1,
+              "name": "Relay1",
+              "status": true,
+              "function_time": false,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": true,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            },
+            {
+              "id": 2,
+              "name": "Relay2",
+              "status": false,
+              "function_time": true,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": true,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            },
+            {
+              "id": 3,
+              "name": "Relay3",
+              "status": true,
+              "function_time": true,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": false,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            }
           ]
         }
       ],
@@ -158,6 +348,44 @@
             { "id": 1, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
             { "id": 2, "status": "on", "OnOffTime": "off", "OnOffData": "on" },
             { "id": 3, "status": "on", "OnOffTime": "on", "OnOffData": "on" }
+          ],
+          "RelayList": [
+            {
+              "id": 1,
+              "name": "Relay1",
+              "status": true,
+              "function_time": false,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": true,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            },
+            {
+              "id": 2,
+              "name": "Relay2",
+              "status": false,
+              "function_time": true,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": true,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            },
+            {
+              "id": 3,
+              "name": "Relay3",
+              "status": true,
+              "function_time": true,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": false,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            }
           ]
         },
         {
@@ -175,6 +403,44 @@
           "relay": [
             { "id": 1, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
             { "id": 2, "status": "on", "OnOffTime": "off", "OnOffData": "on" }
+          ],
+          "RelayList": [
+            {
+              "id": 1,
+              "name": "Relay1",
+              "status": true,
+              "function_time": false,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": true,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            },
+            {
+              "id": 2,
+              "name": "Relay2",
+              "status": false,
+              "function_time": true,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": true,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            },
+            {
+              "id": 3,
+              "name": "Relay3",
+              "status": true,
+              "function_time": true,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": false,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            }
           ]
         }
       ],
@@ -215,6 +481,44 @@
             { "id": 1, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
             { "id": 2, "status": "on", "OnOffTime": "off", "OnOffData": "on" },
             { "id": 3, "status": "on", "OnOffTime": "on", "OnOffData": "on" }
+          ],
+          "RelayList": [
+            {
+              "id": 1,
+              "name": "Relay1",
+              "status": true,
+              "function_time": false,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": true,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            },
+            {
+              "id": 2,
+              "name": "Relay2",
+              "status": false,
+              "function_time": true,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": true,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            },
+            {
+              "id": 3,
+              "name": "Relay3",
+              "status": true,
+              "function_time": true,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": false,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            }
           ]
         },
         {
@@ -233,6 +537,44 @@
             { "id": 1, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
             { "id": 2, "status": "on", "OnOffTime": "off", "OnOffData": "on" },
             { "id": 3, "status": "on", "OnOffTime": "on", "OnOffData": "on" }
+          ],
+          "RelayList": [
+            {
+              "id": 1,
+              "name": "Relay1",
+              "status": true,
+              "function_time": false,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": true,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            },
+            {
+              "id": 2,
+              "name": "Relay2",
+              "status": false,
+              "function_time": true,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": true,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            },
+            {
+              "id": 3,
+              "name": "Relay3",
+              "status": true,
+              "function_time": true,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": false,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            }
           ]
         }
       ],
@@ -278,6 +620,44 @@
             { "id": 5, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
             { "id": 6, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
             { "id": 7, "status": "on", "OnOffTime": "on", "OnOffData": "on" }
+          ],
+          "RelayList": [
+            {
+              "id": 1,
+              "name": "Relay1",
+              "status": true,
+              "function_time": false,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": true,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            },
+            {
+              "id": 2,
+              "name": "Relay2",
+              "status": false,
+              "function_time": true,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": true,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            },
+            {
+              "id": 3,
+              "name": "Relay3",
+              "status": true,
+              "function_time": true,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": false,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            }
           ]
         }
       ],

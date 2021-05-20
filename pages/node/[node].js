@@ -35,12 +35,11 @@ export default function node(props) {
     }
   }
   var timeout = setTimeout(reload, updateTime);
-  async function updateTimer(id) {
+  function updateTimer(id) {
     if (document.getElementById(id)) {
-      await clearTimeout(timeout);
-      await console.log("time out clear");
+      clearTimeout(timeout);
       var milisec = document.getElementById(id).value * 60 * 1000;
-      await setupdateTime(milisec);
+      setupdateTime(milisec);
     }
   }
 
@@ -130,16 +129,15 @@ export default function node(props) {
           <div className={styles.sensor_box}></div>
         </div>
         <div className={styles.relay}>
-          {Node.relay.map((relay) => {
-            const [data1min, setdata1min] = useState(0);
-            const [data1max, setdata1max] = useState(0);
-            const [data2min, setdata2min] = useState(0);
-            const [data2max, setdata2max] = useState(0);
-
+          {Node.RelayList.map((relays) => {
+            const [data1min, setdata1min] = useState(relays.data1[1]);
+            const [data1max, setdata1max] = useState(relays.data1[0]);
+            const [data2min, setdata2min] = useState(relays.data2[1]);
+            const [data2max, setdata2max] = useState(relays.data2[0]);
             function sendData() {
               window.alert(
                 "Relay" +
-                  relay.id.toString() +
+                  relays.id.toString() +
                   " : " +
                   data1min.toString() +
                   " , " +
@@ -153,41 +151,78 @@ export default function node(props) {
             function rangeData(id, func) {
               var value = document.getElementById(id).value;
               func(value);
+              relays.data1[1] = value;
             }
 
-            useEffect(() => {
-              if (document.getElementById("status" + relay.id) !== null) {
-                if (relay.status == "on") {
-                  document.getElementById("status" + relay.id).checked = true;
-                } else {
-                  document.getElementById("status" + relay.id).checked = false;
+            function getstatus() {
+              if (typeof window !== "undefined") {
+                if (document.getElementById("status" + relays.id) !== null) {
+                  if (relays.status == true) {
+                    document.getElementById(
+                      "status" + relays.id
+                    ).checked = true;
+                  } else {
+                    document.getElementById(
+                      "status" + relays.id
+                    ).checked = false;
+                  }
+                  if (document.getElementById("status" + relays.id).checked) {
+                    document.getElementById("style" + relays.id).style.color =
+                      "black";
+                  } else {
+                    document.getElementById("style" + relays.id).style.color =
+                      "#969696";
+                  }
                 }
-                if (document.getElementById("status" + relay.id).checked) {
-                  document.getElementById("style" + relay.id).style.color =
-                    "black";
-                } else {
-                  document.getElementById("style" + relay.id).style.color =
-                    "#969696";
+                if (document.getElementById("chkBa" + relays.id) !== null) {
+                  if (relays.function_time == true) {
+                    document.getElementById("chkBa" + relays.id).checked = true;
+                  } else {
+                    document.getElementById(
+                      "chkBa" + relays.id
+                    ).checked = false;
+                  }
+                }
+                if (document.getElementById("chkBb" + relays.id) !== null) {
+                  if (relays.function_data == true) {
+                    document.getElementById("chkBb" + relays.id).checked = true;
+                  } else {
+                    document.getElementById(
+                      "chkBb" + relays.id
+                    ).checked = false;
+                  }
+                }
+                if (document.getElementById(relays.id + "sun1")) {
+                  if (relays.time1[2] == 1) {
+                    document.getElementById(relays.id + "sun1").checked = true;
+                  } else {
+                    document.getElementById(relays.id + "sun1").checked = false;
+                  }
+                  var day = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+                  for (let t = 1; t <= 3; t++) {
+                    for (let index = 2; index < relays.time1.length; index++) {
+                      if (
+                        document.getElementById(relays.id + day[index - 2] + t)
+                      ) {
+                        if (relays.time1[index] == 1) {
+                          document.getElementById(
+                            relays.id + day[index - 2] + t
+                          ).checked = true;
+                        } else {
+                          document.getElementById(
+                            relays.id + day[index - 2] + t
+                          ).checked = false;
+                        }
+                      }
+                    }
+                  }
                 }
               }
-              if (document.getElementById("chkBa" + relay.id) !== null) {
-                if (relay.OnOffTime === "on") {
-                  document.getElementById("chkBa" + relay.id).checked = true;
-                } else {
-                  document.getElementById("chkBa" + relay.id).checked = false;
-                }
-              }
-              if (document.getElementById("chkBb" + relay.id) !== null) {
-                if (relay.OnOffData === "on") {
-                  document.getElementById("chkBb" + relay.id).checked = true;
-                } else {
-                  document.getElementById("chkBb" + relay.id).checked = false;
-                }
-              }
-            }, []);
+            }
+            getstatus();
 
             return (
-              <div id={"style" + relay.id} className={styles.box}>
+              <div id={"style" + relays.id} className={styles.box}>
                 <p>
                   <label>Relay 1</label>
                   <label className={styles.status}>
@@ -195,9 +230,9 @@ export default function node(props) {
                     <label className={styles.switch}>
                       <input
                         onClick={() =>
-                          checkBox("status" + relay.id, "style" + relay.id)
+                          checkBox("status" + relays.id, "style" + relays.id)
                         }
-                        id={"status" + relay.id}
+                        id={"status" + relays.id}
                         type="checkbox"
                       />
                       <span className={styles.slider}></span>
@@ -208,31 +243,92 @@ export default function node(props) {
                   <label>On/Off on Time : </label>
                   <label className={styles.switch}>
                     <input
-                      onClick={() => checkBox("chkBa" + relay.id)}
-                      id={"chkBa" + relay.id}
+                      onClick={() => checkBox("chkBa" + relays.id)}
+                      id={"chkBa" + relays.id}
                       type="checkbox"
                     />
                     <span className={styles.slider}></span>
                   </label>
                 </p>
                 <p>
-                  Time 1 : On: <input type="time" />
-                  Off: <input type="time" />
+                  <label>Time 1 : On: </label>
+                  <input id={relays.id + "time1on"} type="time" />
+                  <label> Off: </label>
+                  <input id={relays.id + "time1off"} type="time" />
                 </p>
                 <p>
-                  Time 2 : On: <input type="time" />
-                  Off: <input type="time" />
+                  <label>
+                    <label>Day1 : </label>
+                    <input type="checkbox" id={relays.id + "sun1"} />
+                    <label for={relays.id + "sun1"}>Mon</label>
+                    <input type="checkbox" id={relays.id + "mon1"} />
+                    <label for={relays.id + "mon1"}>Tue</label>
+                    <input type="checkbox" id={relays.id + "tue1"} />
+                    <label for={relays.id + "tue1"}>Wed</label>
+                    <input type="checkbox" id={relays.id + "wed1"} />
+                    <label for={relays.id + "wed1"}>Thu</label>
+                    <input type="checkbox" id={relays.id + "thu1"} />
+                    <label for={relays.id + "thu1"}>Fri</label>
+                    <input type="checkbox" id={relays.id + "fri1"} />
+                    <label for={relays.id + "fri1"}>Sat</label>
+                    <input type="checkbox" id={relays.id + "sat1"} />
+                    <label for={relays.id + "sat1"}>Sun</label>
+                  </label>
+                </p>
+                <p>
+                  <label>Time 2 : On: </label>
+                  <input id={relays.id + "time2on"} type="time" />
+                  <label> Off: </label>
+                  <input id={relays.id + "time2off"} type="time" />
+                </p>
+                <p>
+                  <label>
+                    <label>Day1 : </label>
+                    <input type="checkbox" id={relays.id + "sun2"} />
+                    <label for={relays.id + "sun2"}>Mon</label>
+                    <input type="checkbox" id={relays.id + "mon2"} />
+                    <label for={relays.id + "mon2"}>Tue</label>
+                    <input type="checkbox" id={relays.id + "tue2"} />
+                    <label for={relays.id + "tue2"}>Wed</label>
+                    <input type="checkbox" id={relays.id + "wed2"} />
+                    <label for={relays.id + "wed2"}>Thu</label>
+                    <input type="checkbox" id={relays.id + "thu2"} />
+                    <label for={relays.id + "thu2"}>Fri</label>
+                    <input type="checkbox" id={relays.id + "fri2"} />
+                    <label for={relays.id + "fri2"}>Sat</label>
+                    <input type="checkbox" id={relays.id + "sat2"} />
+                    <label for={relays.id + "sat2"}>Sun</label>
+                  </label>
                 </p>
                 <p>
                   Time 3 : On: <input type="time" />
                   Off: <input type="time" />
                 </p>
                 <p>
+                  <label>
+                    <label>Day1 : </label>
+                    <input type="checkbox" id={relays.id + "sun3"} />
+                    <label for={relays.id + "sun3"}>Mon</label>
+                    <input type="checkbox" id={relays.id + "mon3"} />
+                    <label for={relays.id + "mon3"}>Tue</label>
+                    <input type="checkbox" id={relays.id + "tue3"} />
+                    <label for={relays.id + "tue3"}>Wed</label>
+                    <input type="checkbox" id={relays.id + "wed3"} />
+                    <label for={relays.id + "wed3"}>Thu</label>
+                    <input type="checkbox" id={relays.id + "thu3"} />
+                    <label for={relays.id + "thu3"}>Fri</label>
+                    <input type="checkbox" id={relays.id + "fri3"} />
+                    <label for={relays.id + "fri3"}>Sat</label>
+                    <input type="checkbox" id={relays.id + "sat3"} />
+                    <label for={relays.id + "sat3"}>Sun</label>
+                  </label>
+                </p>
+                <p>
                   <labe>On/Off on Data : </labe>
                   <label className={styles.switch}>
                     <input
-                      onClick={() => checkBox("chkBb" + relay.id)}
-                      id={"chkBb" + relay.id}
+                      onClick={() => checkBox("chkBb" + relays.id)}
+                      id={"chkBb" + relays.id}
                       type="checkbox"
                     />
                     <span className={styles.slider}></span>
@@ -242,63 +338,65 @@ export default function node(props) {
                 <p>
                   Min :
                   <input
-                    id={relay.id + "data1min"}
+                    id={relays.id + "data1min"}
                     type="range"
                     min="0"
                     max="100"
                     step="1"
-                    value={data1min}
+                    value={relays.data1[1]}
                     onChange={() =>
-                      rangeData(relay.id + "data1min", setdata1min)
+                      rangeData(relays.id + "data1min", setdata1min)
                     }
                   />
-                  <label id={relay.id + "data1mintxt"}>{data1min}</label>
+                  <label id={relays.id + "data1mintxt"}>
+                    {relays.data1[1]}
+                  </label>
                 </p>
                 <p>
                   Max :
                   <input
-                    id={relay.id + "data1max"}
+                    id={relays.id + "data1max"}
                     type="range"
                     min="0"
                     max="100"
                     step="1"
-                    value={data1max}
+                    value={relays.data1[0]}
                     onChange={() =>
-                      rangeData(relay.id + "data1max", setdata1max)
+                      rangeData(relays.id + "data1max", setdata1max)
                     }
                   />
-                  <label id={relay.id + "data1maxtxt"}>{data1max}</label>
+                  <label id={relays.id + "data1maxtxt"}>{data1max}</label>
                 </p>
                 <p>Data 2 :</p>
                 <p>
                   Min :
                   <input
-                    id={relay.id + "data2min"}
+                    id={relays.id + "data2min"}
                     type="range"
                     min="0"
                     max="100"
                     step="1"
-                    value={data2min}
+                    value={relays.data2[1]}
                     onChange={() =>
-                      rangeData(relay.id + "data2min", setdata2min)
+                      rangeData(relays.id + "data2min", setdata2min)
                     }
                   />
-                  <label id={relay.id + "data2mintxt"}>{data2min}</label>
+                  <label id={relays.id + "data2mintxt"}>{data2min}</label>
                 </p>
                 <p>
                   Max :
                   <input
-                    id={relay.id + "data2max"}
+                    id={relays.id + "data2max"}
                     type="range"
                     min="0"
                     max="100"
                     step="1"
-                    value={data2max}
+                    value={relays.data2[0]}
                     onChange={() =>
-                      rangeData(relay.id + "data2max", setdata2max)
+                      rangeData(relays.id + "data2max", setdata2max)
                     }
                   />
-                  <label id={relay.id + "data2maxtxt"}>{data2max}</label>
+                  <label id={relays.id + "data2maxtxt"}>{data2max}</label>
                 </p>
                 <p>
                   <button onClick={sendData}>Click</button>

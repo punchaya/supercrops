@@ -67,6 +67,25 @@
   max-height: 600px;
   line-height: 10px;
   font-weight: 500;
+  label input[type="checkbox"] {
+    display: none;
+  }
+  label input[type="checkbox"] + label {
+    display: inline-block;
+    font-size: 12px;
+    border-radius: 50%;
+    background: #dddddd;
+    height: 30px;
+    width: 30px;
+    margin-right: 3px;
+    line-height: 30px;
+    text-align: center;
+    cursor: pointer;
+  }
+  label input[type="checkbox"]:checked + label {
+    background: #2196f3;
+    color: #ffffff;
+  }
 }
 .box_flex {
   display: flex;
@@ -189,3 +208,47 @@ input:checked + .slider:before {
 }
 
 //----------------End-check-box-toggle--------------------//
+//===================day-a-week-check-box=================//
+.weekDays_selector {
+  margin-top: 10px;
+}
+.weekDays_selector input {
+  display: none !important;
+}
+
+.weekDays_selector input[type="checkbox"] + label {
+  display: inline-block;
+  font-size: 12px;
+  border-radius: 50%;
+  background: #dddddd;
+  height: 30px;
+  width: 30px;
+  margin-right: 3px;
+  line-height: 30px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.weekDays_selector input[type="checkbox"]:checked + label {
+  background: #2ad705;
+  color: #ffffff;
+}
+
+/*
+                  <div className={styles.weekDays_selector}>
+                    <label>Day1 : </label>
+                    <input type="checkbox" id={"weekday-mon"} />
+                    <label for="weekday-mon">Mon</label>
+                    <input type="checkbox" id="weekday-tue" />
+                    <label for="weekday-tue">Tue</label>
+                    <input type="checkbox" id="weekday-wed" />
+                    <label for="weekday-wed">Wed</label>
+                    <input type="checkbox" id="weekday-thu" />
+                    <label for="weekday-thu">Thu</label>
+                    <input type="checkbox" id="weekday-fri" />
+                    <label for="weekday-fri">Fri</label>
+                    <input type="checkbox" id="weekday-sat" />
+                    <label for="weekday-sat">Sat</label>
+                    <input type="checkbox" id="weekday-sun" />
+                    <label for="weekday-sun">Sun</label>
+                  </div>*/
