@@ -9,72 +9,26 @@ import FarmSvg from "../public/farm.svg";
 import NodeSvg from "../public/node.svg";
 import UpSvg from "../public/up.svg";
 import DownSvg from "../public/down.svg";
+async function fetchData() {
+  const response = await fetch("http://localhost:3001/farms");
+  const fetchedData = await response.json();
 
-export default function layout({ children }) {
+  return { fetchedData };
+}
+
+export default function layout(props) {
+  const [farm, setFarm] = useState(props.fetchedData);
   const [txtTitle, settxtTitle] = useState("");
+  async function reload() {
+    const refreshedProps = await fetchData();
+    setFarm(refreshedProps.fetchedData);
+  }
   useEffect(() => {
     if (sessionStorage.title != undefined) {
       settxtTitle(sessionStorage.title);
+      reload();
     }
-  });
-
-  var farm = [
-    {
-      name: "Green Farm",
-      node: ["Node1", "Node2"],
-      numnode: "2",
-      numparam: "xx",
-      numdashb: "xx",
-      gateway: "yes",
-      analytic: "yes",
-      blockchain: "no",
-      created: "2021-04-29",
-    },
-    {
-      name: "Red Farm",
-      node: ["Node1", "Node2", "Node3"],
-      numnode: "3",
-      numparam: "xx",
-      numdashb: "xx",
-      gateway: "yes",
-      analytic: "no",
-      blockchain: "no",
-      created: "2021-04-29",
-    },
-    {
-      name: "Blue Farm",
-      node: ["Node1", "Node2"],
-      numnode: "2",
-      numparam: "xx",
-      numdashb: "xx",
-      gateway: "yes",
-      analytic: "yes",
-      blockchain: "yes",
-      created: "2021-04-29",
-    },
-    {
-      name: "Pink Farm",
-      node: ["Node1", "Node2"],
-      numnode: "2",
-      numparam: "xx",
-      numdashb: "xx",
-      gateway: "no",
-      analytic: "no",
-      blockchain: "no",
-      created: "2021-04-29",
-    },
-    {
-      name: "Orange Farm",
-      node: ["Node1"],
-      numnode: "2",
-      numparam: "xx",
-      numdashb: "xx",
-      gateway: "no",
-      analytic: "no",
-      blockchain: "no",
-      created: "2021-04-29",
-    },
-  ];
+  }, []);
 
   function activebar(id) {
     if (id == "home" || id == "organiz") {
@@ -159,131 +113,134 @@ export default function layout({ children }) {
       sessionStorage.title = title;
     }
   }
-  function test() {
-    alert("test");
+  function titleSet(title) {
+    settxtTitle("");
+    settxtTitle(title);
+    sessionStorage.title = title;
   }
-  return (
-    <div>
-      <div className={styles.container}>
-        <div className={styles.nav}>
-          <div className={styles.title}>
-            {txtTitle}
-            {children.page}
+  if (farm != undefined) {
+    return (
+      <div>
+        <div className={styles.container}>
+          <div className={styles.nav}>
+            <div className={styles.title}>{txtTitle}</div>
+            <div className={styles.user}></div>
           </div>
-          <div className={styles.user}></div>
-        </div>
-        <div className={styles.sidebar}>
-          <div className={styles.side_icon}>
-            <Image src="/supercrops.png" height="65px" width="65px" />
-          </div>
-          <div className={styles.sidenav}>
-            <div
-              id="home"
-              onClick={() => activebar("home")}
-              className={styles.menu_item}
-            >
-              <Link href="/">
-                <div onClick={() => setTitle("")}>
-                  <HomeSvg />
-                  <label>Home</label>
-                </div>
-              </Link>
+          <div className={styles.sidebar}>
+            <div className={styles.side_icon}>
+              <Image src="/supercrops.png" height="65px" width="65px" />
             </div>
-            <div
-              id="over"
-              className={styles.menu_item}
-              onClick={() => activebar_dd("over", farmlist, "")}
-            >
-              <Link href="/overview">
-                <div>
-                  <OverviewSvg />
-                  <label>Overview</label>
-                  <DownSvg />
-                </div>
-              </Link>
-            </div>
-
-            <div id="farmlist" className={styles.dpdwn_container}>
-              {/*map farmname from farmlist json*/}
-              {farm.map((val, index) => {
-                return (
-                  <>
-                    <div
-                      key={val.name}
-                      id={val.name}
-                      className={styles.dropdown_item_1rem}
-                      onClick={() =>
-                        activebar_dd(
-                          val.name,
-                          nodelist,
-                          "Farm " + (index + 1) + " : " + val.name
-                        )
-                      }
-                    >
-                      <Link href={"/farm/" + (index + 1)}>
-                        <div>
-                          <FarmSvg />
-                          <label>Farm{index + 1}</label>
-                          <DownSvg />
-                        </div>
-                      </Link>
-                    </div>
-
-                    <div>
-                      <div
-                        id={val.name + "node"}
-                        className={styles.dpdwn_container}
-                      >
-                        {val.node.map((nodes, ni) => {
-                          return (
-                            <div
-                              key={nodes}
-                              id={val.name + nodes}
-                              className={styles.dropdown_item_2rem}
-                              onClick={() => activebar(val.name + nodes)}
-                            >
-                              <Link href={"/node/" + (index + 1) + (ni + 1)}>
-                                <div
-                                  onClick={() =>
-                                    setTitle(
-                                      "Farm " + (index + 1) + " : " + val.name
-                                    )
-                                  }
-                                >
-                                  <NodeSvg />
-                                  <label>{nodes}</label>
-                                </div>
-                              </Link>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </>
-                );
-              })}
-            </div>
-            <div
-              id="organiz"
-              className={styles.menu_item}
-              onClick={() => activebar("organiz")}
-            >
-              <div /*className="test"*/>
-                <Link href="/organiz">
+            <div className={styles.sidenav}>
+              <div
+                id="home"
+                onClick={() => activebar("home")}
+                className={styles.menu_item}
+              >
+                <Link href="/">
                   <div onClick={() => setTitle("")}>
-                    <OrganizSvg />
-                    <label>Organization</label>
+                    <HomeSvg />
+                    <label>Home</label>
                   </div>
                 </Link>
               </div>
+              <div
+                id="over"
+                className={styles.menu_item}
+                onClick={() => activebar_dd("over", farmlist, "")}
+              >
+                <Link href="/overview">
+                  <div>
+                    <OverviewSvg />
+                    <label>Overview</label>
+                    <DownSvg />
+                  </div>
+                </Link>
+              </div>
+
+              <div id="farmlist" className={styles.dpdwn_container}>
+                {/*map farmname from farmlist json*/}
+                {farm.map((val, index) => {
+                  return (
+                    <>
+                      <div
+                        key={val.name}
+                        id={val.name}
+                        className={styles.dropdown_item_1rem}
+                        onClick={() =>
+                          activebar_dd(
+                            val.name,
+                            nodelist,
+                            "Farm " + (index + 1) + " : " + val.name
+                          )
+                        }
+                      >
+                        <Link href={"/farm/" + (index + 1)}>
+                          <div>
+                            <FarmSvg />
+                            <label>Farm{index + 1}</label>
+                            <DownSvg />
+                          </div>
+                        </Link>
+                      </div>
+
+                      <div>
+                        <div
+                          id={val.name + "node"}
+                          className={styles.dpdwn_container}
+                        >
+                          {val.node.map((nodes, ni) => {
+                            return (
+                              <div
+                                key={nodes}
+                                id={val.name + nodes}
+                                className={styles.dropdown_item_2rem}
+                                onClick={() => activebar(val.name + nodes)}
+                              >
+                                <Link href={"/node/" + (index + 1) + (ni + 1)}>
+                                  <div
+                                    onClick={() =>
+                                      titleSet(
+                                        "Farm " + (index + 1) + " : " + val.name
+                                      )
+                                    }
+                                  >
+                                    <NodeSvg />
+                                    <label>{nodes}</label>
+                                  </div>
+                                </Link>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </>
+                  );
+                })}
+              </div>
+              <div
+                id="organiz"
+                className={styles.menu_item}
+                onClick={() => activebar("organiz")}
+              >
+                <div /*className="test"*/>
+                  <Link href="/organiz">
+                    <div onClick={() => setTitle("")}>
+                      <OrganizSvg />
+                      <label>Organization</label>
+                    </div>
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div className={styles.content}>{children}</div>
-        <div className={styles.footer}>
-          ©2021 KITFORWARD.CO.,LTD. All Rights Reserved.
+          <div className={styles.content}>{props.children}</div>
+          <div className={styles.footer}>
+            ©2021 KITFORWARD.CO.,LTD. All Rights Reserved.
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  } else {
+    return <div>Loading...</div>;
+  }
 }

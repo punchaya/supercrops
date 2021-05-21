@@ -142,3 +142,53 @@
 .farmPic {
   height: 500px;
 }
+.box_flex {
+  display: flex;
+  background-color: white;
+  padding-left: 10px;
+  box-shadow: #00000038 5px 3px 3px;
+  padding: 10px;
+  max-height: 600px;
+  font-weight: 500;
+  align-items: center;
+
+  label {
+    margin-left: 10px;
+  }
+  label.online {
+    color: green;
+  }
+  label.offline {
+    color: red;
+  }
+  label.right {
+    margin-left: auto;
+  }
+  select {
+    background-color: #cccc;
+    border: none;
+    font-weight: 500;
+    font-size: 14px;
+    height: 25px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+    outline: none;
+  }
+  select option {
+    background-color: white;
+  }
+  button {
+    border: none;
+    background-color: #2196f3;
+    color: white;
+    height: 25px;
+    border-radius: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+  button:hover {
+    cursor: pointer;
+    background-color: #81c4fa;
+  }
+}

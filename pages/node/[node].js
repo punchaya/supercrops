@@ -48,6 +48,19 @@ export default function node(props) {
     var nodeIndex = parseInt(Data.node[1]) - 1;
     var Farm = farmList[FarmIndex];
     var Node = Farm.nodelist[nodeIndex];
+    useEffect(() => {
+      sessionStorage.title = "Farm " + (FarmIndex + 1) + " : " + Farm.name;
+    }, []);
+    if (Node.status == "online") {
+      var statusStyle = styles.online;
+      var statusTxt = "Online";
+    } else if (Node.status == "offline") {
+      var statusStyle = styles.offline;
+      var statusTxt = "Offline";
+    } else {
+      var statusStyle = styles.problem;
+      var statusTxt = "Error";
+    }
     return (
       <div className={styles.body}>
         <div className={styles.title}>
@@ -65,7 +78,7 @@ export default function node(props) {
           <div className={styles.box_flex}>
             <Image src="/bar-chart.png" width="25" height="25" />
             <label> status : </label>
-            <label className={styles.online}> {Node.status}</label>
+            <label className={statusStyle}> {statusTxt}</label>
           </div>
 
           <div className={styles.box_flex}>
@@ -148,10 +161,19 @@ export default function node(props) {
                   data2max.toString()
               );
             }
-            function rangeData(id, func) {
+            function rangeData(id, func, relays_data) {
               var value = document.getElementById(id).value;
               func(value);
-              relays.data1[1] = value;
+              if (relays_data == "data1min") {
+                relays.data1[1] = value;
+              } else if (relays_data == "data1max") {
+                relays.data1[0] = value;
+              } else if (relays_data == "data2min") {
+                relays.data2[1] = value;
+              } else if (relays_data == "data2max") {
+                relays.data2[0] = value;
+              }
+              relays_data = value;
             }
 
             function getstatus() {
@@ -342,10 +364,9 @@ export default function node(props) {
                     type="range"
                     min="0"
                     max="100"
-                    step="1"
                     value={relays.data1[1]}
                     onChange={() =>
-                      rangeData(relays.id + "data1min", setdata1min)
+                      rangeData(relays.id + "data1min", setdata1min, "data1min")
                     }
                   />
                   <label id={relays.id + "data1mintxt"}>
@@ -359,13 +380,14 @@ export default function node(props) {
                     type="range"
                     min="0"
                     max="100"
-                    step="1"
                     value={relays.data1[0]}
                     onChange={() =>
-                      rangeData(relays.id + "data1max", setdata1max)
+                      rangeData(relays.id + "data1max", setdata1max, "data1max")
                     }
                   />
-                  <label id={relays.id + "data1maxtxt"}>{data1max}</label>
+                  <label id={relays.id + "data1maxtxt"}>
+                    {relays.data1[0]}
+                  </label>
                 </p>
                 <p>Data 2 :</p>
                 <p>
@@ -378,10 +400,12 @@ export default function node(props) {
                     step="1"
                     value={relays.data2[1]}
                     onChange={() =>
-                      rangeData(relays.id + "data2min", setdata2min)
+                      rangeData(relays.id + "data2min", setdata2min, "data2min")
                     }
                   />
-                  <label id={relays.id + "data2mintxt"}>{data2min}</label>
+                  <label id={relays.id + "data2mintxt"}>
+                    {relays.data2[1]}
+                  </label>
                 </p>
                 <p>
                   Max :
@@ -393,14 +417,17 @@ export default function node(props) {
                     step="1"
                     value={relays.data2[0]}
                     onChange={() =>
-                      rangeData(relays.id + "data2max", setdata2max)
+                      rangeData(relays.id + "data2max", setdata2max, "data2max")
                     }
                   />
-                  <label id={relays.id + "data2maxtxt"}>{data2max}</label>
+                  <label id={relays.id + "data2maxtxt"}>
+                    {relays.data2[0]}
+                  </label>
                 </p>
+                {/*}
                 <p>
-                  <button onClick={sendData}>Click</button>
-                </p>
+                  <button onClick={sendData}>Apply</button>
+                  </p>{*/}
               </div>
             );
           })}

@@ -8,7 +8,7 @@
           "index": 0,
           "id": "Node1",
           "createDate": "2021-10-18",
-          "status": "online",
+          "status": "offline",
           "updateTime": "2021-05-06",
           "updateEvery": 30000,
           "temp": -250,
@@ -138,13 +138,13 @@
     },
     {
       "name": "red Farm",
-      "node": ["Node1", "Node2", "Node3"],
+      "node": ["Node1", "Node2", "Node3", "Node4", "Node5"],
       "nodelist": [
         {
           "index": 0,
           "id": "Node1",
           "createDate": "2021-10-18",
-          "status": "online",
+          "status": "err",
           "updateTime": "xxxx-xx-xx",
           "updateEvery": 300,
           "temp": 30,
@@ -257,6 +257,118 @@
           "id": "Node3",
           "createDate": "2021-10-18",
           "status": "online",
+          "updateTime": "xxxx-xx-xx",
+          "updateEvery": 300,
+          "temp": 30,
+          "humid": 33,
+          "mois": 40,
+          "ec": 10,
+          "Light": 20,
+          "relay": [
+            { "id": 1, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
+            { "id": 2, "status": "on", "OnOffTime": "off", "OnOffData": "on" },
+            { "id": 3, "status": "on", "OnOffTime": "on", "OnOffData": "on" }
+          ],
+          "RelayList": [
+            {
+              "id": 1,
+              "name": "Relay1",
+              "status": true,
+              "function_time": false,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": true,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            },
+            {
+              "id": 2,
+              "name": "Relay2",
+              "status": false,
+              "function_time": true,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": true,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            },
+            {
+              "id": 3,
+              "name": "Relay3",
+              "status": true,
+              "function_time": true,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": false,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "id": "Node4",
+          "createDate": "2021-10-18",
+          "status": "err",
+          "updateTime": "xxxx-xx-xx",
+          "updateEvery": 300,
+          "temp": 30,
+          "humid": 33,
+          "mois": 40,
+          "ec": 10,
+          "Light": 20,
+          "relay": [
+            { "id": 1, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
+            { "id": 2, "status": "on", "OnOffTime": "off", "OnOffData": "on" },
+            { "id": 3, "status": "on", "OnOffTime": "on", "OnOffData": "on" }
+          ],
+          "RelayList": [
+            {
+              "id": 1,
+              "name": "Relay1",
+              "status": true,
+              "function_time": false,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": true,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            },
+            {
+              "id": 2,
+              "name": "Relay2",
+              "status": false,
+              "function_time": true,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": true,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            },
+            {
+              "id": 3,
+              "name": "Relay3",
+              "status": true,
+              "function_time": true,
+              "time1": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time2": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "time3": ["time_on", "time_off", 0, 1, 1, 1, 1, 1, 0],
+              "function_data": false,
+              "data1": [80, 30],
+              "data2": [80, 30]
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "id": "Node5",
+          "createDate": "2021-10-18",
+          "status": "err",
           "updateTime": "xxxx-xx-xx",
           "updateEvery": 300,
           "temp": 30,

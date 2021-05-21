@@ -3,6 +3,7 @@ import Layout from "../../layout/layout";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import styles from "../../styles/farm.module.scss";
+import Link from "next/link";
 
 async function fetchData() {
   const response = await fetch("http://localhost:3001/farms");
@@ -67,7 +68,7 @@ export default function farm(props) {
     }
     return (
       <div className={styles.body}>
-        <div className={styles.box}>
+        <div className={styles.box_flex}>
           <label className={styles.head}>
             <select
               id="updateEvery"
@@ -107,7 +108,11 @@ export default function farm(props) {
                   {val}
                 </button>
                 <div id={Farm.name + "_node" + i} className={styles.nodebox}>
-                  <button>Edit</button>
+                  <button>
+                    <Link href={"/node/" + (Index + 1) + (index + 1)}>
+                      Edit
+                    </Link>
+                  </button>
                   <button
                     className={styles.close}
                     onClick={() => nodeModal(Farm.name + "_node" + i)}
