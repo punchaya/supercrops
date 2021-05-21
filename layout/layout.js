@@ -9,16 +9,31 @@ import FarmSvg from "../public/farm.svg";
 import NodeSvg from "../public/node.svg";
 import UpSvg from "../public/up.svg";
 import DownSvg from "../public/down.svg";
+import { useRouter } from "next/router";
+
 async function fetchData() {
   const response = await fetch("http://localhost:3001/farms");
   const fetchedData = await response.json();
-
   return { fetchedData };
 }
 
 export default function layout(props) {
-  const [farm, setFarm] = useState(props.fetchedData);
+  const router = useRouter();
+  const [farm, setFarm] = useState([
+    {
+      name: "Green Farm",
+      node: ["Node1", "Node2"],
+      numnode: "2",
+      numparam: "xx",
+      numdashb: "xx",
+      gateway: "yes",
+      analytic: "yes",
+      blockchain: "no",
+      created: "2021-04-29",
+    },
+  ]);
   const [txtTitle, settxtTitle] = useState("");
+
   async function reload() {
     const refreshedProps = await fetchData();
     setFarm(refreshedProps.fetchedData);
@@ -240,7 +255,10 @@ export default function layout(props) {
         </div>
       </div>
     );
-  } else {
+  } else if (farm == undefined) {
+    reload();
     return <div>Loading...</div>;
+  } else {
+    return <div>Err</div>;
   }
 }
