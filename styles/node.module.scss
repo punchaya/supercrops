@@ -1,3 +1,21 @@
+$colorss: #1597ff;
+$color1: #f4f4f4;
+$color2: #e04b55;
+$color3: #ff436c;
+$color4: #32a5c2;
+$color5: #ffa52f;
+$btncolor: #f06c00;
+$primary: #1266f1;
+$secondary: #b23cfd;
+$success: #00b74a;
+$danger: #f93154;
+$danger2: #ff6f87;
+$Warning: #ffa900;
+$info: #39c0ed;
+$light: #fbfbfb;
+$dark: #262626;
+$text: #5a5a5a;
+$input_text: #494949;
 .body {
   display: grid;
   grid-gap: 10px;
@@ -7,7 +25,8 @@
     "status status"
     "sensor sensor"
     "relay relay";
-  width: 1200px;
+  width: 1300px;
+  margin: auto;
 }
 .dpNone {
   display: none;
@@ -74,6 +93,37 @@
     border-radius: 5px;
     width: 70px;
   }
+  p.highlight {
+    color: #fb4f14;
+  }
+  label.title {
+    font-weight: bold;
+    font-size: 18px;
+    margin-top: 10px;
+  }
+  label.create_date {
+    color: #969696;
+    font-weight: 500;
+    float: right;
+    margin-right: 10px;
+  }
+  label.status {
+    font-weight: 500;
+    float: right;
+    margin-right: 10px;
+  }
+  label.head {
+    line-height: 40px;
+    font-size: 24px;
+    align-items: center;
+  }
+  button.apply {
+    margin-left: 10px;
+    display: flex;
+    margin-left: 10px;
+    align-items: center;
+    justify-content: center;
+  }
   button:hover {
     cursor: pointer;
     background-color: #81c4fa;
@@ -98,6 +148,199 @@
     color: #ffffff;
   }
 }
+.box_confrim {
+  position: absolute;
+  margin: auto;
+  background-color: blue;
+}
+.box_hide {
+  position: relative;
+  margin: auto;
+  background-color: white;
+  box-shadow: #00000038 5px 3px 3px;
+  padding: 30px;
+  font-weight: 500;
+  width: 570px;
+  border-radius: 10px;
+  button {
+    border: none;
+    background-color: #2273dd;
+    color: white;
+    height: 25px;
+    border-radius: 5px;
+    width: 70px;
+  }
+  button.close {
+    width: 100%;
+    background-color: $danger;
+  }
+  button.close:hover {
+    cursor: pointer;
+    background-color: #ff8c8c;
+  }
+  p.highlight {
+    color: #fb4f14;
+  }
+  label.title {
+    font-weight: bold;
+    font-size: 18px;
+    margin-top: 10px;
+  }
+  label.create_date {
+    color: #969696;
+    font-weight: 500;
+    float: right;
+    margin-right: 10px;
+  }
+  label.status {
+    font-weight: 500;
+    float: right;
+    margin-right: 10px;
+  }
+  label.head {
+    line-height: 40px;
+    font-size: 24px;
+    align-items: center;
+  }
+  button.apply {
+    margin-left: 10px;
+    display: flex;
+    margin-left: 10px;
+    align-items: center;
+    justify-content: center;
+    background-color: #2273dd;
+  }
+  button:hover {
+    cursor: pointer;
+    background-color: #81c4fa;
+  }
+  label input[type="checkbox"] {
+    display: none;
+  }
+  label input[type="checkbox"] + label {
+    display: inline-block;
+    font-size: 12px;
+    background: #dddddd;
+    height: 30px;
+    width: 30px;
+    line-height: 30px;
+    text-align: center;
+    margin-right: 20px;
+  }
+  label input[type="checkbox"]:checked + label {
+    background: #2196f3;
+    color: #ffffff;
+  }
+}
+.box_hidemini {
+  position: relative;
+  margin: auto;
+  background-color: white;
+  box-shadow: #00000038 5px 3px 3px;
+  padding: 30px;
+  font-weight: 500;
+  width: 300px;
+  border-radius: 10px;
+  button {
+    border: none;
+    background-color: #2273dd;
+    color: white;
+    height: 25px;
+    border-radius: 5px;
+    width: 70px;
+  }
+  button.close {
+    width: 100%;
+    background-color: $danger;
+  }
+  button.close:hover {
+    cursor: pointer;
+    background-color: #ff8c8c;
+  }
+  p.highlight {
+    color: #fb4f14;
+  }
+  label.title {
+    font-weight: bold;
+    font-size: 18px;
+    margin-top: 10px;
+  }
+  label.create_date {
+    color: #969696;
+    font-weight: 500;
+    float: right;
+    margin-right: 10px;
+  }
+  label.status {
+    font-weight: 500;
+    float: right;
+    margin-right: 10px;
+  }
+  label.head {
+    line-height: 40px;
+    font-size: 24px;
+    align-items: center;
+  }
+  button.apply {
+    margin-left: 10px;
+    display: flex;
+    margin-left: 10px;
+    align-items: center;
+    justify-content: center;
+  }
+  button:hover {
+    cursor: pointer;
+    background-color: #81c4fa;
+  }
+  label input[type="checkbox"] {
+    display: none;
+  }
+  label input[type="checkbox"] + label {
+    display: inline-block;
+    font-size: 12px;
+    background: #dddddd;
+    height: 30px;
+    width: 30px;
+    line-height: 30px;
+    text-align: center;
+    margin-right: 20px;
+  }
+  label input[type="checkbox"]:checked + label {
+    background: #2196f3;
+    color: #ffffff;
+  }
+}
+.weekday {
+  input[type="checkbox"] {
+    display: none;
+  }
+  label input[type="checkbox"] + label {
+    display: inline-block;
+    font-size: 12px;
+    background: #dddddd;
+    height: 30px;
+    width: 68px;
+    line-height: 30px;
+    text-align: center;
+    margin-right: 3px;
+    border-radius: 10px;
+  }
+  label input[type="checkbox"] + label:hover {
+    cursor: pointer;
+    background: #03bd9e;
+    color: #ffffff;
+  }
+  label input[type="checkbox"]:checked + label {
+    background: #2196f3;
+    color: #ffffff;
+  }
+  label input[type="checkbox"]:checked + label:hover {
+    background: #03bd9e;
+    cursor: pointer;
+    color: #ffffff;
+  }
+}
+
 .box_flex {
   display: flex;
   background-color: white;
@@ -112,7 +355,101 @@
     margin-left: 10px;
   }
   label.online {
-    color: green;
+    color: #169216;
+    animation-duration: 1000ms;
+    animation-name: onlineblink;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+  }
+  label.offline {
+    color: #a5a5a5;
+  }
+  label.problem {
+    color: red;
+  }
+  label.right {
+    margin-left: auto;
+  }
+  select {
+    background-color: #cccc;
+    border: none;
+    font-weight: 500;
+    font-size: 14px;
+    height: 25px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+    outline: none;
+  }
+  select option {
+    background-color: white;
+  }
+  button {
+    border: none;
+    background-color: #2196f3;
+    color: white;
+    height: 25px;
+    border-radius: 5px;
+    width: 70px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  button:hover {
+    cursor: pointer;
+    background-color: #81c4fa;
+  }
+}
+.line_flex_time {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  margin-top: 10px;
+  label {
+    margin-right: 10px;
+  }
+  input {
+    margin-right: 10px;
+  }
+  .imgsetting {
+    padding: 5px;
+  }
+  .imgsetting:hover {
+    cursor: pointer;
+  }
+}
+.line_flex {
+  display: flex;
+  background-color: white;
+  font-weight: 500;
+  align-items: center;
+  .imgsetting {
+    border-radius: 50%;
+    padding: 2px;
+  }
+  .imgsetting:hover {
+    cursor: pointer;
+    background-color: #9affb0;
+  }
+  label.timesetting {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+  label {
+    margin-left: 10px;
+  }
+  label.marginleft {
+    margin-right: 220px;
+  }
+  label.left2 {
+    margin-left: 0px;
+    margin-right: 330px;
+  }
+  label.online {
+    color: #169216;
+    animation-duration: 1000ms;
+    animation-name: onlineblink;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
   }
   label.offline {
     color: #a5a5a5;
@@ -153,30 +490,6 @@
   }
 }
 
-.box p.highlight {
-  color: #fb4f14;
-}
-.box label.title {
-  font-weight: bold;
-  font-size: 18px;
-  margin-top: 10px;
-}
-.box label.create_date {
-  color: #969696;
-  font-weight: 500;
-  float: right;
-  margin-right: 10px;
-}
-.box label.status {
-  font-weight: 500;
-  float: right;
-  margin-right: 10px;
-}
-.box label.head {
-  line-height: 40px;
-  font-size: 24px;
-  align-items: center;
-}
 .sensor_box {
   display: grid;
   background-color: white;
@@ -199,7 +512,20 @@
   width: 40px;
   height: 24px;
   top: -5px;
-  margin-bottom: -5px;
+  margin-bottom: -10px;
+}
+.switch2 {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 24px;
+  top: -5px;
+  margin-bottom: -10px;
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
 }
 
 .switch input {
@@ -275,4 +601,249 @@ input:checked + .slider:before {
 .weekDays_selector input[type="checkbox"]:checked + label {
   background: #2ad705;
   color: #ffffff;
+}
+
+.box_show {
+  background-color: white;
+  padding-left: 10px;
+  box-shadow: #00000038 5px 3px 3px;
+  line-height: 15px;
+  padding: 10px;
+  line-height: 20px;
+  font-weight: 500;
+  button {
+    border: none;
+    background-color: #2196f3;
+    color: white;
+    height: 25px;
+    border-radius: 5px;
+    width: 100%;
+  }
+  button.apply {
+    display: flex;
+    margin-left: 10px;
+    align-items: center;
+    justify-content: center;
+  }
+  button:hover {
+    cursor: pointer;
+    background-color: #81c4fa;
+  }
+  label input[type="checkbox"] {
+    display: none;
+  }
+  label input[type="checkbox"] + label {
+    display: inline-block;
+    font-size: 12px;
+    border-radius: 50%;
+    background: #dddddd;
+    height: 30px;
+    width: 30px;
+    margin-right: 3px;
+    line-height: 30px;
+    text-align: center;
+    cursor: pointer;
+  }
+  label input[type="checkbox"]:checked + label {
+    background: #2196f3;
+    color: #ffffff;
+  }
+  p.highlight {
+    color: #fb4f14;
+  }
+  label.title {
+    font-weight: bold;
+    font-size: 18px;
+    margin-top: 10px;
+  }
+  label.create_date {
+    color: #969696;
+    font-weight: 500;
+    float: right;
+    margin-right: 10px;
+  }
+  label.status {
+    font-weight: 500;
+    float: right;
+    margin-right: 10px;
+  }
+  label.head {
+    line-height: 40px;
+    font-size: 24px;
+    align-items: center;
+  }
+  label.online {
+    color: #169216;
+    animation-duration: 1000ms;
+    animation-name: onlineblink;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+  }
+  label.offline {
+    color: #a5a5a5;
+  }
+  label.problem {
+    color: red;
+  }
+  label.dayOn {
+    background-color: #2196f3;
+    color: white;
+    border-radius: 10px;
+    padding: 5px;
+    font-size: 12px;
+    margin: 3px;
+  }
+  label.dayOff {
+    background-color: #dddddd;
+    color: #a5a5a5;
+    border-radius: 10px;
+    padding: 5px;
+    font-size: 12px;
+    margin: 3px;
+  }
+  label.datatxt {
+    color: #2196f3;
+  }
+}
+.waiting {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  border-radius: 10px;
+  justify-content: space-evenly;
+  margin: auto;
+  background-color: rgb(61, 61, 61);
+  padding-left: 10px;
+  box-shadow: #00000038 5px 3px 3px;
+  padding: 10px;
+  line-height: 10px;
+  color: white;
+  font-size: 40px;
+  font-weight: 500;
+  width: 440px;
+  padding: 20px;
+  height: 650px;
+}
+.Success_button {
+  color: white;
+  background-color: #4caf50;
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  height: 30px;
+  width: 80px;
+}
+.Success_button:hover {
+  cursor: pointer;
+  background-color: #71d174;
+}
+.error_button {
+  color: white;
+  background-color: $danger;
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  height: 30px;
+  width: 80px;
+}
+.error_button:hover {
+  cursor: pointer;
+  background-color: $danger2;
+}
+.modal_wait {
+  display: none;
+  position: fixed;
+  z-index: 2;
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+//==============================waiting================================//@at-root
+.lds_dual_ring {
+  display: inline-block;
+  width: 128px;
+  height: 128px;
+  margin-left: -25px;
+}
+.lds_dual_ring:after {
+  content: " ";
+  display: block;
+  width: 128px;
+  height: 128px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid white;
+  border-color: white transparent white transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.relaypart {
+  padding: 5px;
+  border: solid 1px #c4c4c4;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  input[type="range"] {
+    width: 420px;
+  }
+}
+.relaypart_flex {
+  display: flex;
+  padding: 5px;
+  border: solid 1px #c4c4c4;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  align-items: center;
+  label.editorHead {
+    margin-left: 10px;
+    font-size: 18px;
+  }
+  label.fright {
+    margin-left: 200px;
+    margin-right: 10px;
+  }
+}
+//=========================================animation===================================/
+
+@keyframes onlineblink {
+  from {
+    color: #169216;
+  }
+  to {
+    color: #48d348;
+  }
+}
+@keyframes datatextblink {
+  from {
+    color: #169216;
+  }
+  to {
+    color: #48d348;
+  }
 }

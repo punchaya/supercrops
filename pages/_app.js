@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/globals.css";
+import "../styles/globals.scss";
 import Head from "next/head";
 import Layout from "../layout/layout";
 import firebase from "../assets/firebase";
@@ -15,6 +15,7 @@ function MyApp({ Component, pageProps }) {
             name="viewport"
             content="width=device-width, initial-scale=1.0"
           />
+          ​
         </Head>
         <Component {...pageProps} />
       </Layout>

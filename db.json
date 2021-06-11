@@ -11,16 +11,11 @@
           "status": "offline",
           "updateTime": "2021-05-06",
           "updateEvery": 30000,
-          "temp": -250,
-          "humid": 3123,
+          "temp": 2005,
+          "humid": 31,
           "mois": 50,
           "ec": 100,
           "Light": 20,
-          "relay": [
-            { "id": 1, "status": "on", "OnOffTime": "on", "OnOffData": "on" },
-            { "id": 2, "status": "on", "OnOffTime": "off", "OnOffData": "on" },
-            { "id": 3, "status": "off", "OnOffTime": "on", "OnOffData": "off" }
-          ],
           "RelayList": [
             {
               "id": 1,

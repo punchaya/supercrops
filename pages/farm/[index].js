@@ -61,6 +61,9 @@ export default function farm(props) {
     }, []);
 
     var Farm = farmList[Index];
+    useEffect(() => {
+      sessionStorage.title = "Farm " + (Index + 1) + " : " + Farm.name;
+    }, []);
     if (Farm.gateway == "yes") {
       var stylesGateway = styles.gatewayon;
     } else {
@@ -109,9 +112,9 @@ export default function farm(props) {
                 </button>
                 <div id={Farm.name + "_node" + i} className={styles.nodebox}>
                   <button>
-                    <Link href={"/node/" + (Index + 1) + (index + 1)}>
+                    <a href={"/node/farm" + (Index + 1) + "node" + (index + 1)}>
                       Edit
-                    </Link>
+                    </a>
                   </button>
                   <button
                     className={styles.close}

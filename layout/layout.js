@@ -211,7 +211,14 @@ export default function layout(props) {
                                 className={styles.dropdown_item_2rem}
                                 onClick={() => activebar(val.name + nodes)}
                               >
-                                <Link href={"/node/" + (index + 1) + (ni + 1)}>
+                                <a
+                                  href={
+                                    "/node/farm" +
+                                    (index + 1) +
+                                    "node" +
+                                    (ni + 1)
+                                  }
+                                >
                                   <div
                                     onClick={() =>
                                       titleSet(
@@ -222,7 +229,7 @@ export default function layout(props) {
                                     <NodeSvg />
                                     <label>{nodes}</label>
                                   </div>
-                                </Link>
+                                </a>
                               </div>
                             );
                           })}
