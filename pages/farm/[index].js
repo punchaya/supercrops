@@ -100,7 +100,12 @@ export default function farm(props) {
           <button id="gateway" className={stylesGateway}>
             GateWay
           </button>
-          <Image src="/farm.png" width="800px" height="500px" />
+          <Image
+            src="/farm.png"
+            width="800px"
+            height="500px"
+            placeholder="blur"
+          />
 
           {Farm.node.map((val, index) => {
             var i = index + 1;
@@ -143,6 +148,12 @@ export default function farm(props) {
         </div>
         <div className={styles.box}>
           <p>
+            <Image
+              src="/detail.png"
+              width="30px"
+              height="30px"
+              placeholder="blur"
+            />
             <label className={styles.title}>Detail Farm</label>
           </p>
           <p>ประเภทพืช: {Farm.detail.type}</p>

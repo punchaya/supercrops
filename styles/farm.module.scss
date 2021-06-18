@@ -1,56 +1,115 @@
-.body {
-  display: grid;
-  grid-template-columns: auto 300px;
-  grid-template-areas:
-    "pic btn"
-    "pic detail";
-  grid-template-rows: 65px auto;
-  font-size: 16px;
-  font-weight: 500;
-  grid-gap: 20px;
-  margin-bottom: 20px;
-  width: 1100px;
+@media only screen and (max-width: 1224px) {
+  .body {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-areas:
+      "btn"
+      "pic"
+      "detail";
+    grid-template-rows: 65px auto auto;
+    font-size: 16px;
+    font-weight: 500;
+    grid-gap: 20px;
+    margin: auto;
+    padding: 5px;
+  }
+  .nodebox {
+    display: none;
+    position: fixed;
+    background-color: #00bcdf;
+    padding-left: 10px;
+    box-shadow: #00000038 5px 3px 3px;
+    line-height: 5px;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 400;
+    left: 50;
+    width: 250px;
+  }
+  .nodebox button {
+    position: absolute;
+    height: 30px;
+    line-height: 20px;
+    font-size: 18px;
+    width: 80px;
+    left: 45%;
+    background-color: #ed7d31;
+  }
+  .nodebox button.close {
+    position: absolute;
+    line-height: 20px;
+    font-size: 18px;
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    background-color: #cf2e2e;
+    font-weight: 800;
+    left: 83%;
+  }
+  .nodebox button:hover {
+    background-color: #ec9256;
+  }
+  .nodebox button.close:hover {
+    background-color: #c75353;
+  }
 }
-.nodebox {
-  display: none;
-  position: absolute;
-  background-color: #00bcdf;
-  padding-left: 10px;
-  box-shadow: #00000038 5px 3px 3px;
-  line-height: 5px;
-  padding: 10px;
-  font-size: 16px;
-  font-weight: 400;
-  left: -250px;
-  top: -200px;
-  width: 250px;
+
+@media only screen and (min-width: 1224px) {
+  .body {
+    display: grid;
+    grid-template-columns: auto 300px;
+    grid-template-areas:
+      "pic btn"
+      "pic detail";
+    grid-template-rows: 65px auto;
+    font-size: 16px;
+    font-weight: 500;
+    grid-gap: 20px;
+    width: 1100px;
+    margin: auto;
+  }
+  .nodebox {
+    display: none;
+    position: absolute;
+    background-color: #00bcdf;
+    padding-left: 10px;
+    box-shadow: #00000038 5px 3px 3px;
+    line-height: 5px;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 400;
+    left: -250px;
+    top: -200px;
+    width: 250px;
+  }
+  .nodebox button {
+    position: absolute;
+    height: 30px;
+    line-height: 20px;
+    font-size: 18px;
+    width: 80px;
+    left: 45%;
+    background-color: #ed7d31;
+  }
+  .nodebox button.close {
+    position: absolute;
+    line-height: 20px;
+    font-size: 18px;
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    background-color: #cf2e2e;
+    font-weight: 800;
+    left: 83%;
+  }
+  .nodebox button:hover {
+    background-color: #ec9256;
+  }
+  .nodebox button.close:hover {
+    background-color: #c75353;
+  }
 }
-.nodebox button {
-  position: absolute;
-  height: 30px;
-  line-height: 20px;
-  font-size: 18px;
-  width: 80px;
-  left: 45%;
-  background-color: #ed7d31;
-}
-.nodebox button.close {
-  position: absolute;
-  line-height: 20px;
-  font-size: 18px;
-  border-radius: 50%;
-  height: 30px;
-  width: 30px;
-  background-color: #cf2e2e;
-  font-weight: 800;
-  left: 83%;
-}
-.nodebox button:hover {
-  background-color: #ec9256;
-}
-.nodebox button.close:hover {
-  background-color: #c75353;
-}
+
 .boxpic {
   grid-area: pic;
   background-color: white;
@@ -58,8 +117,8 @@
   box-shadow: #00000038 5px 3px 3px;
   line-height: 15px;
   padding: 10px;
-  max-height: 600px;
-  min-height: 600px;
+  min-height: 200px;
+  border-radius: 5px;
 }
 .box {
   background-color: white;
@@ -68,6 +127,11 @@
   line-height: 15px;
   padding: 10px;
   max-height: 600px;
+  border-radius: 5px;
+  p {
+    display: flex;
+    align-items: center;
+  }
 }
 .box p.highlight {
   color: #fb4f14;
@@ -151,6 +215,7 @@
   max-height: 600px;
   font-weight: 500;
   align-items: center;
+  border-radius: 5px;
 
   label {
     margin-left: 10px;

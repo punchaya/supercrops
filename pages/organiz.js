@@ -114,14 +114,29 @@ export default function organiz() {
   return (
     <div className={styles.body}>
       <div className={styles.title}>
-        <div className={styles.title_logo}></div>
-        <div className={styles.title_name}>Farm Name: </div>
+        <div className={styles.title_logo}>
+          <Image
+            className={styles.Head_logo_image}
+            src="/logo.jpg"
+            width="80"
+            height="80"
+          />
+        </div>
+        <div className={styles.title_name}>Farm Name: NewWorld Farm</div>
       </div>
       <div className={styles.detail}>
-        <p>Admin User: {admin.length}</p>
-        <p>Editor User: {editor.length}</p>
-        <p>View User: {view.length}</p>
-        <p>Total User: {user.length}</p>
+        <p>
+          <label>Admin User: {admin.length}</label>
+        </p>
+        <p>
+          <label>Editor User: {editor.length}</label>
+        </p>
+        <p>
+          <label>View User: {view.length}</label>
+        </p>
+        <p>
+          <label>Total User: {user.length}</label>
+        </p>
       </div>
       <div className={styles.menu}>
         {user.map((val) => {

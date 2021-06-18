@@ -15,7 +15,7 @@ function MyApp({ Component, pageProps }) {
             name="viewport"
             content="width=device-width, initial-scale=1.0"
           />
-          ​
+          <title>Super Crops</title>​
         </Head>
         <Component {...pageProps} />
       </Layout>

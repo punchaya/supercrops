@@ -2,6 +2,7 @@ import Link from "next/link";
 import React, { useEffect } from "react";
 import Layout from "../layout/layout";
 import styles from "../styles/overview.module.scss";
+import Image from "next/image";
 
 export default function overview() {
   var farm = [
@@ -68,7 +69,8 @@ export default function overview() {
           <Link href={"/farm/" + (index + 1)}>
             <div className={styles.box}>
               <p>
-                <label className={styles.title}>Farm{index + 1}</label>
+                <Image src="/layout/farm.png" width="30px" height="30px" />
+                <label className={styles.title}>Farm {index + 1}</label>
                 <label className={styles.create_date}>{val.created}</label>
               </p>
               <p>Farm Name: {val.name}</p>

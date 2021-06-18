@@ -334,18 +334,24 @@ export default function node(props) {
         } else if (relay == "Relay3") {
           var nodeRelay = tnode.relay3;
         }
-        document.getElementById(relay + "data1min").value = nodeRelay.data1.min;
-        document.getElementById(relay + "data1mintxt").innerHTML =
-          nodeRelay.data1.min;
-        document.getElementById(relay + "data1max").value = nodeRelay.data1.max;
-        document.getElementById(relay + "data1maxtxt").innerHTML =
-          nodeRelay.data1.max;
-        document.getElementById(relay + "data2min").value = nodeRelay.data2.min;
-        document.getElementById(relay + "data2mintxt").innerHTML =
-          nodeRelay.data2.min;
-        document.getElementById(relay + "data2max").value = nodeRelay.data2.max;
-        document.getElementById(relay + "data2maxtxt").innerHTML =
-          nodeRelay.data2.max;
+        if (document.getElementById(relay + "data1min") !== null) {
+          document.getElementById(relay + "data1min").value =
+            nodeRelay.data1.min;
+          document.getElementById(relay + "data1mintxt").innerHTML =
+            nodeRelay.data1.min;
+          document.getElementById(relay + "data1max").value =
+            nodeRelay.data1.max;
+          document.getElementById(relay + "data1maxtxt").innerHTML =
+            nodeRelay.data1.max;
+          document.getElementById(relay + "data2min").value =
+            nodeRelay.data2.min;
+          document.getElementById(relay + "data2mintxt").innerHTML =
+            nodeRelay.data2.min;
+          document.getElementById(relay + "data2max").value =
+            nodeRelay.data2.max;
+          document.getElementById(relay + "data2maxtxt").innerHTML =
+            nodeRelay.data2.max;
+        }
         if (document.getElementById("status" + relay) !== null) {
           if (nodeRelay.status == true) {
             document.getElementById("status" + relay).checked = true;
@@ -646,7 +652,6 @@ export default function node(props) {
             </div>
             <label>Co2 : {tnode.data.co2}</label>
           </div>
-          <div className={styles.sensor_box}></div>
         </div>
 
         <div className={styles.relay}>
@@ -755,6 +760,7 @@ export default function node(props) {
                             )
                           }
                         >
+                          <Image src="/save_white.png" width={20} height={20} />
                           Save
                         </button>
                       </div>
@@ -820,6 +826,7 @@ export default function node(props) {
                             )
                           }
                         >
+                          <Image src="/save_white.png" width={20} height={20} />
                           Save
                         </button>
                       </div>
@@ -885,6 +892,7 @@ export default function node(props) {
                             )
                           }
                         >
+                          <Image src="/save_white.png" width={20} height={20} />
                           Save
                         </button>
                       </div>
@@ -971,6 +979,7 @@ export default function node(props) {
                             )
                           }
                         >
+                          <Image src="/save_white.png" width={20} height={20} />
                           Save
                         </button>
                       </div>
@@ -1027,6 +1036,7 @@ export default function node(props) {
                             )
                           }
                         >
+                          <Image src="/save_white.png" width={20} height={20} />
                           Save
                         </button>
                       </div>
