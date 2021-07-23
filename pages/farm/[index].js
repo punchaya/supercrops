@@ -14,9 +14,9 @@ async function fetchData() {
 
 export default function farm(props) {
   const router = useRouter();
-  const [farmList, setFarmList] = useState(props.fetchedData);
-
   const Data = router.query;
+  const farmName = Data.farm;
+  const [farmList, setFarmList] = useState(props.fetchedData);
   var Index = parseInt(Data.index) - 1;
 
   //
@@ -24,29 +24,7 @@ export default function farm(props) {
     const refreshedProps = await fetchData();
     setFarmList(refreshedProps.fetchedData);
   }
-  function goSite(url) {
-    window.open(url);
-  }
-  function nodeModal(id) {
-    if (document.getElementById(id).style.display) {
-      if (document.getElementById(id).style.display == "none") {
-        document.getElementById(id).style.display = "block";
-      } else {
-        document.getElementById(id).style.display = "none";
-      }
-    } else {
-      document.getElementById(id).style.display = "block";
-    }
-  }
-  const [updateTime, setupdateTime] = useState(5000);
-  var timeout = setTimeout(reload, updateTime);
-  async function updateTimer(id) {
-    if (document.getElementById(id)) {
-      await clearTimeout(timeout);
-      var milisec = document.getElementById(id).value * 60 * 1000;
-      setupdateTime(milisec);
-    }
-  }
+
   if (Data.index != undefined) {
     useEffect(() => {
       farmList.map((farm) => {
@@ -64,108 +42,141 @@ export default function farm(props) {
     useEffect(() => {
       sessionStorage.title = "Farm " + (Index + 1) + " : " + Farm.name;
     }, []);
-    if (Farm.gateway == "yes") {
-      var stylesGateway = styles.gatewayon;
-    } else {
-      var stylesGateway = styles.gatewayoff;
-    }
-    return (
-      <div className={styles.body}>
-        <div className={styles.box_flex}>
-          <label className={styles.head}>
-            <select
-              id="updateEvery"
-              onChange={() => updateTimer("updateEvery")}
-            >
-              <option value={1} selected={true} disabled>
-                select
-              </option>
-              <option value={0.016}>1s</option>
-              <option value={0.05}>3s</option>
-              <option value={0.1}>6s</option>
-              <option value={1}>1min</option>
-              <option value={5}>5min</option>
-              <option value={10}>10min</option>
-              <option value={20}>20min</option>
-              <option value={30}>30min</option>
-              <option value={60}>60min</option>
-            </select>
-            <button onClick={reload}>Refresh</button>
-            <button onClick={() => goSite("https://google.com")}>
-              Dashboard
-            </button>
-          </label>
-        </div>
-        <div className={styles.boxpic}>
-          <button id="gateway" className={stylesGateway}>
-            GateWay
-          </button>
-          <Image
-            src="/farm.png"
-            width="800px"
-            height="500px"
-            placeholder="blur"
-          />
 
-          {Farm.node.map((val, index) => {
-            var i = index + 1;
-            var nodeStyle = "node_" + i; //ใช้ styles จาก global.css
-            return (
-              <div className={nodeStyle}>
-                <button onClick={() => nodeModal(Farm.name + "_node" + i)}>
-                  {val}
-                </button>
-                <div id={Farm.name + "_node" + i} className={styles.nodebox}>
-                  <button>
-                    <a href={"/node/farm" + (Index + 1) + "node" + (index + 1)}>
-                      Edit
-                    </a>
-                  </button>
-                  <button
-                    className={styles.close}
-                    onClick={() => nodeModal(Farm.name + "_node" + i)}
-                  >
-                    X
-                  </button>
-                  <p>Node :{i}</p>
-                  <p>Updatte Time : xx-xx-xxxx</p>
-                  <p>Create : xx-xx-xxxx</p>
-                  <p>Status : Online</p>
-                  <p>Temp : xx</p>
-                  <p>Humi : xx</p>
-                  <p>Light : xx</p>
-                  <p>Mois : xx</p>
-                  <p>EC: xx</p>
-                  <p>Relay 1 :On</p>
-                  <p>Relay 2 :On</p>
-                  <p>Relay 3 :On</p>
-                  <p>On/Off on Time : On</p>
-                  <p>On/Off on Date : On</p>
-                </div>
+    return (
+      <>
+        <div className="row">
+          <div className="x_panel">
+            <h2>
+              <i className="fa fa-home"></i>
+              <Link href="/"> หน้าหลัก</Link> /{" "}
+              <Link href={`/farm/${Index + 1}?farm=${farmName}`}>ฟาร์ม</Link>
+            </h2>
+          </div>
+        </div>
+        <div className="row">
+          <div className="x_panel">
+            <div
+              className="col-md-2 col-sm-4  tile_stats_count"
+              style={{ minWidth: "300px", marginLeft: "-10px" }}
+            >
+              <span className="count_top">
+                <h5>
+                  <i className="fa fa-home"></i> {farmName}
+                </h5>
+                <h2>จำนวนโรงเรือน</h2>
+              </span>
+              <div className="count">
+                <h3>{farmList.length}</h3>
               </div>
-            );
-          })}
+              <span className="count_bottom"></span>
+            </div>
+          </div>
         </div>
-        <div className={styles.box}>
-          <p>
-            <Image
-              src="/detail.png"
-              width="30px"
-              height="30px"
-              placeholder="blur"
-            />
-            <label className={styles.title}>Detail Farm</label>
-          </p>
-          <p>ประเภทพืช: {Farm.detail.type}</p>
-          <p>ปลูกเมื่อ: {Farm.detail.plant_date}</p>
-          <p>วันที่จะต้องเก็บเกี่ยว: {Farm.detail.havest_date}</p>
-          <p>ประเภทปุ๋ย: {Farm.detail.fertilizer}</p>
-          <p>จำนวน: {Farm.detail.amount}</p>
-          <p>ยอดเก็บเกี่ยว: {Farm.detail.havest_amount}</p>
-          <p>ราคาขาย: {Farm.detail.sell_price}</p>
-          <p>ราคาตลาด: {Farm.detail.market_price}</p>
+
+        <div className="row">
+          <div className="x_panel">
+            <div className="x_content">
+              <div>
+                <h2>โรงเรือน</h2>
+              </div>
+              <div
+                className="profile_details"
+                style={{
+                  display: "flex",
+                  gap: "40px",
+                  maxWidth: "100%",
+                  flexFlow: "row wrap",
+                }}
+              >
+                {farmList.map((farm, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="well profile_view"
+                      style={{ minWidth: "300px", width: "350px" }}
+                    >
+                      <div className="col-sm-12">
+                        <h2 className="brief">โรงเรือนที่ {index + 1}</h2>
+                        <div className="left">
+                          <ul className="list-unstyled">
+                            <li>
+                              <h4>
+                                <strong>
+                                  <i className="fa fa-tag"></i> ชื่อ :
+                                </strong>{" "}
+                                โรง 1
+                              </h4>
+                            </li>
+                          </ul>
+                          <ul className="list-unstyled">
+                            <li>
+                              <h4>
+                                <strong>
+                                  <i className="fa fa-home"></i> ไอดี :
+                                </strong>{" "}
+                                st048
+                              </h4>
+                            </li>
+                          </ul>
+                          <ul className="list-unstyled">
+                            <li>
+                              <h4>
+                                <strong>
+                                  <i className="fa fa-book"></i> แพคเกจ :
+                                </strong>{" "}
+                                test
+                              </h4>
+                            </li>
+                          </ul>
+                          <ul className="list-unstyled">
+                            <li>
+                              <h4>
+                                <strong>
+                                  <i className="fa fa-calendar"></i> วันที่สร้าง
+                                  :
+                                </strong>{" "}
+                                04/11/2020
+                              </h4>
+                            </li>
+                          </ul>
+                          <ul className="list-unstyled">
+                            <li>
+                              <h4>
+                                <strong>
+                                  <i className="fa fa-calendar-o"></i>{" "}
+                                  วันหมดอายุ :
+                                </strong>{" "}
+                                04/11/2021
+                              </h4>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div className=" bottom text-center">
+                        <div className=" col">
+                          <button
+                            style={{ marginBottom: "20px" }}
+                            type="button"
+                            className="btn btn-primary btn-sm"
+                            onClick={() =>
+                              router.push(
+                                `/station?station=${index + 1}&farm=${farmName}`
+                              )
+                            }
+                          >
+                            <i className="fa fa-eye"> </i> ดูข้อมูล
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </>
     );
   } else {
     return <div>Loading..</div>;
