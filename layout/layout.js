@@ -243,7 +243,7 @@ export default function layout(props) {
                   <ul className=" navbar-right">
                     <li
                       className="nav-item dropdown open"
-                      style={{ paddingLeft: "15px" }}
+                      style={{ paddingLeft: "15px", userSelect: "none" }}
                       onClick={toggleprofile}
                     >
                       <a
@@ -272,7 +272,9 @@ export default function layout(props) {
                             : { display: "none" }
                         }
                       >
-                        <a className="dropdown-item"> Profile</a>
+                        <Link href="/profile">
+                          <a className="dropdown-item"> Profile</a>
+                        </Link>
                         <a className="dropdown-item">
                           <span className="badge bg-red pull-right">50%</span>
                           <span>Settings</span>

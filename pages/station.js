@@ -14,6 +14,7 @@ export default function station(props) {
   if (farmName == undefined) {
     return <div>error</div>;
   }
+  const [stapopup, setstapopup] = useState(false);
   const farmList = [
     { name: "ฟาร์มภูมิใจ", location: "อุตรดิตถ์", type: "ทุเรียน" },
     { name: "เพิ่มพูลฟาร์ม", location: "สุโขทัย", type: "ลองกอง" },
@@ -22,7 +23,6 @@ export default function station(props) {
     { name: "สวนสตรอเบอรี่", location: "เพชรบูรณ์", type: "สตรอเบอรี่" },
   ];
   const nodeList = [{ name: "โหนด 1" }, { name: "โหนด 2" }, { name: "โหนด 3" }];
-
   return (
     <>
       <div className="row">
@@ -50,7 +50,7 @@ export default function station(props) {
               <h2>จำนวนโหนด</h2>
             </span>
             <div className="count">
-              <h3>{farmList.length}</h3>
+              <h3>{nodeList.length}</h3>
             </div>
             <span className="count_bottom"></span>
           </div>
@@ -70,11 +70,55 @@ export default function station(props) {
             display: "flex",
           }}
         >
-          <img
-            className="embed-responsive embed-responsive-16by9"
-            src="/16_9test.jpg"
-            style={{ maxWidth: "1200px", borderRadius: "2px" }}
-          />
+          <div style={{ position: "relative" }}>
+            <img
+              className="embed-responsive embed-responsive-16by9"
+              src="/16_9test.jpg"
+              style={{ maxWidth: "1200px", borderRadius: "2px" }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                right: "0px",
+                bottom: "0px",
+              }}
+            >
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => setstapopup(!stapopup)}
+              >
+                Detail
+              </button>
+            </div>
+            <div
+              id="stationID"
+              className="x_panel"
+              style={
+                stapopup
+                  ? {
+                      minWidth: "200px",
+                      width: "300px",
+                      position: "absolute",
+                      right: "10px",
+                      bottom: "35px",
+                    }
+                  : { display: "none" }
+              }
+            >
+              <h6>รายละเอียดโรงเรือน</h6>
+              <ul>
+                <li>ชื่อ : โรงเรือน 1 </li>
+                <li>รหัสโรงเรือน : 1234</li>
+                <li>เกทเวย์ : </li>
+                <li>การวิเคราะห์ :</li>
+                <li>บล็อกเชนต์ :</li>
+                <li>วันที่สร้าง : </li>
+                <li>แพคเกจ : </li>
+                <li>วันหมดอายุ :</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -123,7 +167,10 @@ export default function station(props) {
                       </div>
 
                       <div className="text-left">
-                        <h2>{node.name}</h2>
+                        <h2>รหัสโหนด :</h2>
+                        <h2>สถานะ :</h2>
+                        <h2>วันที่สร้าง :</h2>
+                        <h2>เวลารีเฟรช :</h2>
                       </div>
                     </div>
                     <div className=" bottom text-left">
@@ -132,7 +179,13 @@ export default function station(props) {
                           style={{ marginBottom: "20px" }}
                           type="button"
                           className="btn btn-primary btn-sm"
-                          onClick={() => router.push(`/farm/${index + 1}`)}
+                          onClick={() =>
+                            router.push(
+                              `/node?node=${
+                                index + 1
+                              }&station=${stationIndex}&farm=${farmName}`
+                            )
+                          }
                         >
                           <i className="fa fa-eye"> </i> ดูข้อมูล
                         </button>

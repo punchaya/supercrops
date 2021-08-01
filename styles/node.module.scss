@@ -345,7 +345,26 @@ $input_text: #494949;
     color: #ffffff;
   }
 }
-
+.online {
+  color: #169216;
+  animation-duration: 1000ms;
+  animation-name: onlineblink;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+.offline {
+  color: #a5a5a5;
+}
+.problem {
+  color: red;
+}
+.circle {
+  label.online {
+    background-color: blue;
+    width: 20px;
+    height: 20px;
+  }
+}
 .box_flex {
   display: flex;
   background-color: white;
