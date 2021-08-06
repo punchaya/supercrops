@@ -45,7 +45,7 @@ export default function layout(props) {
         <div className="container body">
           <div className="main_container">
             <div className="col-md-3 left_col">
-              <div className="left_col scroll-view">
+              <div className="left_col scroll-view" style={{ height: "100%" }}>
                 <div className="navbar nav_title" style={{ border: 0 }}>
                   <a
                     href="/"
@@ -162,7 +162,7 @@ export default function layout(props) {
                   alignItems: "center",
                 }}
               >
-                <div className="nav toggle">
+                <div className="nav toggle" style={{ minWidth: "50px" }}>
                   <a id="menu_toggle" onClick={toggleSidebar}>
                     <i
                       className="fa fa-bars"
@@ -261,7 +261,7 @@ export default function layout(props) {
                         }}
                       >
                         <Image src="/no-pic.png" width={30} height={30} />
-                        John Doe
+                        ผู้ใช้1 ทดสอบ
                       </a>
                       <div
                         className="dropdown-menu dropdown-usermenu pull-right"
@@ -273,15 +273,12 @@ export default function layout(props) {
                         }
                       >
                         <Link href="/profile">
-                          <a className="dropdown-item"> Profile</a>
+                          <a className="dropdown-item"> ข้อมูลส่วนตัว</a>
                         </Link>
-                        <a className="dropdown-item">
-                          <span className="badge bg-red pull-right">50%</span>
-                          <span>Settings</span>
-                        </a>
-                        <a className="dropdown-item">Help</a>
+                        <a className="dropdown-item">ช่วยเหลือ</a>
                         <a className="dropdown-item" href="login">
-                          <i className="fa fa-sign-out pull-right"></i> Log Out
+                          <i className="fa fa-sign-out pull-right"></i>{" "}
+                          ออกจากระบบ
                         </a>
                       </div>
                     </li>

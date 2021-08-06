@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import $ from "jquery";
 import "../styles/globals.scss";
 import "../styles/gentelella/vendors/bootstrap/dist/css/bootstrap.min.css";
@@ -20,6 +20,10 @@ import firebase from "../assets/firebase";
 function MyApp({ Component, pageProps }) {
   const Layout = Component.Layout ? Component.Layout : React.Fragment;
   const [test, settest] = useState("");
+  useEffect(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+  }, []);
 
   return (
     <>
@@ -30,9 +34,9 @@ function MyApp({ Component, pageProps }) {
             content="width=device-width, initial-scale=1.0"
           />
           <title>Super Crops</title>
-          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-          <meta charset="utf-8" />
-          <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+          <meta httpEquiv="Content-Type" content="text/html; charset=UTF-8" />
+          <meta charSet="utf-8" />
+          <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           ​
         </Head>

@@ -1,13 +1,41 @@
 import React from "react";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 import styles from "../styles/home.module.scss";
 import Layout from "../layout/layout";
 import Link from "next/link";
 import Image from "next/image";
-import { useMediaQuery } from "react-responsive";
 import router from "next/router";
+import { gql } from "@apollo/client";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
+import axios from "axios";
 
-export default function Home() {
-  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
+Home.getInitialProps = async function postFarm() {
+  try {
+    const response = await axios.post(
+      "http://203.151.136.127:10001/api/getFarmID/69d3a3a1-8448-4a02-9f32-0bcab693d351",
+      {
+        orgId: "O21f42baf3ce842c292092197e17002cb",
+      }
+    );
+    const res = response.data;
+    console.log(res);
+    const farm = await axios.post(
+      "http://203.151.136.127:10001/api/farmDetail/",
+      {
+        orgId: "O21f42baf3ce842c292092197e17002cb",
+        farmId: "F4227b07670ec437a9a6bde39d2530d87",
+      }
+    );
+    const farmres = farm.data;
+    console.log(farmres);
+    return { res, farmres };
+  } catch (error) {
+    return { error };
+  }
+};
+
+export default function Home(props) {
   const farmList = [
     { name: "ฟาร์มภูมิใจ", location: "อุตรดิตถ์", type: "ทุเรียน" },
     { name: "เพิ่มพูลฟาร์ม", location: "สุโขทัย", type: "ลองกอง" },

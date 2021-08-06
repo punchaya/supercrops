@@ -9,10 +9,12 @@
     "jserver": "json-server --watch db.json --port 3001"
   },
   "dependencies": {
+    "@apollo/client": "^3.4.3",
     "axios": "^0.21.1",
     "babel-plugin-inline-react-svg": "^2.0.1",
     "bootstrap-toggle": "^2.2.2",
     "firebase": "^8.4.3",
+    "graphql": "^15.5.1",
     "jquery": "^3.6.0",
     "mqtt": "^4.2.8",
     "next": "^11.0.1",
