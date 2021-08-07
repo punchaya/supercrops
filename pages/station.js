@@ -75,7 +75,7 @@ export default function station(props) {
           <div style={{ position: "relative" }}>
             <img
               className="embed-responsive embed-responsive-16by9"
-              src="/16_9test.jpg"
+              src="/station-demo.png"
               style={{ maxWidth: "1200px", borderRadius: "2px" }}
             />
             <div
