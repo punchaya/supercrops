@@ -114,7 +114,7 @@ export default function Home(props) {
                         </ul>
                       </div>
                       <div className="right col-md-5 col-sm-5 text-center">
-                        <Image src="/farm.png" width={64} height={64} />
+                        <Image src="/station-demo.png" width={108} height={64} />
                       </div>
                     </div>
                     <div className=" bottom text-right">
