@@ -58,7 +58,7 @@ export default function layout(props) {
                       width="40px"
                     />
 
-                    <span> Super Crops</span>
+                    <span>Super Crops</span>
                   </a>
                 </div>
 
@@ -86,7 +86,8 @@ export default function layout(props) {
                           onClick={() => toggleSideMenu("home")}
                         >
                           <a>
-                            <i className="glyphicon glyphicon-home"></i>{" "}
+                            {/* <i className="glyphicon glyphicon-home"></i>{" "} */}
+                            <i className="fa fa-home"></i>{" "}
                             หน้าหลัก{" "}
                           </a>
                         </li>
@@ -101,7 +102,8 @@ export default function layout(props) {
                           }}
                         >
                           <a>
-                            <i className="glyphicon glyphicon-th-large"></i>
+                            {/* <i className="glyphicon glyphicon-th-large"></i> */}
+                            <i className="fa fa-users"></i>
                             {"  "}
                             กลุ่มฟาร์ม
                           </a>
@@ -128,7 +130,7 @@ export default function layout(props) {
                     title="Organization"
                   >
                     <span
-                      className="glyphicon glyphicon-th-large"
+                      className="fa fa-users"
                       aria-hidden="true"
                     ></span>
                   </a>

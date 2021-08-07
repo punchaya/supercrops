@@ -62,9 +62,9 @@ export default function Home(props) {
             style={{ minWidth: "300px", marginLeft: "-10px" }}
           >
             <span className="count_top">
-              <h5>
-                <i className="fa fa-home"></i> จำนวนฟาร์ม
-              </h5>
+              <h2>
+                <i className="fa fa-sitemap"></i> จำนวนฟาร์ม
+              </h2>
             </span>
             <div className="count">
               <h3>{farmList.length}</h3>
@@ -78,13 +78,15 @@ export default function Home(props) {
         <div className="x_panel">
           <div className="x_content">
             <div>
-              <h2>รายชื่อฟาร์ม</h2>
+              <h2>
+                <i className="fa fa-sitemap"></i> ฟาร์มของฉัน
+              </h2>
             </div>
             <div
               className="profile_details"
               style={{
                 display: "flex",
-                gap: "40px",
+                gap: "20px",
                 maxWidth: "100%",
                 flexFlow: "row wrap",
               }}
@@ -100,12 +102,12 @@ export default function Home(props) {
                       <h4 className="brief">ฟาร์ม {index + 1}</h4>
                       <div className="left col-md-7 col-sm-7">
                         <h2>{farm.name}</h2>
-                        <p>
-                          <strong>จังหวัด: </strong> {farm.location}
-                        </p>
                         <ul className="list-unstyled">
                           <li>
-                            <i className="fa fa-heart"></i> {farm.type}
+                            <i className="fa fa-location-arrow"></i> <b> จังหวัด: </b> {farm.location}
+                          </li>
+                          <li>
+                            <i className="fa fa-leaf"></i><b> ผลผลิต: </b> {farm.type}
                           </li>
                         </ul>
                       </div>
