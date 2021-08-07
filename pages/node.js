@@ -92,8 +92,7 @@ export default function node(props) {
             <div className="col-md-3 col-sm-6  tile_stats_count">
               <span className="count_top">
                 <h2>
-                  <strong class="farmname"> {farmName} : โรงเรือนที่{" "}
-                    {stationIndex} : โหนดที่{" "}
+                  <strong class="farmname">โหนดที่{" "}
                     {nodeIndex}</strong>
                 </h2>
               </span>

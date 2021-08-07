@@ -44,7 +44,7 @@ export default function station(props) {
           >
             <span className="count_top">
               <h2>
-                <strong class="farmname"> {farmName} : โรงเรือนที่{" "}
+                <strong class="farmname">โรงเรือนที่{" "}
                   {stationIndex}</strong>
               </h2>
               <h2>
