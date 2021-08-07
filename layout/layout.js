@@ -189,71 +189,6 @@ export default function layout(props) {
                         </a>
                       </div>
                     </li>
-
-                    <li role="presentation" className="nav-item dropdown open">
-                      <ul
-                        className="dropdown-menu list-unstyled msg_list"
-                        role="menu"
-                        aria-labelledby="navbarDropdown1"
-                      >
-                        <li className="nav-item">
-                          <a className="dropdown-item">
-                            <span>
-                              <span>John Smith</span>
-                              <span className="time">3 mins ago</span>
-                            </span>
-                            <span className="message">
-                              Film festivals used to be do-or-die moments for
-                              movie makers. They were where...
-                            </span>
-                          </a>
-                        </li>
-                        <li className="nav-item">
-                          <a className="dropdown-item">
-                            <span>
-                              <span>John Smith</span>
-                              <span className="time">3 mins ago</span>
-                            </span>
-                            <span className="message">
-                              Film festivals used to be do-or-die moments for
-                              movie makers. They were where...
-                            </span>
-                          </a>
-                        </li>
-                        <li className="nav-item">
-                          <a className="dropdown-item">
-                            <span>
-                              <span>John Smith</span>
-                              <span className="time">3 mins ago</span>
-                            </span>
-                            <span className="message">
-                              Film festivals used to be do-or-die moments for
-                              movie makers. They were where...
-                            </span>
-                          </a>
-                        </li>
-                        <li className="nav-item">
-                          <a className="dropdown-item">
-                            <span>
-                              <span>John Smith</span>
-                              <span className="time">3 mins ago</span>
-                            </span>
-                            <span className="message">
-                              Film festivals used to be do-or-die moments for
-                              movie makers. They were where...
-                            </span>
-                          </a>
-                        </li>
-                        <li className="nav-item">
-                          <div className="text-center">
-                            <a className="dropdown-item">
-                              <strong>See All Alerts</strong>
-                              <i className="fa fa-angle-right"></i>
-                            </a>
-                          </div>
-                        </li>
-                      </ul>
-                    </li>
                   </ul>
                 </nav>
               </div>
@@ -263,7 +198,6 @@ export default function layout(props) {
               role="main"
               style={{ minHeight: "100vh" }}
             >
-              <div className="row" style={{ display: "inline-block" }}></div>
 
               <div id="content">{props.children}</div>
             </div>
@@ -280,7 +214,6 @@ export default function layout(props) {
               </a>{" "}
               . All rights reserved
             </div>
-            <div className="clearfix"></div>
           </footer>
         </div>
       </div>
