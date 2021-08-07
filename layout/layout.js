@@ -113,52 +113,7 @@ export default function layout(props) {
                   </div>
                 </div>
 
-                <div className="sidebar-footer hidden-small">
-                  <a
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title="Dashboard"
-                    onClick={() => alert("www.dashboard.supercrops.io")}
-                  >
-                    <span
-                      className="fa fa-desktop"
-                      aria-hidden="true"
-                    ></span>
-                  </a>
-                  <a
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title="Line Notify"
-                    onClick={() => alert("Line Notify")}
-                  >
-                    <span
-                      className="fa fa-warning"
-                      aria-hidden="true"
-                    ></span>
-                  </a>
-                  <a
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title="Line OA"
-                    onClick={() => alert("Line OA")}
-                  >
-                    <span
-                      className="fa fa-comments-o"
-                      aria-hidden="true"
-                    ></span>
-                  </a>
-                  <a
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title="Landing Page"
-                    onClick={() => alert("Landing Page")}
-                  >
-                    <span
-                      className="fa fa-globe"
-                      aria-hidden="true"
-                    ></span>
-                  </a>
-                </div>
+
               </div>
             </div>
             <div className="top_nav">
@@ -213,11 +168,23 @@ export default function layout(props) {
                         }
                       >
                         <Link href="/profile">
-                          <a className="dropdown-item"><i className="fa fa-smile-o pull-left"></i> ข้อมูลส่วนตัว</a>
+                          <a className="dropdown-item"><i className="fa fa-smile-o pull-right"></i> ข้อมูลส่วนตัว</a>
                         </Link>
-                        <a className="dropdown-item"><i className="fa fa-question pull-left"></i> ช่วยเหลือ</a>
+                        <Link href="/profile">
+                          <a className="dropdown-item"><i className="fa fa-desktop pull-right"></i> ไปยัง Dashboard</a>
+                        </Link>
+                        <Link href="/profile">
+                          <a className="dropdown-item"><i className="fa fa-warning pull-right"></i> การใช้งาน Line Notify</a>
+                        </Link>
+                        <Link href="/profile">
+                          <a className="dropdown-item"><i className="fa fa-comments-o pull-right"></i> การใช้งาน Line OA</a>
+                        </Link>
+                        <Link href="/profile">
+                          <a className="dropdown-item"><i className="fa fa-globe pull-right"></i> การใช้งาน SuperCrops</a>
+                        </Link>
+                        <a className="dropdown-item"><i className="fa fa-question pull-right"></i> Help Center</a>
                         <a className="dropdown-item" href="login">
-                          <i className="fa fa-sign-out pull-left"></i>{" "}
+                          <i className="fa fa-sign-out pull-right"></i>{" "}
                           ออกจากระบบ
                         </a>
                       </div>
