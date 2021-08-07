@@ -160,7 +160,21 @@ export default function node(props) {
         </div>
       </div>
       <div className="row">
-        <div className="x_panel"></div>
+        <div className="x_panel">
+          <div class="x_title">
+            <h2><i className="fa fa-line-chart"></i> กราฟสถิติ</h2>
+            <ul class="nav navbar-right panel_toolbox">
+              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+              </li>              
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+
+            {/* <div id="echart_scatter" style="height:350px;"></div> */}
+
+          </div>
+        </div>
       </div>
       <div id="zonebox" className="row">
         <div className="x_panel">
@@ -234,7 +248,7 @@ export default function node(props) {
                 display: "flex",
                 gap: "40px",
                 widows: "350px",
-                minWidth : "300px",
+                minWidth: "300px",
                 maxWidth: "100%",
                 flexFlow: "row wrap",
                 userSelect: "none",
@@ -246,7 +260,7 @@ export default function node(props) {
                 const [dataSetting, setdataSetting] = useState(false);
                 return (
                   <div key={index}>
-                    
+
                     <Timesetting
                       relay={relay}
                       timeSetting={timeSetting}
@@ -378,13 +392,13 @@ export default function node(props) {
                           <h2><i className="fa fa-database"></i> ตั้งค่าข้อมูล</h2>
                           <h2><i className="fa fa-sun-o"></i> แสง</h2>
                           <h2 className="brief">ค่าน้อยสุด: <strong class="minvalue">Min <i className="fa fa-long-arrow-down"></i></strong> |
-                          ค่ามากสุด: <strong class="maxvalue">Max <i className="fa fa-long-arrow-up"></i></strong></h2>
+                            ค่ามากสุด: <strong class="maxvalue">Max <i className="fa fa-long-arrow-up"></i></strong></h2>
                           <h2><i className="fa fa-fire"></i> อุณหภูมิ</h2>
                           <h2 className="brief">ค่าน้อยสุด: <strong class="minvalue">Min <i className="fa fa-long-arrow-down"></i></strong> |
-                          ค่ามากสุด: <strong class="maxvalue">Max <i className="fa fa-long-arrow-up"></i></strong></h2>
+                            ค่ามากสุด: <strong class="maxvalue">Max <i className="fa fa-long-arrow-up"></i></strong></h2>
                           <h2><i className="fa fa-tint"></i> ความชื้น</h2>
                           <h2 className="brief">ค่าน้อยสุด: <strong class="minvalue">Min <i className="fa fa-long-arrow-down"></i></strong> |
-                          ค่ามากสุด: <strong class="maxvalue">Max <i className="fa fa-long-arrow-up"></i></strong></h2>                        
+                            ค่ามากสุด: <strong class="maxvalue">Max <i className="fa fa-long-arrow-up"></i></strong></h2>
                         </div>
                       </div>
                     </div>
