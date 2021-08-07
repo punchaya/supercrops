@@ -1806,7 +1806,7 @@ h2 {
   font-size: 16px;
   font-weight: 500;
   padding-left: 10px;
-  color: #aab6aa;
+  /* color: #aab6aa; */
 }
 legend {
   padding-bottom: 7px;
@@ -1854,6 +1854,7 @@ legend {
 .brief {
   margin: 0;
   font-weight: 300;
+  color: #aab6aa;
 }
 .profile_details .profile_left {
   background: white;
@@ -5183,4 +5184,8 @@ ul.notifications {
 
 #slash {
   display: none;
+}
+
+.farmname {
+  color:#FB4F14;
 }

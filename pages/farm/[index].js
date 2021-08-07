@@ -32,10 +32,12 @@ export default function farm(props) {
             style={{ minWidth: "300px", marginLeft: "-10px" }}
           >
             <span className="count_top">
-              <h5>
-                <i className="fa fa-home"></i> {farmName}
-              </h5>
-              <h2>จำนวนโรงเรือน</h2>
+              <h2>
+                <strong class="farmname">{farmName}</strong>
+              </h2>
+              <h2>
+                <i className="fa fa-cubes"></i> จำนวนโรงเรือน
+              </h2>
             </span>
             <div className="count">
               <h3>{farmList.length}</h3>
@@ -49,7 +51,9 @@ export default function farm(props) {
         <div className="x_panel">
           <div className="x_content">
             <div>
-              <h2>โรงเรือน</h2>
+              <h2>
+                <i className="fa fa-cubes"></i> โรงเรือน
+              </h2>
             </div>
             <div
               className="profile_details"
@@ -68,15 +72,16 @@ export default function farm(props) {
                     style={{ minWidth: "300px", width: "350px" }}
                   >
                     <div className="col-sm-12">
-                      <h2 className="brief">โรงเรือนที่ {index + 1}</h2>
+                      <h4 className="brief">โรงเรือนที่ {index + 1}</h4>
                       <div className="left">
                         <ul className="list-unstyled">
                           <li>
                             <h4>
-                              <strong>
-                                <i className="fa fa-tag"></i> ชื่อ :
-                              </strong>{" "}
-                              โรง 1
+                            <strong>
+                              <i className="fa fa-tag"></i> ชื่อ :
+                              {" "}
+                              </strong>
+                              โรง 1                              
                             </h4>
                           </li>
                         </ul>
@@ -84,7 +89,7 @@ export default function farm(props) {
                           <li>
                             <h4>
                               <strong>
-                                <i className="fa fa-home"></i> ไอดี :
+                                <i className="fa fa-rss"></i> รหัส :
                               </strong>{" "}
                               st048
                             </h4>
@@ -94,7 +99,7 @@ export default function farm(props) {
                           <li>
                             <h4>
                               <strong>
-                                <i className="fa fa-book"></i> แพคเกจ :
+                                <i className="fa fa-cube"></i> แพคเกจ :
                               </strong>{" "}
                               test
                             </h4>
@@ -123,7 +128,7 @@ export default function farm(props) {
                         </ul>
                       </div>
                     </div>
-                    <div className=" bottom text-center">
+                    <div className=" bottom text-right">
                       <div className=" col">
                         <button
                           style={{ marginBottom: "20px" }}

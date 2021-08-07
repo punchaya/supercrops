@@ -99,9 +99,11 @@ export default function Home(props) {
                     style={{ minWidth: "300px", width: "350px" }}
                   >
                     <div className="col-sm-12">
-                      <h4 className="brief">ฟาร์ม {index + 1}</h4>
+                      <h4 className="brief">ฟาร์มที่ {index + 1}</h4>
                       <div className="left col-md-7 col-sm-7">
-                        <h2>{farm.name}</h2>
+                        <h2>
+                        <strong class="farmname">{farm.name}</strong>
+                        </h2>
                         <ul className="list-unstyled">
                           <li>
                             <i className="fa fa-location-arrow"></i> <b> จังหวัด: </b> {farm.location}
@@ -115,7 +117,7 @@ export default function Home(props) {
                         <Image src="/farm.png" width={64} height={64} />
                       </div>
                     </div>
-                    <div className=" bottom text-left">
+                    <div className=" bottom text-right">
                       <div className=" col">
                         <button
                           style={{ marginBottom: "20px" }}
