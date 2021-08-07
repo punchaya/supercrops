@@ -55,7 +55,7 @@ export default function layout(props) {
                     <Image
                       src="/supercropsico.png"
                       height="50px"
-                      width="50px"
+                      width="50px" 
                     />
 
                     <span>Super Crops</span>
