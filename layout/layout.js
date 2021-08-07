@@ -55,7 +55,7 @@ export default function layout(props) {
                     <Image
                       src="/supercropsico.png"
                       height="50px"
-                      width="50px" 
+                      width="50px"
                     />
 
                     <span>Super Crops</span>
@@ -275,11 +275,11 @@ export default function layout(props) {
                         }
                       >
                         <Link href="/profile">
-                          <a className="dropdown-item"> ข้อมูลส่วนตัว</a>
+                          <a className="dropdown-item"><i className="fa fa-smile-o pull-left"></i> ข้อมูลส่วนตัว</a>
                         </Link>
-                        <a className="dropdown-item">ช่วยเหลือ</a>
+                        <a className="dropdown-item"><i className="fa fa-question pull-left"></i> ช่วยเหลือ</a>
                         <a className="dropdown-item" href="login">
-                          <i className="fa fa-sign-out pull-right"></i>{" "}
+                          <i className="fa fa-sign-out pull-left"></i>{" "}
                           ออกจากระบบ
                         </a>
                       </div>

@@ -29,8 +29,8 @@ export default function station(props) {
         <div className="x_panel">
           <h2>
             <i className="fa fa-home"></i> <Link href="/">หน้าหลัก</Link> /{" "}
-            <Link href={`/farm/1?farm=${farmName}`}>ฟาร์ม</Link> /{" "}
-            <Link href={`/station?station=${stationIndex}&farm=${farmName}`}>
+            <i className="fa fa-sitemap"></i> <Link href={`/farm/1?farm=${farmName}`}>ฟาร์ม</Link> /{" "}
+            <i className="fa fa-cubes"></i><Link href={`/station?station=${stationIndex}&farm=${farmName}`}>
               โรงเรือน
             </Link>
           </h2>
@@ -43,11 +43,13 @@ export default function station(props) {
             style={{ minWidth: "300px", marginLeft: "-10px" }}
           >
             <span className="count_top">
-              <h5>
-                <i className="fa fa-home"></i> {farmName} / โรงเรือนที่{" "}
-                {stationIndex}
-              </h5>
-              <h2>จำนวนโหนด</h2>
+              <h2>
+                <strong class="farmname"> {farmName} : โรงเรือนที่{" "}
+                  {stationIndex}</strong>
+              </h2>
+              <h2>
+                <i className="fa fa-dot-circle-o"></i> จำนวนโหนด
+              </h2>
             </span>
             <div className="count">
               <h3>{nodeList.length}</h3>
@@ -88,7 +90,7 @@ export default function station(props) {
                 className="btn btn-primary"
                 onClick={() => setstapopup(!stapopup)}
               >
-                Detail
+                <i className="fa fa-info-circle"></i> รายละเอียด
               </button>
             </div>
             <div
@@ -97,25 +99,26 @@ export default function station(props) {
               style={
                 stapopup
                   ? {
-                      minWidth: "200px",
-                      width: "300px",
-                      position: "absolute",
-                      right: "10px",
-                      bottom: "35px",
-                    }
+                    minWidth: "200px",
+                    width: "250px",
+                    position: "absolute",
+                    right: "5px",
+                    bottom: "35px",
+                    borderRadius: "4px"
+                    
+                  }
                   : { display: "none" }
               }
-            >
-              <h6>รายละเอียดโรงเรือน</h6>
-              <ul>
-                <li>ชื่อ : โรงเรือน 1 </li>
-                <li>รหัสโรงเรือน : 1234</li>
-                <li>เกทเวย์ : </li>
-                <li>การวิเคราะห์ :</li>
-                <li>บล็อกเชนต์ :</li>
-                <li>วันที่สร้าง : </li>
-                <li>แพคเกจ : </li>
-                <li>วันหมดอายุ :</li>
+            >              
+              <ul className="list-unstyled">
+                <li><strong><i className="fa fa-tag"></i> ชื่อ :</strong> โรงเรือน 1 </li>
+                <li><strong><i className="fa fa-rss"></i> รหัส : </strong> 1234</li>
+                <li><strong><i className="fa fa-cloud"></i> เกทเวย์ : </strong> </li>
+                <li><strong><i className="fa fa-line-chart"></i> การวิเคราะห์ : </strong> ปิด</li>
+                <li><strong><i className="fa fa-code-fork"></i> บล็อกเชนต์ : </strong> ปิด</li>
+                <li><strong><i className="fa fa-calendar"></i> วันที่สร้าง : </strong> 20/08/2021 </li>
+                <li><strong><i className="fa fa-cube"></i> แพคเกจ : </strong> Crops </li>
+                <li><strong><i className="fa fa-calendar-o"></i> วันหมดอายุ : </strong> 20/08/2022</li>
               </ul>
             </div>
           </div>
@@ -126,7 +129,9 @@ export default function station(props) {
         <div className="x_panel">
           <div className="x_content">
             <div>
-              <h2>รายการโหนด</h2>
+              <h2>
+                <i className="fa fa-dot-circle-o"></i> รายการโหนด
+              </h2>
             </div>
             <div
               className="profile_details"
@@ -145,10 +150,10 @@ export default function station(props) {
                     className="well profile_view"
                     style={{ width: "350px", minWidth: "300px" }}
                   >
-                    <div className="col">
+                    <div className="col-sm-12">
                       <label
                         className={styles.switch2}
-                        style={{ position: "absolute", top: "0", right: "5px" }}
+                        style={{ position: "absolute", top: "0", right: "20px" }}
                       >
                         <input
                           id={"status"}
@@ -162,18 +167,43 @@ export default function station(props) {
                         />
                         <span className={styles.slider}></span>
                       </label>
-                      <div style={{ display: "flex", width: "100%" }}>
-                        <h4 className="brief">โหนดที่ {index + 1}</h4>
-                      </div>
-
-                      <div className="text-left">
-                        <h2>รหัสโหนด :</h2>
-                        <h2>สถานะ :</h2>
-                        <h2>วันที่สร้าง :</h2>
-                        <h2>เวลารีเฟรช :</h2>
+                      <div className="col-sm-12">
+                        <h4 className="brief">โหนดที่ {index + 1}</h4>                      
+                      <div className="left">
+                        <ul className="list-unstyled">
+                          <li>
+                            <h4>
+                              <strong>
+                              <i className="fa fa-rss"></i> รหัส :
+                              </strong>
+                            </h4>
+                          </li>
+                        </ul>
+                        <ul className="list-unstyled">
+                          <li>
+                            <h4>
+                            <i className="fa fa-exchange"></i> <strong>สถานะ :</strong>
+                            </h4>
+                          </li>
+                        </ul>
+                        <ul className="list-unstyled">
+                          <li>
+                            <h4>
+                            <i className="fa fa-calendar"></i> <strong>วันที่สร้าง :</strong>
+                            </h4>
+                          </li>
+                        </ul>
+                        <ul className="list-unstyled">
+                          <li>
+                            <h4>
+                            <i className="fa fa-calendar"></i> <strong>เวลารีเฟรช :</strong>
+                            </h4>
+                          </li>
+                        </ul>
                       </div>
                     </div>
-                    <div className=" bottom text-left">
+                    </div>
+                    <div className=" bottom text-right">
                       <div className=" col">
                         <button
                           style={{ marginBottom: "20px" }}
@@ -181,8 +211,7 @@ export default function station(props) {
                           className="btn btn-primary btn-sm"
                           onClick={() =>
                             router.push(
-                              `/node?node=${
-                                index + 1
+                              `/node?node=${index + 1
                               }&station=${stationIndex}&farm=${farmName}`
                             )
                           }

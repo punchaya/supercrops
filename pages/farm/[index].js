@@ -21,7 +21,7 @@ export default function farm(props) {
           <h2>
             <i className="fa fa-home"></i>
             <Link href="/"> หน้าหลัก</Link> /{" "}
-            <Link href={`/farm/${Index + 1}?farm=${farmName}`}>ฟาร์ม</Link>
+            <i className="fa fa-sitemap"></i> <Link href={`/farm/${Index + 1}?farm=${farmName}`}>ฟาร์ม</Link>
           </h2>
         </div>
       </div>
