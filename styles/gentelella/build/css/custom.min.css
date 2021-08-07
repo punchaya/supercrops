@@ -5189,3 +5189,11 @@ ul.notifications {
 .farmname {
   color:#FB4F14;
 }
+
+.minvalue {
+  color:green;
+}
+
+.maxvalue {
+  color:orangered;
+}

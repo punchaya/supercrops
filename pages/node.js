@@ -14,6 +14,7 @@ export default function node(props) {
   const Data = router.query;
   const stationIndex = Data.station;
   const nodeIndex = Data.node;
+  const relayIndex = 1;
   const farmName = Data.farm;
   if (farmName == undefined) {
     return <div>error</div>;
@@ -71,12 +72,12 @@ export default function node(props) {
         <div className="x_panel">
           <h2>
             <i className="fa fa-home"></i> <Link href="/">หน้าหลัก</Link> /{" "}
-            <Link href={`/farm/1?farm=${farmName}`}>ฟาร์ม</Link> /{" "}
-            <Link href={`/station?station=${stationIndex}&farm=${farmName}`}>
+            <i className="fa fa-sitemap"></i> <Link href={`/farm/1?farm=${farmName}`}>ฟาร์ม</Link> /{" "}
+            <i className="fa fa-cubes"></i><Link href={`/station?station=${stationIndex}&farm=${farmName}`}>
               โรงเรือน
             </Link>{" "}
             /{" "}
-            <Link
+            <i className="fa fa-dot-circle-o"></i> <Link
               href={`/node?node=${nodeIndex}&station=${stationIndex}&farm=${farmName}`}
             >
               โหนด
@@ -91,13 +92,14 @@ export default function node(props) {
             <div className="col-md-3 col-sm-6  tile_stats_count">
               <span className="count_top">
                 <h2>
-                  <i className="fa fa-home"></i>{" "}
-                  <label style={{ color: "#73879C" }}>Node ID</label>
+                  <strong class="farmname"> {farmName} : โรงเรือนที่{" "}
+                    {stationIndex} : โหนดที่{" "}
+                    {nodeIndex}</strong>
                 </h2>
               </span>
               <div>
                 <h2>
-                  <span className="count_bottom">รหัสโหนด</span>{" "}
+                  <span className="brief"><i className="fa fa-rss"></i> รหัสโหนด</span>{" "}
                   <label>ND0415</label>
                 </h2>
               </div>
@@ -106,12 +108,12 @@ export default function node(props) {
               <span className="count_top">
                 <h2 className={styles.online}>
                   <i className="fa fa-circle"></i>{" "}
-                  <label style={{ color: "#73879C" }}>Indicator Light</label>
+                  <label style={{ color: "#73879C" }}>การทำงาน</label>
                 </h2>
               </span>
               <div>
                 <h2>
-                  <span className="count_bottom">ไฟแสดงสถานะ</span>{" "}
+                  <span className="brief"> <i className="fa fa-exchange"></i>  สถานะ</span>{" "}
                   <label className={styles.online}>ออนไลน์</label>
                 </h2>
               </div>
@@ -120,13 +122,13 @@ export default function node(props) {
               <span className="count_top">
                 <h2>
                   <i className="fa fa-calendar"></i>{" "}
-                  <label style={{ color: "#73879C" }}>Create Date</label>
+                  <label style={{ color: "#73879C" }}>วันที่สร้าง</label>
                 </h2>
               </span>
               <div>
                 <h2>
-                  <span className="count_bottom">วันที่สร้าง</span>{" "}
-                  <label>20/7/2564</label>
+                  <span className="brief">วันที่</span>{" "}
+                  <label>04/11/2021</label>
                 </h2>
               </div>
             </div>
@@ -134,7 +136,7 @@ export default function node(props) {
             <div className="col-md-3 col-sm-6  tile_stats_count">
               <span className="count_top">
                 <h2>
-                  <i className="fa fa-clock-o"></i> Refresh Time
+                  <i className="fa fa-clock-o"></i> อัพเดตข้อมูล
                 </h2>
               </span>
               <div>
@@ -144,10 +146,13 @@ export default function node(props) {
                     className="form-control"
                     style={{ color: "#73879C" }}
                   >
-                    <option value="volvo">เวลารีเฟรช</option>
-                    <option value="saab">test</option>
-                    <option value="fiat">test</option>
-                    <option value="audi">test </option>
+                    <option value="volvo">เลือกเวลาอัพเดตข้อมูล</option>
+                    <option value="saab">ทุก 5 นาที</option>
+                    <option value="fiat">ทุก 10 นาที</option>
+                    <option value="audi">ทุก 15 นาที</option>
+                    <option value="audi">ทุก 20 นาที</option>
+                    <option value="audi">ทุก 25 นาที</option>
+                    <option value="audi">ทุก 30 นาที</option>
                   </select>
                 </h2>
               </div>
@@ -165,7 +170,7 @@ export default function node(props) {
             return (
               <div key={index} className="x_panel" style={{ height: "auto" }}>
                 <div className="x_title">
-                  <h2>Zone ID {zIndex}</h2>
+                  <h2><i className="fa fa-map-marker"></i> โซนที่ {zIndex}</h2>
                   <ul className="nav navbar-right panel_toolbox">
                     <li>
                       <a className="collapse-link">
@@ -199,7 +204,7 @@ export default function node(props) {
                         >
                           <div className="col">
                             <div style={{ display: "flex", width: "100%" }}>
-                              <h4 className="brief">Data Card </h4>
+                              <h2 className="brief"><i className="fa fa-sun-o"></i> แสง </h2>
                             </div>
                             <div>
                               <p>testtest2</p>
@@ -222,7 +227,7 @@ export default function node(props) {
         <div className="x_panel">
           <div className="x_content">
             <div>
-              <h2>Relay</h2>
+              <h2><i className="fa fa-random"></i> รีเลย์</h2>
             </div>
             <div
               className="profile_details"
@@ -253,7 +258,7 @@ export default function node(props) {
                     <div key={index} className="">
                       <div className="x_panel">
                         <div className="x_title">
-                          <h2>Relay ID</h2>
+                          <h2>รีเลย์ที่ {relayIndex}</h2>
                           <ul className="nav navbar-right panel_toolbox">
                             <li
                               className={setting ? "dropdown show" : "dropdown"}
@@ -286,7 +291,7 @@ export default function node(props) {
                                     setsetting(!setsetting);
                                   }}
                                 >
-                                  Time Setting
+                                  ตั้งค่าเวลา
                                 </a>
                                 <a
                                   className="dropdown-item"
@@ -295,7 +300,7 @@ export default function node(props) {
                                     setsetting(!setsetting);
                                   }}
                                 >
-                                  Data Setting
+                                  ตั้งค่าข้อมูล
                                 </a>
                               </div>
                             </li>
@@ -329,11 +334,11 @@ export default function node(props) {
                           className="x_content"
                           style={{ display: " block" }}
                         >
-                          <h4>On / Off on Time : On</h4>
-                          <h4>Time 1 : On</h4>
-                          <li>On : time | Off: time</li>
-                          <h4>
-                            <label>Day 1 :</label>{" "}
+                          <h2><i className="fa fa-clock-o"></i> ตั้งค่าเวลา</h2>
+                          <h2>รอบที่ 1 : เปิด</h2>
+                          <h2 className="brief">เปิด : <i className="fa fa-clock-o"></i> เวลา | ปิด: <i className="fa fa-clock-o"></i> เวลา</h2>
+                          <h2>
+                            <label>วัน </label>{" "}
                             <label style={dayunactive}>อา</label>{" "}
                             <label style={dayactive}>จ</label>{" "}
                             <label style={dayunactive}>อ</label>{" "}
@@ -341,11 +346,11 @@ export default function node(props) {
                             <label style={dayunactive}>พฤ</label>{" "}
                             <label style={dayunactive}>ศ</label>{" "}
                             <label style={dayactive}>ส</label>
-                          </h4>
-                          <h4>Time 2 : On</h4>
-                          <li>On : time | Off: time</li>
-                          <h4>
-                            <label>Day 2 :</label>{" "}
+                          </h2>
+                          <h2>รอบที่ 2 : ปิด</h2>
+                          <h2 className="brief">เปิด : <i className="fa fa-clock-o"></i> เวลา | ปิด: <i className="fa fa-clock-o"></i> เวลา</h2>
+                          <h2>
+                            <label>วัน </label>{" "}
                             <label style={dayunactive}>อา</label>{" "}
                             <label style={dayactive}>จ</label>{" "}
                             <label style={dayunactive}>อ</label>{" "}
@@ -353,11 +358,11 @@ export default function node(props) {
                             <label style={dayunactive}>พฤ</label>{" "}
                             <label style={dayunactive}>ศ</label>{" "}
                             <label style={dayactive}>ส</label>
-                          </h4>
-                          <h4>Time 3 : On</h4>
-                          <li>On : time | Off: time</li>
-                          <h4>
-                            <label>Day 3 :</label>{" "}
+                          </h2>
+                          <h2>รอบที่ 3 : ปิด</h2>
+                          <h2 className="brief">เปิด : <i className="fa fa-clock-o"></i> เวลา | ปิด: <i className="fa fa-clock-o"></i> เวลา</h2>
+                          <h2>
+                            <label>วัน </label>{" "}
                             <label style={dayunactive}>อา</label>{" "}
                             <label style={dayactive}>จ</label>{" "}
                             <label style={dayunactive}>อ</label>{" "}
@@ -365,17 +370,19 @@ export default function node(props) {
                             <label style={dayunactive}>พฤ</label>{" "}
                             <label style={dayunactive}>ศ</label>{" "}
                             <label style={dayactive}>ส</label>
-                          </h4>
+                          </h2>
+                          <div className="x_title"></div>
 
-                          <h4>On / Off on Data : On</h4>
-
-                          <h4>Data 1 :</h4>
-
-                          <h4>Min: value | Max: value</h4>
-
-                          <h4>Data 2 :</h4>
-
-                          <h4>Min: value | Max: value</h4>
+                          <h2><i className="fa fa-database"></i> ตั้งค่าข้อมูล</h2>
+                          <h2><i className="fa fa-sun-o"></i> แสง</h2>
+                          <h2 className="brief">ค่าน้อยสุด: <strong class="minvalue">Min <i className="fa fa-long-arrow-down"></i></strong></h2>
+                          <h2 className="brief">ค่ามากสุด: <strong class="maxvalue">Max <i className="fa fa-long-arrow-up"></i></strong></h2>
+                          <h2><i className="fa fa-fire"></i> อุณหภูมิ</h2>
+                          <h2 className="brief">ค่าน้อยสุด: <strong class="minvalue">Min <i className="fa fa-long-arrow-down"></i></strong></h2>
+                          <h2 className="brief">ค่ามากสุด: <strong class="maxvalue">Max <i className="fa fa-long-arrow-up"></i></strong></h2>
+                          <h2><i className="fa fa-tint"></i> ความชื้น</h2>
+                          <h2 className="brief">ค่าน้อยสุด: <strong class="minvalue">Min <i className="fa fa-long-arrow-down"></i></strong></h2>
+                          <h2 className="brief">ค่ามากสุด: <strong class="maxvalue">Max <i className="fa fa-long-arrow-up"></i></strong></h2>                        
                         </div>
                       </div>
                     </div>

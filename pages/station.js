@@ -112,13 +112,13 @@ export default function station(props) {
             >              
               <ul className="list-unstyled">
                 <li><strong><i className="fa fa-tag"></i> ชื่อ :</strong> โรงเรือน 1 </li>
-                <li><strong><i className="fa fa-rss"></i> รหัส : </strong> 1234</li>
-                <li><strong><i className="fa fa-cloud"></i> เกทเวย์ : </strong> </li>
+                <li><strong><i className="fa fa-rss"></i> รหัส : </strong> st048</li>
+                <li><strong><i className="fa fa-cloud"></i> เกทเวย์ : </strong> 203.168.16.1</li>
                 <li><strong><i className="fa fa-line-chart"></i> การวิเคราะห์ : </strong> ปิด</li>
                 <li><strong><i className="fa fa-code-fork"></i> บล็อกเชนต์ : </strong> ปิด</li>
-                <li><strong><i className="fa fa-calendar"></i> วันที่สร้าง : </strong> 20/08/2021 </li>
                 <li><strong><i className="fa fa-cube"></i> แพคเกจ : </strong> Crops </li>
-                <li><strong><i className="fa fa-calendar-o"></i> วันหมดอายุ : </strong> 20/08/2022</li>
+                <li><strong><i className="fa fa-calendar"></i> วันที่สร้าง : </strong> 04/11/2021 </li>
+                <li><strong><i className="fa fa-calendar-o"></i> วันหมดอายุ : </strong> 04/11/2022</li>
               </ul>
             </div>
           </div>
@@ -174,29 +174,28 @@ export default function station(props) {
                           <li>
                             <h4>
                               <strong>
-                              <i className="fa fa-rss"></i> รหัส :
-                              </strong>
+                              <i className="fa fa-rss"></i> รหัส : </strong> ND0415
                             </h4>
                           </li>
                         </ul>
                         <ul className="list-unstyled">
                           <li>
                             <h4>
-                            <i className="fa fa-exchange"></i> <strong>สถานะ :</strong>
+                            <i className="fa fa-exchange"></i> <strong>สถานะ : </strong> ออนไลน์
                             </h4>
                           </li>
                         </ul>
                         <ul className="list-unstyled">
                           <li>
                             <h4>
-                            <i className="fa fa-calendar"></i> <strong>วันที่สร้าง :</strong>
+                            <i className="fa fa-calendar"></i> <strong>วันที่สร้าง : </strong> 04/11/2021
                             </h4>
                           </li>
                         </ul>
                         <ul className="list-unstyled">
                           <li>
                             <h4>
-                            <i className="fa fa-calendar"></i> <strong>เวลารีเฟรช :</strong>
+                            <i className="fa fa-clock-o"></i> <strong>อัพเดตข้อมูล : </strong> ทุก 5 นาที
                             </h4>
                           </li>
                         </ul>

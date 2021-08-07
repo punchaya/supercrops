@@ -101,7 +101,7 @@ export default function farm(props) {
                               <strong>
                                 <i className="fa fa-cube"></i> แพคเกจ :
                               </strong>{" "}
-                              test
+                              Crops
                             </h4>
                           </li>
                         </ul>
