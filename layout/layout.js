@@ -54,8 +54,8 @@ export default function layout(props) {
                   >
                     <Image
                       src="/supercropsico.png"
-                      height="40px"
-                      width="40px"
+                      height="50px"
+                      width="50px"
                     />
 
                     <span>Super Crops</span>
@@ -262,7 +262,7 @@ export default function layout(props) {
                           justifyContent: "flex-end",
                         }}
                       >
-                        <Image src="/no-pic.png" width={30} height={30} />
+                        <Image src="/user.png" width={30} height={30} />
                         ผู้ใช้1 ทดสอบ
                       </a>
                       <div

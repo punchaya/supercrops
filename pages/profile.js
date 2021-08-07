@@ -158,7 +158,7 @@ export default function profile() {
                   className="center"
                   style={{ margin: "auto", paddingBottom: "20px" }}
                 >
-                  <Image src="/no-pic.png" width={128} height={128}></Image>
+                  <Image src="/user.png" width={128} height={128}></Image>
                 </div>
               </div>
             </div>
