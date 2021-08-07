@@ -294,7 +294,7 @@ export default function node(props) {
                                     setsetting(!setsetting);
                                   }}
                                 >
-                                  ตั้งค่าเวลา
+                                  <i className="fa fa-clock-o"></i> ตั้งค่าเวลา
                                 </a>
                                 <a
                                   className="dropdown-item"
@@ -303,7 +303,7 @@ export default function node(props) {
                                     setsetting(!setsetting);
                                   }}
                                 >
-                                  ตั้งค่าข้อมูล
+                                  <i className="fa fa-database"></i> ตั้งค่าข้อมูล
                                 </a>
                               </div>
                             </li>
@@ -378,14 +378,14 @@ export default function node(props) {
 
                           <h2><i className="fa fa-database"></i> ตั้งค่าข้อมูล</h2>
                           <h2><i className="fa fa-sun-o"></i> แสง</h2>
-                          <h2 className="brief">ค่าน้อยสุด: <strong class="minvalue">Min <i className="fa fa-long-arrow-down"></i></strong></h2>
-                          <h2 className="brief">ค่ามากสุด: <strong class="maxvalue">Max <i className="fa fa-long-arrow-up"></i></strong></h2>
+                          <h2 className="brief">ค่าน้อยสุด: <strong class="minvalue">Min <i className="fa fa-long-arrow-down"></i></strong> |
+                          ค่ามากสุด: <strong class="maxvalue">Max <i className="fa fa-long-arrow-up"></i></strong></h2>
                           <h2><i className="fa fa-fire"></i> อุณหภูมิ</h2>
-                          <h2 className="brief">ค่าน้อยสุด: <strong class="minvalue">Min <i className="fa fa-long-arrow-down"></i></strong></h2>
-                          <h2 className="brief">ค่ามากสุด: <strong class="maxvalue">Max <i className="fa fa-long-arrow-up"></i></strong></h2>
+                          <h2 className="brief">ค่าน้อยสุด: <strong class="minvalue">Min <i className="fa fa-long-arrow-down"></i></strong> |
+                          ค่ามากสุด: <strong class="maxvalue">Max <i className="fa fa-long-arrow-up"></i></strong></h2>
                           <h2><i className="fa fa-tint"></i> ความชื้น</h2>
-                          <h2 className="brief">ค่าน้อยสุด: <strong class="minvalue">Min <i className="fa fa-long-arrow-down"></i></strong></h2>
-                          <h2 className="brief">ค่ามากสุด: <strong class="maxvalue">Max <i className="fa fa-long-arrow-up"></i></strong></h2>                        
+                          <h2 className="brief">ค่าน้อยสุด: <strong class="minvalue">Min <i className="fa fa-long-arrow-down"></i></strong> |
+                          ค่ามากสุด: <strong class="maxvalue">Max <i className="fa fa-long-arrow-up"></i></strong></h2>                        
                         </div>
                       </div>
                     </div>
