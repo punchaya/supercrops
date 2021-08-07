@@ -233,7 +233,9 @@ export default function node(props) {
               className="profile_details"
               style={{
                 display: "flex",
-                gap: "10px",
+                gap: "40px",
+                widows: "350px",
+                minWidth : "300px",
                 maxWidth: "100%",
                 flexFlow: "row wrap",
                 userSelect: "none",
@@ -245,6 +247,7 @@ export default function node(props) {
                 const [dataSetting, setdataSetting] = useState(false);
                 return (
                   <div key={index}>
+                    
                     <Timesetting
                       relay={relay}
                       timeSetting={timeSetting}

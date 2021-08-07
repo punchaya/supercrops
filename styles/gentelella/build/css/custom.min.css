@@ -1770,6 +1770,7 @@ h2 {
   opacity: 1;
   -webkit-transition: all 0.2s ease;
   transition: all 0.2s ease;
+  border-radius: 4px;
 }
 .x_title {
   border-bottom: 2px solid #e6e9ed;
