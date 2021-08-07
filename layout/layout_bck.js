@@ -117,44 +117,37 @@ export default function layout(props) {
                   <a
                     data-toggle="tooltip"
                     data-placement="top"
-                    title="Dashboard"
-                    onClick={() => alert("www.dashboard.supercrops.io")}
+                    title="Settings"
                   >
                     <span
-                      className="fa fa-desktop"
+                      className="glyphicon glyphicon-cog"
                       aria-hidden="true"
                     ></span>
                   </a>
                   <a
                     data-toggle="tooltip"
                     data-placement="top"
-                    title="Line Notify"
-                    onClick={() => alert("Line Notify")}
+                    title="Organization"
                   >
                     <span
-                      className="fa fa-warning"
+                      className="fa fa-users"
+                      aria-hidden="true"
+                    ></span>
+                  </a>
+                  <a data-toggle="tooltip" data-placement="top" title="Help">
+                    <span
+                      className="glyphicon glyphicon-question-sign"
                       aria-hidden="true"
                     ></span>
                   </a>
                   <a
                     data-toggle="tooltip"
                     data-placement="top"
-                    title="Line OA"
-                    onClick={() => alert("Line OA")}
+                    title="Logout"
+                    onClick={() => alert("logout")}
                   >
                     <span
-                      className="fa fa-comments-o"
-                      aria-hidden="true"
-                    ></span>
-                  </a>
-                  <a
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title="Landing Page"
-                    onClick={() => alert("Landing Page")}
-                  >
-                    <span
-                      className="fa fa-globe"
+                      className="glyphicon glyphicon-off"
                       aria-hidden="true"
                     ></span>
                   </a>
@@ -179,6 +172,75 @@ export default function layout(props) {
                     ></i>
                   </a>
                 </div>
+                <div
+                  id="link_btn"
+                  style={{
+                    display: "flex",
+                    minWidth: "20px",
+                    overflow: "hidden",
+                    gap: "10px",
+                  }}
+                >
+                  <a
+                    href="http://dashboard.supercrops.io
+                "
+                    target="_blank"
+                  >
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      style={{
+                        marginBottom: "0px",
+                        border: "none",
+                        fontSize: "20px",
+                        minWidth: "20px",
+                        overflow: "hiden",
+                      }}
+                    >
+                      Dashboard
+                    </button>
+                  </a>
+                  <a>
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      style={{
+                        marginBottom: "0px",
+                        border: "none",
+                        fontSize: "20px",
+                      }}
+                    >
+                      Line OA
+                    </button>
+                  </a>
+                  <a>
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      style={{
+                        marginBottom: "0px",
+                        border: "none",
+                        fontSize: "20px",
+                      }}
+                    >
+                      Line Notify
+                    </button>
+                  </a>
+                  <a>
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      style={{
+                        marginBottom: "0px",
+                        border: "none",
+                        fontSize: "20px",
+                      }}
+                    >
+                      Landing
+                    </button>
+                  </a>
+                </div>
+
                 <nav className="nav navbar-nav" style={{ marginLeft: "auto" }}>
                   <ul className=" navbar-right">
                     <li
