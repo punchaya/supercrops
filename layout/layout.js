@@ -54,11 +54,11 @@ export default function layout(props) {
                   >
                     <Image
                       src="/supercropsico.png"
-                      height="40px"
-                      width="40px"
+                      height="50px"
+                      width="50px"
                     />
 
-                    <span> Super Crops</span>
+                    <span>Super Crops</span>
                   </a>
                 </div>
 
@@ -86,7 +86,8 @@ export default function layout(props) {
                           onClick={() => toggleSideMenu("home")}
                         >
                           <a>
-                            <i className="glyphicon glyphicon-home"></i>{" "}
+                            {/* <i className="glyphicon glyphicon-home"></i>{" "} */}
+                            <i className="fa fa-home"></i>{" "}
                             หน้าหลัก{" "}
                           </a>
                         </li>
@@ -101,7 +102,8 @@ export default function layout(props) {
                           }}
                         >
                           <a>
-                            <i className="glyphicon glyphicon-th-large"></i>
+                            {/* <i className="glyphicon glyphicon-th-large"></i> */}
+                            <i className="fa fa-users"></i>
                             {"  "}
                             กลุ่มฟาร์ม
                           </a>
@@ -111,45 +113,7 @@ export default function layout(props) {
                   </div>
                 </div>
 
-                <div className="sidebar-footer hidden-small">
-                  <a
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title="Settings"
-                  >
-                    <span
-                      className="glyphicon glyphicon-cog"
-                      aria-hidden="true"
-                    ></span>
-                  </a>
-                  <a
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title="Organization"
-                  >
-                    <span
-                      className="glyphicon glyphicon-th-large"
-                      aria-hidden="true"
-                    ></span>
-                  </a>
-                  <a data-toggle="tooltip" data-placement="top" title="Help">
-                    <span
-                      className="glyphicon glyphicon-question-sign"
-                      aria-hidden="true"
-                    ></span>
-                  </a>
-                  <a
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title="Logout"
-                    onClick={() => alert("logout")}
-                  >
-                    <span
-                      className="glyphicon glyphicon-off"
-                      aria-hidden="true"
-                    ></span>
-                  </a>
-                </div>
+
               </div>
             </div>
             <div className="top_nav">
@@ -170,75 +134,6 @@ export default function layout(props) {
                     ></i>
                   </a>
                 </div>
-                <div
-                  id="link_btn"
-                  style={{
-                    display: "flex",
-                    minWidth: "20px",
-                    overflow: "hidden",
-                    gap: "10px",
-                  }}
-                >
-                  <a
-                    href="http://dashboard.supercrops.io
-                "
-                    target="_blank"
-                  >
-                    <button
-                      type="button"
-                      className="btn btn-outline-secondary"
-                      style={{
-                        marginBottom: "0px",
-                        border: "none",
-                        fontSize: "20px",
-                        minWidth: "20px",
-                        overflow: "hiden",
-                      }}
-                    >
-                      Dashboard
-                    </button>
-                  </a>
-                  <a>
-                    <button
-                      type="button"
-                      className="btn btn-outline-secondary"
-                      style={{
-                        marginBottom: "0px",
-                        border: "none",
-                        fontSize: "20px",
-                      }}
-                    >
-                      Line OA
-                    </button>
-                  </a>
-                  <a>
-                    <button
-                      type="button"
-                      className="btn btn-outline-secondary"
-                      style={{
-                        marginBottom: "0px",
-                        border: "none",
-                        fontSize: "20px",
-                      }}
-                    >
-                      Line Notify
-                    </button>
-                  </a>
-                  <a>
-                    <button
-                      type="button"
-                      className="btn btn-outline-secondary"
-                      style={{
-                        marginBottom: "0px",
-                        border: "none",
-                        fontSize: "20px",
-                      }}
-                    >
-                      Landing
-                    </button>
-                  </a>
-                </div>
-
                 <nav className="nav navbar-nav" style={{ marginLeft: "auto" }}>
                   <ul className=" navbar-right">
                     <li
@@ -260,7 +155,7 @@ export default function layout(props) {
                           justifyContent: "flex-end",
                         }}
                       >
-                        <Image src="/no-pic.png" width={30} height={30} />
+                        <Image src="/user.png" width={30} height={30} />
                         ผู้ใช้1 ทดสอบ
                       </a>
                       <div
@@ -273,79 +168,26 @@ export default function layout(props) {
                         }
                       >
                         <Link href="/profile">
-                          <a className="dropdown-item"> ข้อมูลส่วนตัว</a>
+                          <a className="dropdown-item"><i className="fa fa-smile-o pull-right"></i> ข้อมูลส่วนตัว</a>
                         </Link>
-                        <a className="dropdown-item">ช่วยเหลือ</a>
+                        <Link href="/profile">
+                          <a className="dropdown-item"><i className="fa fa-desktop pull-right"></i> ไปยัง Dashboard</a>
+                        </Link>
+                        <Link href="/profile">
+                          <a className="dropdown-item"><i className="fa fa-warning pull-right"></i> การใช้งาน Line Notify</a>
+                        </Link>
+                        <Link href="/profile">
+                          <a className="dropdown-item"><i className="fa fa-comments-o pull-right"></i> การใช้งาน Line OA</a>
+                        </Link>
+                        <Link href="/profile">
+                          <a className="dropdown-item"><i className="fa fa-globe pull-right"></i> การใช้งาน SuperCrops</a>
+                        </Link>
+                        <a className="dropdown-item"><i className="fa fa-question pull-right"></i> Help Center</a>
                         <a className="dropdown-item" href="login">
                           <i className="fa fa-sign-out pull-right"></i>{" "}
                           ออกจากระบบ
                         </a>
                       </div>
-                    </li>
-
-                    <li role="presentation" className="nav-item dropdown open">
-                      <ul
-                        className="dropdown-menu list-unstyled msg_list"
-                        role="menu"
-                        aria-labelledby="navbarDropdown1"
-                      >
-                        <li className="nav-item">
-                          <a className="dropdown-item">
-                            <span>
-                              <span>John Smith</span>
-                              <span className="time">3 mins ago</span>
-                            </span>
-                            <span className="message">
-                              Film festivals used to be do-or-die moments for
-                              movie makers. They were where...
-                            </span>
-                          </a>
-                        </li>
-                        <li className="nav-item">
-                          <a className="dropdown-item">
-                            <span>
-                              <span>John Smith</span>
-                              <span className="time">3 mins ago</span>
-                            </span>
-                            <span className="message">
-                              Film festivals used to be do-or-die moments for
-                              movie makers. They were where...
-                            </span>
-                          </a>
-                        </li>
-                        <li className="nav-item">
-                          <a className="dropdown-item">
-                            <span>
-                              <span>John Smith</span>
-                              <span className="time">3 mins ago</span>
-                            </span>
-                            <span className="message">
-                              Film festivals used to be do-or-die moments for
-                              movie makers. They were where...
-                            </span>
-                          </a>
-                        </li>
-                        <li className="nav-item">
-                          <a className="dropdown-item">
-                            <span>
-                              <span>John Smith</span>
-                              <span className="time">3 mins ago</span>
-                            </span>
-                            <span className="message">
-                              Film festivals used to be do-or-die moments for
-                              movie makers. They were where...
-                            </span>
-                          </a>
-                        </li>
-                        <li className="nav-item">
-                          <div className="text-center">
-                            <a className="dropdown-item">
-                              <strong>See All Alerts</strong>
-                              <i className="fa fa-angle-right"></i>
-                            </a>
-                          </div>
-                        </li>
-                      </ul>
                     </li>
                   </ul>
                 </nav>
@@ -356,7 +198,6 @@ export default function layout(props) {
               role="main"
               style={{ minHeight: "100vh" }}
             >
-              <div className="row" style={{ display: "inline-block" }}></div>
 
               <div id="content">{props.children}</div>
             </div>
@@ -373,7 +214,6 @@ export default function layout(props) {
               </a>{" "}
               . All rights reserved
             </div>
-            <div className="clearfix"></div>
           </footer>
         </div>
       </div>

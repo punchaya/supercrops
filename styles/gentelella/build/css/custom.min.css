@@ -1770,6 +1770,7 @@ h2 {
   opacity: 1;
   -webkit-transition: all 0.2s ease;
   transition: all 0.2s ease;
+  border-radius: 4px;
 }
 .x_title {
   border-bottom: 2px solid #e6e9ed;
@@ -1805,6 +1806,8 @@ h2 {
 .x_content h4 {
   font-size: 16px;
   font-weight: 500;
+  padding-left: 10px;
+  /* color: #aab6aa; */
 }
 legend {
   padding-bottom: 7px;
@@ -1852,6 +1855,7 @@ legend {
 .brief {
   margin: 0;
   font-weight: 300;
+  color: #aab6aa;
 }
 .profile_details .profile_left {
   background: white;
@@ -2990,7 +2994,9 @@ select.parsley-error {
 .well {
   min-height: 20px;
   padding: 19px;
-  margin-bottom: 20px;
+  margin-top: 20px;
+  margin-right: 20px;
+  /* margin-bottom: 20px; */
   background-color: #f5f5f5;
   border: 1px solid #e3e3e3;
   border-radius: 4px;
@@ -5179,4 +5185,16 @@ ul.notifications {
 
 #slash {
   display: none;
+}
+
+.farmname {
+  color:#FB4F14;
+}
+
+.minvalue {
+  color:green;
+}
+
+.maxvalue {
+  color:orangered;
 }

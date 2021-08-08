@@ -34,7 +34,7 @@ export default function organizid() {
           >
             <span className="count_top">
               <h5>
-                <i className="fa fa-home"></i> จำนวนฟาร์ม
+                <i className="fa fa-sitemap"></i> จำนวนฟาร์ม
               </h5>
             </span>
             <div className="count">
