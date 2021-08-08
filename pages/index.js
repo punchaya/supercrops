@@ -102,19 +102,25 @@ export default function Home(props) {
                       <h4 className="brief">ฟาร์มที่ {index + 1}</h4>
                       <div className="left col-md-7 col-sm-7">
                         <h2>
-                        <strong class="farmname">{farm.name}</strong>
+                          <strong class="farmname">{farm.name}</strong>
                         </h2>
                         <ul className="list-unstyled">
                           <li>
-                            <i className="fa fa-location-arrow"></i> <b> จังหวัด: </b> {farm.location}
+                            <i className="fa fa-location-arrow"></i>{" "}
+                            <b> จังหวัด: </b> {farm.location}
                           </li>
                           <li>
-                            <i className="fa fa-leaf"></i><b> ผลผลิต: </b> {farm.type}
+                            <i className="fa fa-leaf"></i>
+                            <b> ผลผลิต: </b> {farm.type}
                           </li>
                         </ul>
                       </div>
                       <div className="right col-md-5 col-sm-5 text-center">
-                        <Image src="/station-demo.png" width={108} height={64} />
+                        <Image
+                          src="/station-demo.png"
+                          width={108}
+                          height={64}
+                        />
                       </div>
                     </div>
                     <div className=" bottom text-right">

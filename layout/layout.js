@@ -87,8 +87,7 @@ export default function layout(props) {
                         >
                           <a>
                             {/* <i className="glyphicon glyphicon-home"></i>{" "} */}
-                            <i className="fa fa-home"></i>{" "}
-                            หน้าหลัก{" "}
+                            <i className="fa fa-home"></i> หน้าหลัก{" "}
                           </a>
                         </li>
                       </Link>
@@ -112,8 +111,6 @@ export default function layout(props) {
                     </ul>
                   </div>
                 </div>
-
-
               </div>
             </div>
             <div className="top_nav">
@@ -168,21 +165,39 @@ export default function layout(props) {
                         }
                       >
                         <Link href="/profile">
-                          <a className="dropdown-item"><i className="fa fa-smile-o pull-right"></i> ข้อมูลส่วนตัว</a>
+                          <a className="dropdown-item">
+                            <i className="fa fa-smile-o pull-right"></i>{" "}
+                            ข้อมูลส่วนตัว
+                          </a>
                         </Link>
                         <Link href="/profile">
-                          <a className="dropdown-item"><i className="fa fa-desktop pull-right"></i> ไปยัง Dashboard</a>
+                          <a className="dropdown-item">
+                            <i className="fa fa-desktop pull-right"></i> ไปยัง
+                            Dashboard
+                          </a>
                         </Link>
                         <Link href="/profile">
-                          <a className="dropdown-item"><i className="fa fa-warning pull-right"></i> การใช้งาน Line Notify</a>
+                          <a className="dropdown-item">
+                            <i className="fa fa-warning pull-right"></i>{" "}
+                            การใช้งาน Line Notify
+                          </a>
                         </Link>
                         <Link href="/profile">
-                          <a className="dropdown-item"><i className="fa fa-comments-o pull-right"></i> การใช้งาน Line OA</a>
+                          <a className="dropdown-item">
+                            <i className="fa fa-comments-o pull-right"></i>{" "}
+                            การใช้งาน Line OA
+                          </a>
                         </Link>
                         <Link href="/profile">
-                          <a className="dropdown-item"><i className="fa fa-globe pull-right"></i> การใช้งาน SuperCrops</a>
+                          <a className="dropdown-item">
+                            <i className="fa fa-globe pull-right"></i> การใช้งาน
+                            SuperCrops
+                          </a>
                         </Link>
-                        <a className="dropdown-item"><i className="fa fa-question pull-right"></i> Help Center</a>
+                        <a className="dropdown-item">
+                          <i className="fa fa-question pull-right"></i> Help
+                          Center
+                        </a>
                         <a className="dropdown-item" href="login">
                           <i className="fa fa-sign-out pull-right"></i>{" "}
                           ออกจากระบบ
@@ -198,7 +213,6 @@ export default function layout(props) {
               role="main"
               style={{ minHeight: "100vh" }}
             >
-
               <div id="content">{props.children}</div>
             </div>
           </div>

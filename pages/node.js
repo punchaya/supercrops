@@ -8,8 +8,47 @@ import styles from "../styles/node.module.scss";
 import $ from "jquery";
 import Timesetting from "../components/Timesetting";
 import Datasetting from "../components/Datasetting";
+import { Scatter } from "react-chartjs-2";
+
+const rand = () => Math.round(Math.random() * 20 - 10);
 
 export default function node(props) {
+  const data = {
+    datasets: [
+      {
+        label: "A dataset",
+        data: [
+          { x: rand(), y: rand() },
+          { x: rand(), y: rand() },
+          { x: rand(), y: rand() },
+          { x: rand(), y: rand() },
+          { x: rand(), y: rand() },
+          { x: rand(), y: rand() },
+          { x: rand(), y: rand() },
+          { x: rand(), y: rand() },
+          { x: rand(), y: rand() },
+          { x: rand(), y: rand() },
+          { x: rand(), y: rand() },
+          { x: rand(), y: rand() },
+          { x: rand(), y: rand() },
+          { x: rand(), y: rand() },
+        ],
+        backgroundColor: "rgba(255, 99, 132, 1)",
+      },
+    ],
+  };
+
+  const options = {
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+          },
+        },
+      ],
+    },
+  };
   const router = useRouter();
   const Data = router.query;
   const stationIndex = Data.station;
@@ -72,12 +111,14 @@ export default function node(props) {
         <div className="x_panel">
           <h2>
             <i className="fa fa-home"></i> <Link href="/">หน้าหลัก</Link> /{" "}
-            <i className="fa fa-sitemap"></i> <Link href={`/farm/1?farm=${farmName}`}>ฟาร์ม</Link> /{" "}
-            <i className="fa fa-cubes"></i><Link href={`/station?station=${stationIndex}&farm=${farmName}`}>
+            <i className="fa fa-sitemap"></i>{" "}
+            <Link href={`/farm/1?farm=${farmName}`}>ฟาร์ม</Link> /{" "}
+            <i className="fa fa-cubes"></i>
+            <Link href={`/station?station=${stationIndex}&farm=${farmName}`}>
               โรงเรือน
             </Link>{" "}
-            /{" "}
-            <i className="fa fa-dot-circle-o"></i> <Link
+            / <i className="fa fa-dot-circle-o"></i>{" "}
+            <Link
               href={`/node?node=${nodeIndex}&station=${stationIndex}&farm=${farmName}`}
             >
               โหนด
@@ -92,13 +133,14 @@ export default function node(props) {
             <div className="col-md-3 col-sm-6  tile_stats_count">
               <span className="count_top">
                 <h2>
-                  <strong class="farmname">โหนดที่{" "}
-                    {nodeIndex}</strong>
+                  <strong class="farmname">โหนดที่ {nodeIndex}</strong>
                 </h2>
               </span>
               <div>
                 <h2>
-                  <span className="brief"><i className="fa fa-rss"></i> รหัสโหนด</span>{" "}
+                  <span className="brief">
+                    <i className="fa fa-rss"></i> รหัสโหนด
+                  </span>{" "}
                   <label>ND0415</label>
                 </h2>
               </div>
@@ -112,7 +154,10 @@ export default function node(props) {
               </span>
               <div>
                 <h2>
-                  <span className="brief"> <i className="fa fa-exchange"></i>  สถานะ</span>{" "}
+                  <span className="brief">
+                    {" "}
+                    <i className="fa fa-exchange"></i> สถานะ
+                  </span>{" "}
                   <label className={styles.online}>ออนไลน์</label>
                 </h2>
               </div>
@@ -162,17 +207,31 @@ export default function node(props) {
       <div className="row">
         <div className="x_panel">
           <div class="x_title">
-            <h2><i className="fa fa-line-chart"></i> กราฟสถิติ</h2>
+            <h2>
+              <i className="fa fa-line-chart"></i> กราฟสถิติ
+            </h2>
             <ul class="nav navbar-right panel_toolbox">
-              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-              </li>              
+              <li>
+                <a class="collapse-link">
+                  <i class="fa fa-chevron-up"></i>
+                </a>
+              </li>
             </ul>
             <div class="clearfix"></div>
           </div>
-          <div class="x_content">
-
-            {/* <div id="echart_scatter" style="height:350px;"></div> */}
-
+          <div
+            class="x_content"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Scatter
+              data={data}
+              options={options}
+              d="echart_scatter"
+              style={{ maxHeight: "350px", maxWidth: "600px" }}
+            />
           </div>
         </div>
       </div>
@@ -183,7 +242,9 @@ export default function node(props) {
             return (
               <div key={index} className="x_panel" style={{ height: "auto" }}>
                 <div className="x_title">
-                  <h2><i className="fa fa-map-marker"></i> โซนที่ {zIndex}</h2>
+                  <h2>
+                    <i className="fa fa-map-marker"></i> โซนที่ {zIndex}
+                  </h2>
                   <ul className="nav navbar-right panel_toolbox">
                     <li>
                       <a className="collapse-link">
@@ -217,7 +278,9 @@ export default function node(props) {
                         >
                           <div className="col">
                             <div style={{ display: "flex", width: "100%" }}>
-                              <h2 className="brief"><i className="fa fa-sun-o"></i> แสง </h2>
+                              <h2 className="brief">
+                                <i className="fa fa-sun-o"></i> แสง{" "}
+                              </h2>
                             </div>
                             <div>
                               <p>testtest2</p>
@@ -240,7 +303,9 @@ export default function node(props) {
         <div className="x_panel">
           <div className="x_content">
             <div>
-              <h2><i className="fa fa-random"></i> รีเลย์</h2>
+              <h2>
+                <i className="fa fa-random"></i> รีเลย์
+              </h2>
             </div>
             <div
               className="profile_details"
@@ -260,7 +325,6 @@ export default function node(props) {
                 const [dataSetting, setdataSetting] = useState(false);
                 return (
                   <div key={index}>
-
                     <Timesetting
                       relay={relay}
                       timeSetting={timeSetting}
@@ -316,7 +380,8 @@ export default function node(props) {
                                     setsetting(!setsetting);
                                   }}
                                 >
-                                  <i className="fa fa-database"></i> ตั้งค่าข้อมูล
+                                  <i className="fa fa-database"></i>{" "}
+                                  ตั้งค่าข้อมูล
                                 </a>
                               </div>
                             </li>
@@ -350,9 +415,14 @@ export default function node(props) {
                           className="x_content"
                           style={{ display: " block" }}
                         >
-                          <h2><i className="fa fa-clock-o"></i> ตั้งค่าเวลา</h2>
+                          <h2>
+                            <i className="fa fa-clock-o"></i> ตั้งค่าเวลา
+                          </h2>
                           <h2>รอบที่ 1 : เปิด</h2>
-                          <h2 className="brief">เปิด : <i className="fa fa-clock-o"></i> เวลา | ปิด: <i className="fa fa-clock-o"></i> เวลา</h2>
+                          <h2 className="brief">
+                            เปิด : <i className="fa fa-clock-o"></i> เวลา | ปิด:{" "}
+                            <i className="fa fa-clock-o"></i> เวลา
+                          </h2>
                           <h2>
                             <label>วัน </label>{" "}
                             <label style={dayunactive}>อา</label>{" "}
@@ -364,7 +434,10 @@ export default function node(props) {
                             <label style={dayactive}>ส</label>
                           </h2>
                           <h2>รอบที่ 2 : ปิด</h2>
-                          <h2 className="brief">เปิด : <i className="fa fa-clock-o"></i> เวลา | ปิด: <i className="fa fa-clock-o"></i> เวลา</h2>
+                          <h2 className="brief">
+                            เปิด : <i className="fa fa-clock-o"></i> เวลา | ปิด:{" "}
+                            <i className="fa fa-clock-o"></i> เวลา
+                          </h2>
                           <h2>
                             <label>วัน </label>{" "}
                             <label style={dayunactive}>อา</label>{" "}
@@ -376,7 +449,10 @@ export default function node(props) {
                             <label style={dayactive}>ส</label>
                           </h2>
                           <h2>รอบที่ 3 : ปิด</h2>
-                          <h2 className="brief">เปิด : <i className="fa fa-clock-o"></i> เวลา | ปิด: <i className="fa fa-clock-o"></i> เวลา</h2>
+                          <h2 className="brief">
+                            เปิด : <i className="fa fa-clock-o"></i> เวลา | ปิด:{" "}
+                            <i className="fa fa-clock-o"></i> เวลา
+                          </h2>
                           <h2>
                             <label>วัน </label>{" "}
                             <label style={dayunactive}>อา</label>{" "}
@@ -389,16 +465,48 @@ export default function node(props) {
                           </h2>
                           <div className="x_title"></div>
 
-                          <h2><i className="fa fa-database"></i> ตั้งค่าข้อมูล</h2>
-                          <h2><i className="fa fa-sun-o"></i> แสง</h2>
-                          <h2 className="brief">ค่าน้อยสุด: <strong class="minvalue">Min <i className="fa fa-long-arrow-down"></i></strong> |
-                            ค่ามากสุด: <strong class="maxvalue">Max <i className="fa fa-long-arrow-up"></i></strong></h2>
-                          <h2><i className="fa fa-fire"></i> อุณหภูมิ</h2>
-                          <h2 className="brief">ค่าน้อยสุด: <strong class="minvalue">Min <i className="fa fa-long-arrow-down"></i></strong> |
-                            ค่ามากสุด: <strong class="maxvalue">Max <i className="fa fa-long-arrow-up"></i></strong></h2>
-                          <h2><i className="fa fa-tint"></i> ความชื้น</h2>
-                          <h2 className="brief">ค่าน้อยสุด: <strong class="minvalue">Min <i className="fa fa-long-arrow-down"></i></strong> |
-                            ค่ามากสุด: <strong class="maxvalue">Max <i className="fa fa-long-arrow-up"></i></strong></h2>
+                          <h2>
+                            <i className="fa fa-database"></i> ตั้งค่าข้อมูล
+                          </h2>
+                          <h2>
+                            <i className="fa fa-sun-o"></i> แสง
+                          </h2>
+                          <h2 className="brief">
+                            ค่าน้อยสุด:{" "}
+                            <strong class="minvalue">
+                              Min <i className="fa fa-long-arrow-down"></i>
+                            </strong>{" "}
+                            | ค่ามากสุด:{" "}
+                            <strong class="maxvalue">
+                              Max <i className="fa fa-long-arrow-up"></i>
+                            </strong>
+                          </h2>
+                          <h2>
+                            <i className="fa fa-fire"></i> อุณหภูมิ
+                          </h2>
+                          <h2 className="brief">
+                            ค่าน้อยสุด:{" "}
+                            <strong class="minvalue">
+                              Min <i className="fa fa-long-arrow-down"></i>
+                            </strong>{" "}
+                            | ค่ามากสุด:{" "}
+                            <strong class="maxvalue">
+                              Max <i className="fa fa-long-arrow-up"></i>
+                            </strong>
+                          </h2>
+                          <h2>
+                            <i className="fa fa-tint"></i> ความชื้น
+                          </h2>
+                          <h2 className="brief">
+                            ค่าน้อยสุด:{" "}
+                            <strong class="minvalue">
+                              Min <i className="fa fa-long-arrow-down"></i>
+                            </strong>{" "}
+                            | ค่ามากสุด:{" "}
+                            <strong class="maxvalue">
+                              Max <i className="fa fa-long-arrow-up"></i>
+                            </strong>
+                          </h2>
                         </div>
                       </div>
                     </div>
