@@ -119,9 +119,7 @@ export default function Home(props) {
                           style={{ marginBottom: "20px" }}
                           type="button"
                           className="btn btn-primary btn-sm"
-                          onClick={() =>
-                            router.push(`/farm/${index + 1}?farm=${farm.name}`)
-                          }
+                          onClick={() => router.push(`/farm?farm=${farm.name}`)}
                         >
                           <i className="fa fa-eye"> </i> ดูข้อมูล
                         </button>

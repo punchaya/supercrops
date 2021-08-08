@@ -29,7 +29,7 @@ export default function station(props) {
         <div className="x_panel">
           <h2>
             <i className="fa fa-home"></i> <Link href="/">หน้าหลัก</Link> /{" "}
-            <Link href={`/farm/1?farm=${farmName}`}>ฟาร์ม</Link> /{" "}
+            <Link href={`/farm?farm=${farmName}`}>ฟาร์ม</Link> /{" "}
             <Link href={`/station?station=${stationIndex}&farm=${farmName}`}>
               โรงเรือน
             </Link>
