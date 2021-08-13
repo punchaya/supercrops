@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import Layout from "../layout/layout";
 import Link from "next/link";
 import Image from "next/image";
@@ -8,31 +8,16 @@ import styles from "../styles/node.module.scss";
 import $ from "jquery";
 import Timesetting from "../components/Timesetting";
 import Datasetting from "../components/Datasetting";
-import { Scatter } from "react-chartjs-2";
-
-const rand = () => Math.round(Math.random() * 20 - 10);
+import { Scatter, Bar } from "react-chartjs-2";
+import axios from "axios";
 
 export default function node(props) {
   const data = {
+    labels: ["a", "b", "c", "d", "e", "a", "b", "c", "d", "e"],
     datasets: [
       {
         label: "A dataset",
-        data: [
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-        ],
+        data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         backgroundColor: "rgba(255, 99, 132, 1)",
       },
     ],
@@ -49,50 +34,6 @@ export default function node(props) {
       ],
     },
   };
-  const router = useRouter();
-  const Data = router.query;
-  const stationIndex = Data.station;
-  const nodeIndex = Data.node;
-  const relayIndex = 1;
-  const farmName = Data.farm;
-  if (farmName == undefined) {
-    return <div>error</div>;
-  }
-  const farmList = [
-    { name: "ฟาร์มภูมิใจ", location: "อุตรดิตถ์", type: "ทุเรียน" },
-    { name: "เพิ่มพูลฟาร์ม", location: "สุโขทัย", type: "ลองกอง" },
-    { name: "ไร่ตันตระกูล", location: "สุโขทัย", type: "มะม่วง" },
-    { name: "ทุ่งสุขสวัสดิ์", location: "น่าน", type: "ข้าวโพด" },
-    { name: "สวนสตรอเบอรี่", location: "เพชรบูรณ์", type: "สตรอเบอรี่" },
-  ];
-  const nodeList = [{ name: "โหนด 1" }, { name: "โหนด 2" }, { name: "โหนด 3" }];
-  const relayList = ["1", "2", "3", "4"];
-
-  $(document).ready(function () {
-    $(".collapse-link").on("click", function () {
-      var $BOX_PANEL = $(this).closest(".x_panel"),
-        $ICON = $(this).find("i"),
-        $BOX_CONTENT = $BOX_PANEL.find(".x_content");
-
-      // fix for some div with hardcoded fix class
-      if ($BOX_PANEL.attr("style")) {
-        $BOX_CONTENT.slideToggle(200, function () {
-          $BOX_PANEL.removeAttr("style");
-        });
-      } else {
-        $BOX_CONTENT.slideToggle(200);
-        $BOX_PANEL.css("height", "auto");
-      }
-
-      $ICON.toggleClass("fa-chevron-up fa-chevron-down");
-    });
-
-    $(".close-link").click(function () {
-      var $BOX_PANEL = $(this).closest(".x_panel");
-
-      $BOX_PANEL.remove();
-    });
-  });
   const dayactive = {
     backgroundColor: "#007bff",
     padding: "5px",
@@ -105,24 +46,124 @@ export default function node(props) {
     borderRadius: "10%",
     color: "#5a5a5a",
   };
+  const nodeID = props.nodeID;
+  const orgID = props.orgID;
+  const farmID = props.farmID;
+  /*
+  const router = useRouter();
+  const Data = router.query;
+  const stationIndex = Data.station;
+  const nodeIndex = Data.node;
+  const relayIndex = 1;
+
+  const farmName = Data.farm;
+  if (farmName == undefined) {
+    return <div>error</div>;
+  }*/
+
+  const [nodeInfo, setnodeInfo] = useState({});
+  const [zoneIDlist, setzoneIDlist] = useState([]);
+  const [relayIDlist, setrelayIDlist] = useState([]);
+  const [relayList, setrelayList] = useState([]);
+  const [zoneList, setzoneList] = useState([]);
+  const [zoneContent, setzoneContent] = useState([]);
+
+  useEffect(async () => {
+    const _orgID = localStorage.getItem("_orgID");
+    const _farmID = localStorage.getItem("_farmID");
+    const _nodeID = localStorage.getItem("_nodeID");
+    const nodeInfo = await axios.post(
+      `http://203.151.136.127:10001/api/${_farmID}/n/${_nodeID}`,
+      {
+        orgId: _orgID,
+      }
+    );
+    const nodeInfores = nodeInfo.data;
+    setnodeInfo(nodeInfores);
+    setzoneIDlist(nodeInfores.zoneIDlist);
+    setrelayIDlist(nodeInfores.relayIDlist);
+    let z_list = [];
+    let z_cont = [];
+    for (let j = 0; j < nodeInfores.zoneIDlist.length; j++) {
+      const zoneID = nodeInfores.zoneIDlist[j];
+      const zoneres = await axios.post(
+        `http://203.151.136.127:10001/api/${_farmID}/n/${_nodeID}/data`,
+        {
+          orgId: _orgID,
+          zoneId: zoneID,
+        }
+      );
+      z_list.push(zoneres.data);
+      z_cont.push(false);
+    }
+    setzoneContent(z_cont);
+    setzoneList(z_list);
+    let r_list = [];
+    for (let i = 0; i < nodeInfores.relayIDlist.length; i++) {
+      const relayID = nodeInfores.relayIDlist[i];
+      const relay = await axios.post(
+        `http://203.151.136.127:10001/api/${_farmID}/n/${_nodeID}/relay`,
+        {
+          orgId: _orgID,
+          relayId: relayID,
+        }
+      );
+      r_list.push(relay.data);
+    }
+    setrelayList(r_list);
+  }, []);
+
+  if (typeof window === "object") {
+    $(document).ready(function () {
+      $(".collapse-link").on("click", function () {
+        var $BOX_PANEL = $(this).closest(".x_panel"),
+          $ICON = $(this).find("i"),
+          $BOX_CONTENT = $BOX_PANEL.find(".x_content");
+
+        if ($BOX_PANEL.attr("style")) {
+          $BOX_CONTENT.slideToggle(200, function () {
+            $BOX_PANEL.removeAttr("style");
+          });
+        } else {
+          $BOX_CONTENT.slideToggle(200);
+          $BOX_PANEL.css("height", "auto");
+        }
+
+        $ICON.toggleClass("fa-chevron-up fa-chevron-down");
+      });
+      $(".close-link").click(function () {
+        var $BOX_PANEL = $(this).closest(".x_panel");
+
+        $BOX_PANEL.remove();
+      });
+    });
+  }
+
+  const [setting, setsetting] = useState([]);
+  const [timeSetting, settimeSetting] = useState([]);
+
+  function zoneToggle(index) {
+    const content = document.getElementById("zidContent" + index);
+    const icon = document.getElementById("zicon" + index);
+    if (icon.className == "fa fa-chevron-up") {
+      icon.className = "fa fa-chevron-down";
+      content.style.display = "none";
+    } else {
+      icon.className = "fa fa-chevron-up";
+      content.style.display = "block";
+    }
+  }
   return (
     <>
       <div className="row">
         <div className="x_panel">
           <h2>
             <i className="fa fa-home"></i> <Link href="/">หน้าหลัก</Link> /{" "}
-            <i className="fa fa-sitemap"></i>{" "}
-            <Link href={`/farm/1?farm=${farmName}`}>ฟาร์ม</Link> /{" "}
-            <i className="fa fa-cubes"></i>
-            <Link href={`/station?station=${stationIndex}&farm=${farmName}`}>
-              โรงเรือน
-            </Link>{" "}
-            / <i className="fa fa-dot-circle-o"></i>{" "}
-            <Link
-              href={`/node?node=${nodeIndex}&station=${stationIndex}&farm=${farmName}`}
-            >
-              โหนด
-            </Link>
+            <i className="fa fa-sitemap"></i> <Link href={`/farm`}>ฟาร์ม</Link>{" "}
+            / <i className="fa fa-cubes"></i>
+            <Link href={`/station`}>โรงเรือน</Link> /{" "}
+            <i className="fa fa-dot-circle-o"></i>{" "}
+            <Link href={`/node`}>โหนด</Link>
           </h2>
         </div>
       </div>
@@ -133,7 +174,7 @@ export default function node(props) {
             <div className="col-md-3 col-sm-6  tile_stats_count">
               <span className="count_top">
                 <h2>
-                  <strong class="farmname">โหนดที่ {nodeIndex}</strong>
+                  <strong className="farmname">โหนดที่ {"nodeIndex"}</strong>
                 </h2>
               </span>
               <div>
@@ -206,39 +247,42 @@ export default function node(props) {
       </div>
       <div className="row">
         <div className="x_panel">
-          <div class="x_title">
+          <div className="x_title">
             <h2>
               <i className="fa fa-line-chart"></i> กราฟสถิติ
             </h2>
-            <ul class="nav navbar-right panel_toolbox">
+            <ul className="nav navbar-right panel_toolbox">
               <li>
-                <a class="collapse-link">
-                  <i class="fa fa-chevron-up"></i>
+                <a className="collapse-link">
+                  <i className="fa fa-chevron-up"></i>
                 </a>
               </li>
             </ul>
-            <div class="clearfix"></div>
+            <div className="clearfix"></div>
           </div>
           <div
-            class="x_content"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-            }}
+            className="x_content"
+            style={{ display: "flex", justifyContent: "center" }}
           >
-            <Scatter
+            <Bar
               data={data}
-              options={options}
-              d="echart_scatter"
-              style={{ maxHeight: "350px", maxWidth: "600px" }}
+              option={options}
+              style={{ maxWidth: "650px", maxHeight: "350px" }}
             />
           </div>
         </div>
       </div>
       <div id="zonebox" className="row">
         <div className="x_panel">
-          {nodeList.map((node, index) => {
+          {zoneList.map((zone, index) => {
+            let dataList = [];
+            const zoneData = zone[0];
             const zIndex = index + 1;
+            for (var key in zoneData) {
+              if (zoneData.hasOwnProperty(key)) {
+                dataList.push([key, zoneData[key]]);
+              }
+            }
             return (
               <div key={index} className="x_panel" style={{ height: "auto" }}>
                 <div className="x_title">
@@ -247,17 +291,24 @@ export default function node(props) {
                   </h2>
                   <ul className="nav navbar-right panel_toolbox">
                     <li>
-                      <a className="collapse-link">
-                        <i className="fa fa-chevron-up"></i>
+                      <a
+                        onClick={() => {
+                          zoneToggle(zIndex);
+                        }}
+                      >
+                        <i
+                          id={"zicon" + zIndex}
+                          className={"fa fa-chevron-down"}
+                        ></i>
                       </a>
                     </li>
                   </ul>
                   <div className="clearfix"></div>
                 </div>
                 <div
-                  id={"zidContent" + { zIndex }}
+                  id={"zidContent" + zIndex}
                   className="x_content"
-                  style={{ display: " none" }}
+                  style={{ display: "none" }}
                 >
                   <div
                     className="profile_details"
@@ -269,7 +320,7 @@ export default function node(props) {
                       userSelect: "none",
                     }}
                   >
-                    {farmList.map((node, index) => {
+                    {dataList.map((data, index) => {
                       return (
                         <div
                           key={index}
@@ -277,15 +328,17 @@ export default function node(props) {
                           style={{ width: "350px", minWidth: "300px" }}
                         >
                           <div className="col">
-                            <div style={{ display: "flex", width: "100%" }}>
+                            <div
+                              style={{
+                                display: "flex",
+                                width: "100%",
+                                flexDirection: "column",
+                              }}
+                            >
                               <h2 className="brief">
-                                <i className="fa fa-sun-o"></i> แสง{" "}
+                                <i className="fa fa-sun-o"></i> {data[0]}{" "}
                               </h2>
-                            </div>
-                            <div>
-                              <p>testtest2</p>
-                              <p>testtest2</p>
-                              <p>testtest2</p>
+                              <h4>{data[1]}</h4>
                             </div>
                           </div>
                         </div>
@@ -320,21 +373,22 @@ export default function node(props) {
               }}
             >
               {relayList.map((relay, index) => {
-                const [setting, setsetting] = useState(false);
-                const [timeSetting, settimeSetting] = useState(false);
-                const [dataSetting, setdataSetting] = useState(false);
+                const relayIndex = index + 1;
+                const setting = false;
+                const timeSetting = false;
+                const dataSetting = false;
+                function relaysetting(index) {
+                  const settingbox = document.getElementById(
+                    "rlSetting" + index
+                  );
+                  if (settingbox.className == "dropdown-menu") {
+                    settingbox.className = "dropdown-menu show";
+                  } else {
+                    settingbox.className = "dropdown-menu";
+                  }
+                }
                 return (
                   <div key={index}>
-                    <Timesetting
-                      relay={relay}
-                      timeSetting={timeSetting}
-                      settimeSetting={settimeSetting}
-                    />
-                    <Datasetting
-                      relay={relay}
-                      dataSetting={dataSetting}
-                      setdataSetting={setdataSetting}
-                    />
                     <div key={index} className="">
                       <div className="x_panel">
                         <div className="x_title">
@@ -352,16 +406,13 @@ export default function node(props) {
                                   display: "flex",
                                   alignItems: "center",
                                 }}
-                                onClick={() => setsetting(!setting)}
+                                onClick={() => relaysetting(relayIndex)}
                               >
                                 <i className="fa fa-wrench"></i>
                               </a>
                               <div
-                                className={
-                                  setting
-                                    ? "dropdown-menu show"
-                                    : "dropdown-menu"
-                                }
+                                id={"rlSetting" + relayIndex}
+                                className={"dropdown-menu"}
                                 aria-labelledby="dropdownMenuButton"
                               >
                                 <a
@@ -396,7 +447,6 @@ export default function node(props) {
                                   <input
                                     id={"status"}
                                     type="checkbox"
-                                    onClick={() => props.settest("test")}
                                     style={{
                                       width: "30px",
                                       height: "30px",
@@ -473,11 +523,11 @@ export default function node(props) {
                           </h2>
                           <h2 className="brief">
                             ค่าน้อยสุด:{" "}
-                            <strong class="minvalue">
+                            <strong className="minvalue">
                               Min <i className="fa fa-long-arrow-down"></i>
                             </strong>{" "}
                             | ค่ามากสุด:{" "}
-                            <strong class="maxvalue">
+                            <strong className="maxvalue">
                               Max <i className="fa fa-long-arrow-up"></i>
                             </strong>
                           </h2>
@@ -486,11 +536,11 @@ export default function node(props) {
                           </h2>
                           <h2 className="brief">
                             ค่าน้อยสุด:{" "}
-                            <strong class="minvalue">
+                            <strong className="minvalue">
                               Min <i className="fa fa-long-arrow-down"></i>
                             </strong>{" "}
                             | ค่ามากสุด:{" "}
-                            <strong class="maxvalue">
+                            <strong className="maxvalue">
                               Max <i className="fa fa-long-arrow-up"></i>
                             </strong>
                           </h2>
@@ -499,11 +549,11 @@ export default function node(props) {
                           </h2>
                           <h2 className="brief">
                             ค่าน้อยสุด:{" "}
-                            <strong class="minvalue">
+                            <strong className="minvalue">
                               Min <i className="fa fa-long-arrow-down"></i>
                             </strong>{" "}
                             | ค่ามากสุด:{" "}
-                            <strong class="maxvalue">
+                            <strong className="maxvalue">
                               Max <i className="fa fa-long-arrow-up"></i>
                             </strong>
                           </h2>

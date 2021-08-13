@@ -15,15 +15,53 @@ import "../styles/bootstrap-toggle.min.css";
 
 import Head from "next/head";
 import Layout from "../layout/layout";
-import firebase from "../assets/firebase";
+import { useRouter } from "next/router";
+import node from "./node";
 
 function MyApp({ Component, pageProps }) {
+  const router = useRouter();
   const Layout = Component.Layout ? Component.Layout : React.Fragment;
-  const [test, settest] = useState("");
+  const [Login, setLogin] = useState(false);
+  const [orgID, setorgID] = useState("");
+  const [userID, setuserID] = useState("");
+  const [farmID, setfarmID] = useState("");
+  const [stationID, setstationID] = useState("");
+  const [nodeID, setnodeID] = useState("");
+
   useEffect(() => {
-    localStorage.clear();
-    sessionStorage.clear();
+    const _login = localStorage.getItem("_login");
+    const _orgID = localStorage.getItem("_orgID");
+    const _userID = localStorage.getItem("_userID");
+    const _farmID = localStorage.getItem("_farmID");
+    const _stationID = localStorage.getItem("_stationID");
+    const _nodeID = localStorage.getItem("_nodeID");
+
+    setLogin(_login);
+    setorgID(_orgID);
+    setuserID(_userID);
+    setfarmID(_farmID);
+    setstationID(_stationID);
+    setnodeID(_nodeID);
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("_login", Login);
+  }, [Login]);
+  useEffect(() => {
+    localStorage.setItem("_orgID", orgID);
+  }, [orgID]);
+  useEffect(() => {
+    localStorage.setItem("_userID", userID);
+  }, [userID]);
+  useEffect(() => {
+    localStorage.setItem("_farmID", farmID);
+  }, [farmID]);
+  useEffect(() => {
+    localStorage.setItem("_stationID", stationID);
+  }, [stationID]);
+  useEffect(() => {
+    localStorage.setItem("_nodeID", nodeID);
+  }, [nodeID]);
 
   return (
     <>
@@ -40,7 +78,21 @@ function MyApp({ Component, pageProps }) {
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           ​
         </Head>
-        <Component {...pageProps} test={test} settest={settest} />
+        <Component
+          {...pageProps}
+          Login={Login}
+          setLogin={setLogin}
+          orgID={orgID}
+          setorgID={setorgID}
+          userID={userID}
+          setuserID={setuserID}
+          farmID={farmID}
+          setfarmID={setfarmID}
+          stationID={stationID}
+          setstationID={setstationID}
+          nodeID={nodeID}
+          setnodeID={setnodeID}
+        />
       </Layout>
     </>
   );

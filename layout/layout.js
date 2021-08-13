@@ -23,6 +23,11 @@ export default function layout(props) {
       setsideMenu({ home: "", organize: "active" });
     }
   }
+
+  function logout() {
+    localStorage.clear();
+  }
+
   return (
     <>
       <div id="body" className={bodyClass ? "nav-sm" : "nav-md"}>
@@ -153,7 +158,7 @@ export default function layout(props) {
                         }}
                       >
                         <Image src="/user.png" width={30} height={30} />
-                        ผู้ใช้1 ทดสอบ
+                        ผู้ใช้1 ทดสอบ{props.test}
                       </a>
                       <div
                         className="dropdown-menu dropdown-usermenu pull-right"
@@ -198,7 +203,7 @@ export default function layout(props) {
                           <i className="fa fa-question pull-right"></i> Help
                           Center
                         </a>
-                        <a className="dropdown-item" href="login">
+                        <a className="dropdown-item" onClick={logout}>
                           <i className="fa fa-sign-out pull-right"></i>{" "}
                           ออกจากระบบ
                         </a>

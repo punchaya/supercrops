@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import styles from "../styles/home.module.scss";
 import Layout from "../layout/layout";
@@ -10,32 +10,35 @@ import { gql } from "@apollo/client";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 import axios from "axios";
 
-Home.getInitialProps = async function postFarm() {
-  try {
-    const response = await axios.post(
-      "http://203.151.136.127:10001/api/getFarmID/69d3a3a1-8448-4a02-9f32-0bcab693d351",
-      {
-        orgId: "O21f42baf3ce842c292092197e17002cb",
-      }
-    );
-    const res = response.data;
-    console.log(res);
-    const farm = await axios.post(
-      "http://203.151.136.127:10001/api/farmDetail/",
-      {
-        orgId: "O21f42baf3ce842c292092197e17002cb",
-        farmId: "F4227b07670ec437a9a6bde39d2530d87",
-      }
-    );
-    const farmres = farm.data;
-    console.log(farmres);
-    return { res, farmres };
-  } catch (error) {
-    return { error };
-  }
-};
-
 export default function Home(props) {
+  const router = useRouter();
+  const [farmIdList, setfarmIdList] = useState([]);
+  const [farms, setfarms] = useState([]);
+  useEffect(async () => {
+    const response = await axios
+      .post(
+        "http://203.151.136.127:10001/api/getFarmID/69d3a3a1-8448-4a02-9f32-0bcab693d351",
+        {
+          orgId: "O21f42baf3ce842c292092197e17002cb",
+        }
+      )
+      .then((responce, error) => {
+        setfarmIdList(responce.data.farmIDlist);
+        for (let i = 0; i < responce.data.farmIDlist.length; i++) {
+          const farmid = responce.data.farmIDlist[i];
+          axios
+            .post("http://203.151.136.127:10001/api/farmDetail/", {
+              orgId: "O21f42baf3ce842c292092197e17002cb",
+              farmId: farmid,
+            })
+            .then((res, eror) => {
+              setfarms([]);
+              setfarms((farms) => [...farms, res.data]);
+              console.log(farms);
+            });
+        }
+      });
+  }, []);
   const farmList = [
     { name: "ฟาร์มภูมิใจ", location: "อุตรดิตถ์", type: "ทุเรียน" },
     { name: "เพิ่มพูลฟาร์ม", location: "สุโขทัย", type: "ลองกอง" },
@@ -91,7 +94,7 @@ export default function Home(props) {
                 flexFlow: "row wrap",
               }}
             >
-              {farmList.map((farm, index) => {
+              {farms.map((farm, index) => {
                 return (
                   <div
                     key={index}
@@ -102,16 +105,16 @@ export default function Home(props) {
                       <h4 className="brief">ฟาร์มที่ {index + 1}</h4>
                       <div className="left col-md-7 col-sm-7">
                         <h2>
-                          <strong class="farmname">{farm.name}</strong>
+                          <strong className="farmname">{farm.name}</strong>
                         </h2>
                         <ul className="list-unstyled">
                           <li>
                             <i className="fa fa-location-arrow"></i>{" "}
-                            <b> จังหวัด: </b> {farm.location}
+                            <b> จังหวัด: </b> {"ว่าง"}
                           </li>
                           <li>
                             <i className="fa fa-leaf"></i>
-                            <b> ผลผลิต: </b> {farm.type}
+                            <b> ผลผลิต: </b> {farm.description}
                           </li>
                         </ul>
                       </div>
@@ -129,7 +132,10 @@ export default function Home(props) {
                           style={{ marginBottom: "20px" }}
                           type="button"
                           className="btn btn-primary btn-sm"
-                          onClick={() => router.push(`/farm?farm=${farm.name}`)}
+                          onClick={() => {
+                            router.push(`/farm?farm=${farm.name}`);
+                            props.setfarmID(farmIdList[index]);
+                          }}
                         >
                           <i className="fa fa-eye"> </i> ดูข้อมูล
                         </button>

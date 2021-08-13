@@ -4,19 +4,49 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import styles from "../styles/farm.module.scss";
 import Link from "next/link";
+import axios from "axios";
 
 export default function farm(props) {
   const router = useRouter();
   const Data = router.query;
   const farmName = Data.farm;
+  const [stationID, setstationID] = useState([]);
+  const [stationList, setstationList] = useState([]);
   const [farmList, setFarmList] = useState([1, 2, 3, 4, 5]);
+  useEffect(() => {
+    const orgID = localStorage.getItem("_orgID");
+    const farmID = localStorage.getItem("_farmID");
+    axios
+      .post(`http://203.151.136.127:10001/api/stationMember/${farmID}`, {
+        orgId: orgID,
+      })
+      .then((res, eror) => {
+        setstationID(res.data.stationIDlist);
+        const stationIDlist = res.data.stationIDlist;
+        for (let i = 0; i < stationIDlist.length; i++) {
+          const stationID = stationIDlist[i];
+          axios
+            .post(`http://203.151.136.127:10001/api/detail/${farmID}`, {
+              orgId: orgID,
+              stationId: stationID,
+            })
+            .then((res, error) => {
+              setstationList([]);
+              setstationList((stationList) => [...stationList, res.data]);
+            });
+        }
+      });
+  }, []);
+
+  //
+
   return (
     <>
       <div className="row">
         <div className="x_panel">
           <h2>
             <i className="fa fa-home"></i>
-            <Link href="/"> หน้าหลัก</Link> /{" "}
+            <Link href="/"> หน้าหลัก</Link> / <i className="fa fa-sitemap"></i>{" "}
             <Link href={`/farm?farm=${farmName}`}>ฟาร์ม</Link>
           </h2>
         </div>
@@ -28,13 +58,15 @@ export default function farm(props) {
             style={{ minWidth: "300px", marginLeft: "-10px" }}
           >
             <span className="count_top">
-              <h5>
-                <i className="fa fa-home"></i> {farmName}
-              </h5>
-              <h2>จำนวนโรงเรือน</h2>
+              <h2>
+                <strong className="farmname">{farmName}</strong>
+              </h2>
+              <h2>
+                <i className="fa fa-cubes"></i> จำนวนโรงเรือน
+              </h2>
             </span>
             <div className="count">
-              <h3>{farmList.length}</h3>
+              <h3>{stationID.length}</h3>
             </div>
             <span className="count_bottom"></span>
           </div>
@@ -45,7 +77,9 @@ export default function farm(props) {
         <div className="x_panel">
           <div className="x_content">
             <div>
-              <h2>โรงเรือน</h2>
+              <h2>
+                <i className="fa fa-cubes"></i> โรงเรือน
+              </h2>
             </div>
             <div
               className="profile_details"
@@ -56,23 +90,23 @@ export default function farm(props) {
                 flexFlow: "row wrap",
               }}
             >
-              {farmList.map((farm, index) => {
+              {stationList.map((station, index) => {
                 return (
                   <div
                     key={index}
                     className="well profile_view"
-                    style={{ minWidth: "300px", width: "350px" }}
+                    style={{ minWidth: "320px", width: "400px" }}
                   >
                     <div className="col-sm-12">
-                      <h2 className="brief">โรงเรือนที่ {index + 1}</h2>
+                      <h4 className="brief">โรงเรือนที่ {index + 1}</h4>
                       <div className="left">
                         <ul className="list-unstyled">
                           <li>
                             <h4>
                               <strong>
-                                <i className="fa fa-tag"></i> ชื่อ :
-                              </strong>{" "}
-                              โรง 1
+                                <i className="fa fa-tag"></i> ชื่อ :{" "}
+                              </strong>
+                              {station.name}
                             </h4>
                           </li>
                         </ul>
@@ -80,9 +114,9 @@ export default function farm(props) {
                           <li>
                             <h4>
                               <strong>
-                                <i className="fa fa-home"></i> ไอดี :
+                                <i className="fa fa-rss"></i> รหัส :
                               </strong>{" "}
-                              st048
+                              {station.stationID}
                             </h4>
                           </li>
                         </ul>
@@ -90,9 +124,9 @@ export default function farm(props) {
                           <li>
                             <h4>
                               <strong>
-                                <i className="fa fa-book"></i> แพคเกจ :
+                                <i className="fa fa-cube"></i> แพคเกจ :
                               </strong>{" "}
-                              test
+                              {station.package}
                             </h4>
                           </li>
                         </ul>
@@ -102,7 +136,7 @@ export default function farm(props) {
                               <strong>
                                 <i className="fa fa-calendar"></i> วันที่สร้าง :
                               </strong>{" "}
-                              04/11/2020
+                              {station.createDate}
                             </h4>
                           </li>
                         </ul>
@@ -113,23 +147,24 @@ export default function farm(props) {
                                 <i className="fa fa-calendar-o"></i> วันหมดอายุ
                                 :
                               </strong>{" "}
-                              04/11/2021
+                              {station.expireDate}
                             </h4>
                           </li>
                         </ul>
                       </div>
                     </div>
-                    <div className=" bottom text-center">
+                    <div className=" bottom text-right">
                       <div className=" col">
                         <button
                           style={{ marginBottom: "20px" }}
                           type="button"
                           className="btn btn-primary btn-sm"
-                          onClick={() =>
+                          onClick={() => {
                             router.push(
                               `/station?station=${index + 1}&farm=${farmName}`
-                            )
-                          }
+                            );
+                            props.setstationID(station.stationID);
+                          }}
                         >
                           <i className="fa fa-eye"> </i> ดูข้อมูล
                         </button>

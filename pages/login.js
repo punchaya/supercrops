@@ -4,11 +4,13 @@ import Image from "next/image";
 import router from "next/router";
 import axios from "axios";
 
-export default function login() {
+export default function login(props) {
   function login() {
     var email = document.getElementById("login_email").value;
     var pass = document.getElementById("login_pass").value;
-    router.push("./");
+    props.setorgID("O21f42baf3ce842c292092197e17002cb");
+    props.setLogin(true);
+    router.push("/");
   }
   function register() {
     var username = document.getElementById("reg_Username").value;
@@ -27,12 +29,12 @@ export default function login() {
     alert(email);
   }
   return (
-    <body className="login">
+    <body style={{ backgroundColor: "white", width: "100vw", height: "100vh" }}>
       <a className="hiddenanchor" id="signup"></a>
       <a className="hiddenanchor" id="signin"></a>
       <a className="hiddenanchor" id="repassword"></a>
 
-      <div className="login_wrapper">
+      <div className="login_wrapper" style={{ backgroundColor: "white" }}>
         <div className="animate form login_form">
           <section className="login_content">
             <div
@@ -42,9 +44,9 @@ export default function login() {
                 gap: "10px",
               }}
             >
-              <p>
+              <div>
                 <Image src="/supercrops.png" height="80px" width="80px" />
-              </p>
+              </div>
               <h1>ลงชื่อเข้าใช้งาน</h1>
               <div>
                 <input
