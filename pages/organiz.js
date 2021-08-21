@@ -120,7 +120,7 @@ export default function organiz() {
         >
           <span className="count_top">
             <h2>
-              <i className="fa fa-users"></i> จำนวนกลุ่มฟาร์ม
+              <i className="fa fa-users"></i> จำนวนสมาชิกกลุ่ม
             </h2>
           </span>
           <div className="count">
@@ -152,7 +152,7 @@ export default function organiz() {
                   style={{ minWidth: "300px", width: "350px" }}
                 >
                   <div className="col-sm-12">
-                    <h4 className="brief">กลุ่มฟาร์มที่ {index + 1}</h4>
+                    <h4 className="brief">สมาชิกคนที่ {index + 1}</h4>
                     <div className="left col-md-7 col-sm-7">
                       <h2>
                         <strong className="farmname">{val.name}</strong>
@@ -192,10 +192,10 @@ export default function organiz() {
                       <button
                         style={{ marginBottom: "20px" }}
                         type="button"
-                        className="btn btn-primary btn-sm"
+                        className="btn btn-danger btn-sm"
                         onClick={() =>
                           removeUser(val.id)}
-                      ><i className="fa fa-sign-out"> </i> ออกจากกลุ่ม
+                      ><i className="fa fa-remove"> </i> ลบ
                       </button>
 
                     </div>
@@ -203,9 +203,172 @@ export default function organiz() {
                 </div>
               );
             })}
+            <div
+              className="well profile_view"
+              style={{ minWidth: "300px", width: "350px" }}
+            >
+              <div className="col-sm-12">
+                <h4 className="brief">เพิ่มสมาชิกใหม่</h4>
+                <div className="left col-md-7 col-sm-7">
+                  <h2>
+                    <strong className="newusername">{"สมาชิกใหม่"}</strong>
+                  </h2>
+                  <ul className="list-unstyled">
+                    <li>
+                      <i className="fa fa-user"></i>{" "}
+                      <b> สิทธิ์ผู้ใช้งาน: </b> {"ยังไม่กำหนด"}
+                    </li>
+
+                  </ul>
+                </div>
+                <div className="right col-md-5 col-sm-5 text-center">
+                  <Image
+                    src="/user.png"
+                    width={64}
+                    height={64}
+                  />
+                </div>
+              </div>
+              <div className=" bottom text-right">
+                <div className=" col">
+                  <button
+                    style={{ marginBottom: "20px" }}
+                    type="button"
+                    className="btn btn-primary btn-sm"
+                    onClick={() => modalOn("createUser", 0)}
+                  >
+                    <i className="fa fa-plus"> </i> เพิ่มสมาชิกใหม่
+                  </button>
+
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+      {/*===============================Modal=============================*/}
+      <div id="createUser" className={styles.modal}>
+        <div className={styles.modal_content}>
+          <div className="newuser-card">
+            <h2>
+              <strong className="newusername">{"สมาชิกใหม่"}</strong>
+            </h2>
+          </div>
+          <Image
+            className={styles.menu_pic_image}
+            src="/user.png"
+            width="80"
+            height="80"
+          />
+          <p className={styles.pic_change}><i className="fa fa-camera"> </i> เปลี่ยน</p>
+          <div className={styles.modal_form}>
+            <label class="newuser-label">ชื่อ</label>
+            <input
+              id="reg_Username"
+              type="text"
+              className="form-control"
+              required=""
+            />
+            <label class="newuser-label">อีเมล</label>
+            <input
+              id="reg_email"
+              type="email"
+              className="form-control"
+              required=""
+            />
+            <label class="newuser-label">รหัสผ่าน</label>
+            <input
+              id="reg_pass"
+              type="password"
+              className="form-control"
+              required=""
+            />
+            <label class="newuser-label">สิทธิ์ผู้ใช้งาน</label>
+            <select id="newUserrole">
+              <option class="newuser-label">---</option>
+              <option class="newuser-label">Admin</option>
+              <option class="newuser-label">Editor</option>
+              <option class="newuser-label">View</option>
+            </select>
+          </div>
+          <div className={styles.modal_btn}>
+            <button
+              type="button"
+              className="btn btn-primary btn-sm"
+              onClick={() => addUser(genid)}
+            >บันทึก
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary btn-sm"
+              onClick={() => modalOff("createUser")}
+            >ยกเลิก
+            </button>
+          </div>
+        </div>
+      </div>
+      <div id="editUser" className={styles.modal}>
+        <div className={styles.modal_content}>
+          <div className="newuser-card">
+            <h2>
+              <strong className="newusername">{"แก้ไขข้อมูลสมาชิก"}</strong>
+            </h2>
+          </div>
+          <Image
+            className={styles.menu_pic_image}
+            src="/user.png"
+            width="80"
+            height="80"
+          />
+          <p className={styles.pic_change}><i className="fa fa-camera"> </i> เปลี่ยน</p>
+          <input id="hiden_value" className={styles.hiden} />
+          <div className={styles.modal_form}>
+            <label class="newuser-label">ชื่อ</label>
+            <input
+              id="modal_edit_username"
+              type="text"
+              className="form-control"
+              required=""
+            />
+            <label class="newuser-label">อีเมล</label>
+            <input
+              id="reg_email"
+              type="email"
+              className="form-control"
+              required=""
+            />
+            <label class="newuser-label">รหัสผ่าน</label>
+            <input
+              id="modal_edit_role"
+              type="password"
+              className="form-control"
+              required=""
+            />
+            <label class="newuser-label">สิทธิ์ผู้ใช้งาน</label>
+            <select id="modal_edit_role">
+              <option class="newuser-label">---</option>
+              <option class="newuser-label">Admin</option>
+              <option class="newuser-label">Editor</option>
+              <option class="newuser-label">View</option>
+            </select>
+          </div>
+          <div className={styles.modal_btn}>
+            <button
+              type="button"
+              className="btn btn-primary btn-sm"
+              onClick={editUser}>
+              บันทึก
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary btn-sm"
+              onClick={() => modalOff("editUser")}>
+              ยกเลิก
+            </button>
+          </div>
+        </div>
+      </div>
+      {/*==========================_End_Of_Modal_=========================*/}
     </div>
 
 
