@@ -34,7 +34,6 @@ export default function Home(props) {
             .then((res, eror) => {
               setfarms([]);
               setfarms((farms) => [...farms, res.data]);
-              console.log(farms);
             });
         }
       });
