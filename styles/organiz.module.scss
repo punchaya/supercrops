@@ -95,7 +95,7 @@
   }
   .menu_btn button {
     color: white;
-    background-color: #fb4f14;
+    background-color: #007bff;
     box-shadow: #00000038 5px 3px 3px;
     border: none;
     outline: none;
@@ -103,10 +103,10 @@
   }
   .menu_btn button:hover {
     cursor: pointer;
-    background-color: #f87144;
+    background-color: #0069d9;
   }
   .add_card {
-    background-color: #00bcdf;
+    background-color: #FFF;
     width: 260px;
     height: 280px;
     border-radius: 50px;
@@ -125,7 +125,7 @@
     position: relative;
     top: 40px;
     left: 50px;
-    background-color: #fb4f14;
+    background-color: #0069d9;
     text-align: center;
     box-shadow: #00000038 5px 3px 3px;
     border-radius: 50%;
@@ -136,7 +136,7 @@
   }
   .add_btn:hover {
     cursor: pointer;
-    background-color: #f87144;
+    background-color: #0069d9;
   }
   .modal {
     display: none;
@@ -155,7 +155,7 @@
     position: relative;
     margin: auto;
     height: auto;
-    background-color: #00bcdf;
+    background-color: #FFF;
     width: 300px;
     height: auto;
     padding-bottom: 20px;
@@ -166,10 +166,17 @@
     animation-name: animatetop;
     animation-duration: 0.4s;
     text-align: center;
+    border-radius: 5px;
+  }
+
+  .modal_content p.pic_change {
+    cursor: pointer;
+    color: #007bff;
+    font-weight: 600;
   }
   .modal_content p.pic_change:hover {
     cursor: pointer;
-    color: #fd916d;
+    color: #0069d9;
     font-weight: 600;
   }
   .modal_head {
@@ -189,18 +196,42 @@
     padding: 0;
   }
   .modal_form input {
-    height: 30px;
-    outline: none;
-    border: none;
-    width: 160px;
-    padding-left: 10px;
+    // height: 30px;
+    // outline: none;
+    // border: none;
+    // width: 160px;
+    // padding-left: 10px;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
   }
   .modal_form select {
-    height: 30px;
-    outline: none;
-    border: none;
-    width: 160px;
-    padding-left: 10px;
+    // height: 30px;
+    // outline: none;
+    // border: none;
+    // width: 160px;
+    // padding-left: 10px;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
   }
   .modal_btn {
     padding-left: 20px;
@@ -212,14 +243,14 @@
   .modal_btn button {
     border: none;
     color: white;
-    background-color: #fb4f14;
+    background-color: #007bff;
     width: 125px;
     height: 30px;
     box-shadow: #00000038 5px 3px 3px;
   }
   .modal_btn button:hover {
     cursor: pointer;
-    background-color: #f87144;
+    background-color: #0069d9;
   }
   @-webkit-keyframes animatetop {
     from {
@@ -369,7 +400,7 @@
     background-color: #f87144;
   }
   .add_card {
-    background-color: #00bcdf;
+    background-color: #FFF;
     width: 260px;
     height: 280px;
     border-radius: 50px;
@@ -388,7 +419,7 @@
     position: relative;
     top: 40px;
     left: 50px;
-    background-color: #fb4f14;
+    background-color: #0069d9;
     text-align: center;
     box-shadow: #00000038 5px 3px 3px;
     border-radius: 50%;
@@ -418,7 +449,7 @@
     position: relative;
     margin: auto;
     height: auto;
-    background-color: #00bcdf;
+    background-color: #FFF;
     width: 300px;
     height: auto;
     padding-bottom: 20px;
@@ -429,10 +460,18 @@
     animation-name: animatetop;
     animation-duration: 0.4s;
     text-align: center;
+    border-radius: 5px;
   }
+
+  .modal_content p.pic_change {
+    cursor: pointer;
+    color: #007bff;
+    font-weight: 600;
+  }
+
   .modal_content p.pic_change:hover {
     cursor: pointer;
-    color: #fd916d;
+    color: #0069d9;
     font-weight: 600;
   }
   .modal_head {
@@ -452,18 +491,43 @@
     padding: 0;
   }
   .modal_form input {
-    height: 30px;
-    outline: none;
-    border: none;
-    width: 160px;
-    padding-left: 10px;
+    // height: 30px;
+    // outline: none;
+    // border: none;
+    // width: 160px;
+    // padding-left: 10px;
+    // display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
   }
   .modal_form select {
-    height: 30px;
-    outline: none;
-    border: none;
-    width: 160px;
-    padding-left: 10px;
+    // height: 30px;
+    // outline: none;
+    // border: none;
+    // width: 160px;
+    // padding-left: 10px;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
   }
   .modal_btn {
     padding-left: 20px;
@@ -475,14 +539,14 @@
   .modal_btn button {
     border: none;
     color: white;
-    background-color: #fb4f14;
+    // background-color: #fb4f14;
     width: 125px;
     height: 30px;
     box-shadow: #00000038 5px 3px 3px;
   }
   .modal_btn button:hover {
     cursor: pointer;
-    background-color: #f87144;
+    // background-color: #f87144;
   }
   @-webkit-keyframes animatetop {
     from {

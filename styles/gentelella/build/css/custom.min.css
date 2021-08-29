@@ -5191,6 +5191,11 @@ ul.notifications {
   color:#FB4F14;
 }
 
+.newusername {
+  padding:10px;
+  color:#73879c;
+}
+
 .minvalue {
   color:green;
 }
@@ -5198,3 +5203,17 @@ ul.notifications {
 .maxvalue {
   color:orangered;
 }
+
+.newuser-card {
+  display: flow-root;
+}
+
+.newuser-label {
+  display: inline-block;
+    margin-bottom: .5rem;
+    color: #73879c;
+    font-size: 16px;
+    font-weight: 100;
+    text-align: left;
+}
+
