@@ -2,12 +2,8 @@ import { React, useState, useEffect } from "react";
 import Layout from "../layout/layout";
 import Link from "next/link";
 import Image from "next/image";
-import { useMediaQuery } from "react-responsive";
 import { useRouter } from "next/router";
 import styles from "../styles/node.module.scss";
-import $ from "jquery";
-import Timesetting from "../components/Timesetting";
-import Datasetting from "../components/Datasetting";
 import { Scatter, Bar } from "react-chartjs-2";
 import axios from "axios";
 
@@ -124,6 +120,12 @@ export default function node(props) {
   const [zoneContent, setzoneContent] = useState([]);
 
   useEffect(async () => {
+    if (
+      localStorage.getItem("_login") == false ||
+      localStorage.getItem("_login") == null
+    ) {
+      window.location.assign("/login");
+    }
     const _orgID = localStorage.getItem("_orgID");
     const _farmID = localStorage.getItem("_farmID");
     const _nodeID = localStorage.getItem("_nodeID");
@@ -304,14 +306,24 @@ export default function node(props) {
     const _data1min = document.getElementById("data1min" + relayIndex).value;
     const _data1max = document.getElementById("data1max" + relayIndex).value;
 
+    if (_dataFunction) {
+      var dataFunction = "true";
+    } else {
+      var dataFunction = "false";
+    }
+    if (_data1Status) {
+      var data1Status = "true";
+    } else {
+      var data1Status = "false";
+    }
     const _putdata = {
       orgId: _orgId,
-      dataFunction: _dataFunction,
+      dataFunction: dataFunction,
       data1: {
+        status: data1Status,
         data: _data1Select,
-        max: _data1max,
-        min: _data1min,
-        status: _data1Status,
+        min: parseInt(_data1min),
+        max: parseInt(_data1max),
       },
     };
     const putmethod = "data";
@@ -344,12 +356,11 @@ export default function node(props) {
     if (dataIndex == 1) {
       const _putData = {
         orgId: _orgId,
-        dataFunction: _dataFunction,
         data1: {
-          status: _dataStatus,
+          status: _dataStatus.toString(),
           data: _dataSelect,
-          max: _datamax,
-          min: _datamin,
+          max: parseInt(_datamax),
+          min: parseInt(_datamin),
         },
       };
       console.log(_putData);
@@ -427,7 +438,7 @@ export default function node(props) {
     const putmethod = "time";
     const _putdata = {
       orgId: _orgId,
-      timeFunction: _timeFunction,
+      timeFunction: _timeFunction.toString(),
       time1: time1,
       time2: time2,
       time3: time3,
@@ -731,7 +742,6 @@ export default function node(props) {
               {relayList.map((relay, index) => {
                 const relayIndex = index + 1;
                 const setting = false;
-
                 return (
                   <div key={index}>
                     <div
@@ -827,9 +837,13 @@ export default function node(props) {
                                         borderColor: "#BEBEBE",
                                       }}
                                     >
-                                      <option>เลือกข้อมูล</option>
-                                      <option value={"data1"}>1</option>
-                                      <option value={"data2"}>2</option>
+                                      <option value={"weather_temperature"}>
+                                        เลือกข้อมูล
+                                      </option>
+                                      <option value={"weather_temperature"}>
+                                        1
+                                      </option>
+                                      <option value={"soil_moisture"}>2</option>
                                       <option value={"data3"}>3</option>
                                       <option value={"data4"}>4</option>
                                       <option value={"data5"}>5</option>
@@ -1742,10 +1756,12 @@ export default function node(props) {
                           <div className="x_title"></div>
 
                           <h2>
-                            <i className="fa fa-database"></i> ตั้งค่าข้อมูล
+                            <i className="fa fa-database"></i> ตั้งค่าข้อมูล{" "}
+                            {relay.dataFunction ? "เปิด" : "ปิด"}
                           </h2>
                           <h2>
-                            <i className="fa fa-sun-o"></i> {relay.data1.data}
+                            <i className="fa fa-sun-o"></i> {relay.data1.data}{" "}
+                            {relay.data1.status ? "เปิด" : "ปิด"}
                           </h2>
                           <h2 className="brief">
                             ค่าน้อยสุด:{" "}

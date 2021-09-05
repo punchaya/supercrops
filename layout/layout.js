@@ -26,6 +26,7 @@ export default function layout(props) {
 
   function logout() {
     localStorage.clear();
+    window.location.assign("/login");
   }
 
   return (

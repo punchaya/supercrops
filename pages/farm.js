@@ -14,6 +14,12 @@ export default function farm(props) {
   const [stationList, setstationList] = useState([]);
   const [farmList, setFarmList] = useState([1, 2, 3, 4, 5]);
   useEffect(() => {
+    if (
+      localStorage.getItem("_login") == false ||
+      localStorage.getItem("_login") == null
+    ) {
+      window.location.assign("/login");
+    }
     const orgID = localStorage.getItem("_orgID");
     const farmID = localStorage.getItem("_farmID");
     axios

@@ -14,7 +14,14 @@ export default function Home(props) {
   const router = useRouter();
   const [farmIdList, setfarmIdList] = useState([]);
   const [farms, setfarms] = useState([]);
+
   useEffect(async () => {
+    if (
+      localStorage.getItem("_login") == false ||
+      localStorage.getItem("_login") == null
+    ) {
+      window.location.assign("/login");
+    }
     const response = await axios
       .post(
         "http://203.151.136.127:10001/api/getFarmID/69d3a3a1-8448-4a02-9f32-0bcab693d351",

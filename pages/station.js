@@ -19,6 +19,12 @@ export default function station(props) {
   const [station, setstation] = useState({});
 
   useEffect(() => {
+    if (
+      localStorage.getItem("_login") == false ||
+      localStorage.getItem("_login") == null
+    ) {
+      window.location.assign("/login");
+    }
     const orgID = localStorage.getItem("_orgID");
     const farmID = localStorage.getItem("_farmID");
     const stationID = localStorage.getItem("_stationID");
