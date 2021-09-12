@@ -158,10 +158,19 @@ export default function node(props) {
       time2: 1627035181017,
     };
     console.log(testreqdata);
-    const datapoint = await axios.post(
-      `http://203.151.136.127:10002/api/tsdb/service/F4227b07670ec437a9a6bde39d2530d87/Nd88a6d3b6aa64f98a6ca6ab26b5f757f`,
-      testreqdata
-    );
+    const datapoint = await axios
+      .post(
+        `http://203.151.136.127:10002/api/tsdb/service/F4227b07670ec437a9a6bde39d2530d87/Nd88a6d3b6aa64f98a6ca6ab26b5f757f`,
+        testreqdata
+      )
+      .catch((error) => {
+        /*
+      localStorage.clear();
+      window.location.assign("/login");*/
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      });
     console.log(datapoint);
     setnodeInfo(nodeInfores);
     setzoneIDlist(nodeInfores.zoneIDlist);
