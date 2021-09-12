@@ -135,7 +135,6 @@ export default function node(props) {
     const _orgID = localStorage.getItem("_orgID");
     const _farmID = localStorage.getItem("_farmID");
     const _nodeID = localStorage.getItem("_nodeID");
-    console.log(_orgID);
     const nodeInfo = await axios
       .post(`http://203.151.136.127:10001/api/${_farmID}/n/${_nodeID}`, {
         orgId: _orgID,
@@ -149,6 +148,21 @@ export default function node(props) {
         console.log(error.response.headers);
       });
     const nodeInfores = nodeInfo.data;
+    const testreqdata = {
+      orgId: "O21f42baf3ce842c292092197e17002cb",
+      tsdbToken:
+        "mheVFAOhXfaXI-cbT5vfIm4hqYPjcUafZNCxFpHZY2BVCYFdTXgevr1peNWf9EBN_h2qxKXQ9QmNcTprA3AGuQ==",
+      zoneId: "Zf52e5380caf04c7ab0775811bfaab4c3",
+      graphData: "weather_temperature",
+      time1: 1627033952071,
+      time2: 1627035181017,
+    };
+    console.log(testreqdata);
+    const datapoint = await axios.post(
+      `http://203.151.136.127:10002/api/tsdb/service/F4227b07670ec437a9a6bde39d2530d87/Nd88a6d3b6aa64f98a6ca6ab26b5f757f`,
+      testreqdata
+    );
+    console.log(datapoint);
     setnodeInfo(nodeInfores);
     setzoneIDlist(nodeInfores.zoneIDlist);
     setrelayIDlist(nodeInfores.relayIDlist);
@@ -544,7 +558,7 @@ export default function node(props) {
       <div
         id={"Success"}
         className={styles.modal_wait}
-        style={success ? { display: "block" } : { display: "none" }}
+        style={{ display: success ? "block" : "none" }}
       >
         <div className={styles.waiting}>
           <div className="success-checkmark">
@@ -557,7 +571,7 @@ export default function node(props) {
           </div>
           <div className="color-green">Success</div>
           <button
-            className={styles.Success_button}
+            className="btn btn-success"
             onClick={() => setsuccess(!success)}
           >
             OK
