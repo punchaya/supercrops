@@ -13,35 +13,47 @@ export default function farm(props) {
   const [stationID, setstationID] = useState([]);
   const [stationList, setstationList] = useState([]);
   const [farmList, setFarmList] = useState([1, 2, 3, 4, 5]);
-  useEffect(() => {
+  useEffect(async () => {
     if (
       localStorage.getItem("_login") == false ||
-      localStorage.getItem("_login") == null
+      localStorage.getItem("_login") == null ||
+      localStorage.getItem("_login") == "null" ||
+      localStorage.getItem("_login") == "" ||
+      localStorage.getItem("_orgID") == null ||
+      localStorage.getItem("_orgID") == "null" ||
+      localStorage.getItem("_orgID") == ""
     ) {
       window.location.assign("/login");
     }
     const orgID = localStorage.getItem("_orgID");
     const farmID = localStorage.getItem("_farmID");
-    axios
+    const resStation = await axios
       .post(`http://203.151.136.127:10001/api/stationMember/${farmID}`, {
         orgId: orgID,
       })
-      .then((res, eror) => {
-        setstationID(res.data.stationIDlist);
-        const stationIDlist = res.data.stationIDlist;
-        for (let i = 0; i < stationIDlist.length; i++) {
-          const stationID = stationIDlist[i];
-          axios
-            .post(`http://203.151.136.127:10001/api/detail/${farmID}`, {
-              orgId: orgID,
-              stationId: stationID,
-            })
-            .then((res, error) => {
-              setstationList([]);
-              setstationList((stationList) => [...stationList, res.data]);
-            });
-        }
+      .catch((error) => {
+        /*
+          localStorage.clear();
+          window.location.assign("/login");*/
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
       });
+    setstationID(resStation.data.stationIDlist);
+    const stationIDlist = resStation.data.stationIDlist;
+    for (let i = 0; i < stationIDlist.length; i++) {
+      const stationID = stationIDlist[i];
+      const resstationdata = await axios.post(
+        `http://203.151.136.127:10001/api/detail/${farmID}`,
+        {
+          orgId: orgID,
+          stationId: stationID,
+        }
+      );
+      const stationdata = resstationdata.data;
+      setstationList([]);
+      setstationList((stationList) => [...stationList, stationdata]);
+    }
   }, []);
 
   //

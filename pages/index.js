@@ -18,32 +18,41 @@ export default function Home(props) {
   useEffect(async () => {
     if (
       localStorage.getItem("_login") == false ||
-      localStorage.getItem("_login") == null
+      localStorage.getItem("_login") == null ||
+      localStorage.getItem("_login") == "null" ||
+      localStorage.getItem("_login") == "" ||
+      localStorage.getItem("_orgID") == null ||
+      localStorage.getItem("_orgID") == "null" ||
+      localStorage.getItem("_orgID") == ""
     ) {
       window.location.assign("/login");
     }
-    const response = await axios
+    const responce = await axios
       .post(
-        "http://203.151.136.127:10001/api/getFarmID/69d3a3a1-8448-4a02-9f32-0bcab693d351",
+        "http://203.151.136.127:10001/api/getFarmID/Uda237c338beb4483afdbd961fb7f6dfb",
         {
           orgId: "O21f42baf3ce842c292092197e17002cb",
         }
       )
-      .then((responce, error) => {
-        setfarmIdList(responce.data.farmIDlist);
-        for (let i = 0; i < responce.data.farmIDlist.length; i++) {
-          const farmid = responce.data.farmIDlist[i];
-          axios
-            .post("http://203.151.136.127:10001/api/farmDetail/", {
-              orgId: "O21f42baf3ce842c292092197e17002cb",
-              farmId: farmid,
-            })
-            .then((res, eror) => {
-              setfarms([]);
-              setfarms((farms) => [...farms, res.data]);
-            });
-        }
+      .catch((error) => {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
       });
+    setfarmIdList(responce.data.farmIDlist);
+    const testFarmIDList = ["F4227b07670ec437a9a6bde39d2530d87"];
+    for (let i = 0; i < testFarmIDList.length; i++) {
+      const farmid = testFarmIDList[i];
+      axios
+        .post("http://203.151.136.127:10001/api/farmDetail/", {
+          orgId: "O21f42baf3ce842c292092197e17002cb",
+          farmId: farmid,
+        })
+        .then((res, eror) => {
+          // setfarms([]);
+          setfarms((farms) => [...farms, res.data]);
+        });
+    }
   }, []);
   const farmList = [
     { name: "ฟาร์มภูมิใจ", location: "อุตรดิตถ์", type: "ทุเรียน" },

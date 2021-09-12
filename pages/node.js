@@ -118,23 +118,36 @@ export default function node(props) {
   const [relayList, setrelayList] = useState([]);
   const [zoneList, setzoneList] = useState([]);
   const [zoneContent, setzoneContent] = useState([]);
+  const [success, setsuccess] = useState(false);
 
   useEffect(async () => {
     if (
       localStorage.getItem("_login") == false ||
-      localStorage.getItem("_login") == null
+      localStorage.getItem("_login") == null ||
+      localStorage.getItem("_login") == "null" ||
+      localStorage.getItem("_login") == "" ||
+      localStorage.getItem("_orgID") == null ||
+      localStorage.getItem("_orgID") == "null" ||
+      localStorage.getItem("_orgID") == ""
     ) {
       window.location.assign("/login");
     }
     const _orgID = localStorage.getItem("_orgID");
     const _farmID = localStorage.getItem("_farmID");
     const _nodeID = localStorage.getItem("_nodeID");
-    const nodeInfo = await axios.post(
-      `http://203.151.136.127:10001/api/${_farmID}/n/${_nodeID}`,
-      {
+    console.log(_orgID);
+    const nodeInfo = await axios
+      .post(`http://203.151.136.127:10001/api/${_farmID}/n/${_nodeID}`, {
         orgId: _orgID,
-      }
-    );
+      })
+      .catch((error) => {
+        /*
+        localStorage.clear();
+        window.location.assign("/login");*/
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      });
     const nodeInfores = nodeInfo.data;
     setnodeInfo(nodeInfores);
     setzoneIDlist(nodeInfores.zoneIDlist);
@@ -143,13 +156,19 @@ export default function node(props) {
     let z_cont = [];
     for (let j = 0; j < nodeInfores.zoneIDlist.length; j++) {
       const zoneID = nodeInfores.zoneIDlist[j];
-      const zoneres = await axios.post(
-        `http://203.151.136.127:10001/api/${_farmID}/n/${_nodeID}/data`,
-        {
+      const zoneres = await axios
+        .post(`http://203.151.136.127:10001/api/${_farmID}/data`, {
           orgId: _orgID,
           zoneId: zoneID,
-        }
-      );
+        })
+        .catch((error) => {
+          /*
+          localStorage.clear();
+          window.location.assign("/login");*/
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        });
       z_list.push(zoneres.data);
       z_cont.push(false);
     }
@@ -159,7 +178,7 @@ export default function node(props) {
     for (let i = 0; i < nodeInfores.relayIDlist.length; i++) {
       const relayID = nodeInfores.relayIDlist[i];
       const relay = await axios.post(
-        `http://203.151.136.127:10001/api/${_farmID}/n/${_nodeID}/relay`,
+        `http://203.151.136.127:10001/api/${_farmID}/relay`,
         {
           orgId: _orgID,
           relayId: relayID,
@@ -522,6 +541,29 @@ export default function node(props) {
   }
   return (
     <>
+      <div
+        id={"Success"}
+        className={styles.modal_wait}
+        style={success ? { display: "block" } : { display: "none" }}
+      >
+        <div className={styles.waiting}>
+          <div className="success-checkmark">
+            <div className="check-icon">
+              <span className="icon-line line-tip"></span>
+              <span className="icon-line line-long"></span>
+              <div className="icon-circle"></div>
+              <div className="icon-fix"></div>
+            </div>
+          </div>
+          <div className="color-green">Success</div>
+          <button
+            className={styles.Success_button}
+            onClick={() => setsuccess(!success)}
+          >
+            OK
+          </button>
+        </div>
+      </div>
       <div className="row">
         <div className="x_panel">
           <h2>

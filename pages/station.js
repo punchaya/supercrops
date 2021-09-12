@@ -18,35 +18,56 @@ export default function station(props) {
   const [nodeList, setnodeList] = useState([]);
   const [station, setstation] = useState({});
 
-  useEffect(() => {
+  useEffect(async () => {
     if (
       localStorage.getItem("_login") == false ||
-      localStorage.getItem("_login") == null
+      localStorage.getItem("_login") == null ||
+      localStorage.getItem("_login") == "null" ||
+      localStorage.getItem("_login") == "" ||
+      localStorage.getItem("_orgID") == null ||
+      localStorage.getItem("_orgID") == "null" ||
+      localStorage.getItem("_orgID") == ""
     ) {
       window.location.assign("/login");
     }
     const orgID = localStorage.getItem("_orgID");
     const farmID = localStorage.getItem("_farmID");
     const stationID = localStorage.getItem("_stationID");
-    axios
+    const stations = await axios
       .post(`http://203.151.136.127:10001/api/${farmID}/s/${stationID}`, {
         orgId: orgID,
       })
-      .then((res, error) => {
-        setstation(res.data);
-        setnodeIDlist(res.data.nodeIDlist);
-        for (let i = 0; i < res.data.nodeIDlist.length; i++) {
-          const nodeid = res.data.nodeIDlist[i];
-          axios
-            .post(`http://203.151.136.127:10001/api/${farmID}/n/${nodeid}`, {
-              orgId: orgID,
-            })
-            .then((res, error) => {
-              setnodeList([]);
-              setnodeList((nodeList) => [...nodeList, res.data]);
-            });
-        }
+      .catch((error) => {
+        /*
+          localStorage.clear();
+          window.location.assign("/login");*/
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
       });
+    setstation(stations.data);
+    const _nodeIDlist = ["Nd88a6d3b6aa64f98a6ca6ab26b5f757f"]; // รอแก้ api แล้ว => const _nodeIDlist = stations.data.nodeIDlist //
+    console.log(stations.data);
+
+    for (let i = 0; i < _nodeIDlist.length; i++) {
+      const nodeid = _nodeIDlist[i];
+      axios
+        .post(`http://203.151.136.127:10001/api/${farmID}/n/${nodeid}`, {
+          orgId: orgID,
+        })
+        .catch((error) => {
+          /*
+            localStorage.clear();
+            window.location.assign("/login");*/
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        })
+        .then((res) => {
+          setnodeList([]);
+          setnodeList((nodeList) => [...nodeList, res.data]);
+        });
+    }
   }, []);
 
   return (
