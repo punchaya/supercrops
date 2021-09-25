@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import styles from "../styles/node.module.scss";
 import { Scatter, Bar } from "react-chartjs-2";
 import axios from "axios";
+import client from "./api/mqtt.js";
 
 export default function node(props) {
   const router = useRouter();
@@ -118,9 +119,27 @@ export default function node(props) {
   const [relayList, setrelayList] = useState([]);
   const [zoneList, setzoneList] = useState([]);
   const [zoneContent, setzoneContent] = useState([]);
+  const [dataList, setdataList] = useState([]);
   const [success, setsuccess] = useState(false);
+  const [wait, setwait] = useState(false);
+  const [fail, setfail] = useState(false);
+
+  const [mqttStat, setmqttStat] = useState(null);
+  const [msgSend, setmsgSend] = useState(null);
+  const [mqtype, setmqtype] = useState(null);
 
   useEffect(async () => {
+    /*
+    client.on("connect", function () {
+      client.subscribe("device/prototype/alpha/node1/relay", function (err) {
+        if (!err) {
+          client.publish("test", "testStart");
+        }
+      });
+    });
+    client.on("message", function (topic, message) {
+      console.log(message.toString());
+    });*/
     if (
       localStorage.getItem("_login") == false ||
       localStorage.getItem("_login") == null ||
@@ -148,12 +167,13 @@ export default function node(props) {
         console.log(error.response.headers);
       });
     const nodeInfores = nodeInfo.data;
+    /*
     const testreqdata = {
       orgId: "O21f42baf3ce842c292092197e17002cb",
       tsdbToken:
         "mheVFAOhXfaXI-cbT5vfIm4hqYPjcUafZNCxFpHZY2BVCYFdTXgevr1peNWf9EBN_h2qxKXQ9QmNcTprA3AGuQ==",
       zoneId: "Zf52e5380caf04c7ab0775811bfaab4c3",
-      graphData: "weather_temperature",
+      graphData: "weather_humidity",
       time1: 1627033952071,
       time2: 1627035181017,
     };
@@ -164,14 +184,14 @@ export default function node(props) {
         testreqdata
       )
       .catch((error) => {
-        /*
+        
       localStorage.clear();
-      window.location.assign("/login");*/
+      window.location.assign("/login");
         console.log(error.response.data);
         console.log(error.response.status);
         console.log(error.response.headers);
       });
-    console.log(datapoint);
+    console.log(datapoint);*/
     setnodeInfo(nodeInfores);
     setzoneIDlist(nodeInfores.zoneIDlist);
     setrelayIDlist(nodeInfores.relayIDlist);
@@ -197,6 +217,13 @@ export default function node(props) {
     }
     setzoneContent(z_cont);
     setzoneList(z_list);
+    var datalist = [];
+    for (var key in z_list[0][0]) {
+      if (z_list[0][0].hasOwnProperty(key)) {
+        datalist.push([key, z_list[0][0][key]]);
+      }
+    }
+    setdataList(datalist);
     let r_list = [];
     for (let i = 0; i < nodeInfores.relayIDlist.length; i++) {
       const relayID = nodeInfores.relayIDlist[i];
@@ -231,7 +258,7 @@ export default function node(props) {
     for (let j = 0; j < nodeInfores.zoneIDlist.length; j++) {
       const zoneID = nodeInfores.zoneIDlist[j];
       const zoneres = await axios.post(
-        `http://203.151.136.127:10001/api/${_farmID}/n/${_nodeID}/data`,
+        `http://203.151.136.127:10001/api/${_farmID}/data`,
         {
           orgId: _orgID,
           zoneId: zoneID,
@@ -246,7 +273,7 @@ export default function node(props) {
     for (let i = 0; i < nodeInfores.relayIDlist.length; i++) {
       const relayID = nodeInfores.relayIDlist[i];
       const relay = await axios.post(
-        `http://203.151.136.127:10001/api/${_farmID}/n/${_nodeID}/relay`,
+        `http://203.151.136.127:10001/api/${_farmID}/relay`,
         {
           orgId: _orgID,
           relayId: relayID,
@@ -263,7 +290,7 @@ export default function node(props) {
     if (method == "status") {
       axios
         .put(
-          `http://203.151.136.127:10001/api/update/${_farmID}/${_nodeID}/${relayID}/status`,
+          `http://203.151.136.127:10001/api/update/${_farmID}/${relayID}/status`,
           data
         )
         .then((res) => {
@@ -274,7 +301,7 @@ export default function node(props) {
     } else if (method == "time") {
       axios
         .put(
-          `http://203.151.136.127:10001/api/update/${_farmID}/${_nodeID}/${relayID}/time`,
+          `http://203.151.136.127:10001/api/update/${_farmID}/${relayID}/time`,
           data
         )
         .then((res) => {
@@ -285,7 +312,7 @@ export default function node(props) {
     } else if (method == "data") {
       axios
         .put(
-          `http://203.151.136.127:10001/api/update/${_farmID}/${_nodeID}/${relayID}/data`,
+          `http://203.151.136.127:10001/api/update/${_farmID}/${relayID}/data`,
           data
         )
         .then((res) => {
@@ -552,9 +579,9 @@ export default function node(props) {
     const _orgId = localStorage.getItem("_orgID");
     const check = document.getElementById(id).checked;
     if (check) {
-      var status = true;
+      var status = "true";
     } else {
-      var status = false;
+      var status = "false";
     }
     const _putdata = {
       orgId: _orgId,
@@ -710,11 +737,7 @@ export default function node(props) {
             let dataList = [];
             const zoneData = zone[0];
             const zIndex = index + 1;
-            for (var key in zoneData) {
-              if (zoneData.hasOwnProperty(key)) {
-                dataList.push([key, zoneData[key]]);
-              }
-            }
+
             return (
               <div key={index} className="x_panel" style={{ height: "auto" }}>
                 <div className="x_title">
@@ -902,17 +925,17 @@ export default function node(props) {
                                         borderColor: "#BEBEBE",
                                       }}
                                     >
-                                      <option value={"weather_temperature"}>
-                                        เลือกข้อมูล
-                                      </option>
-                                      <option value={"weather_temperature"}>
-                                        1
-                                      </option>
-                                      <option value={"soil_moisture"}>2</option>
-                                      <option value={"data3"}>3</option>
-                                      <option value={"data4"}>4</option>
-                                      <option value={"data5"}>5</option>
-                                      <option value={"data6"}>6</option>
+                                      <option>เลือกข้อมูล</option>
+                                      {dataList.map((_data) => {
+                                        return (
+                                          <option
+                                            key={_data[0]}
+                                            value={_data[0]}
+                                          >
+                                            {_data[0]}
+                                          </option>
+                                        );
+                                      })}
                                     </select>
                                   </h4>
                                 </label>

@@ -1,6 +1,6 @@
 import mqtt from "mqtt";
-const clientId = "Kane" + Math.random().toString(16).substr(2, 8);
-const host = "ws://203.151.136.201:9001";
+const clientId = "K_" + Math.random().toString(16).substr(2, 8);
+const host = "ws://203.151.136.127:9001";
 const options = {
   keepalive: 60,
   clientId: clientId,
