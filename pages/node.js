@@ -614,7 +614,7 @@ export default function node(props) {
                   <span className="brief">
                     <i className="fa fa-rss"></i> รหัสโหนด
                   </span>{" "}
-                  <label>{nodeInfo.nodeID}</label>
+                  <label className="nodeid">{nodeInfo.nodeID}</label>
                 </h2>
               </div>
             </div>

@@ -1857,6 +1857,12 @@ legend {
   font-weight: 300;
   color: #aab6aa;
 }
+
+.nodeid {
+  margin: 0;
+  font-size: 14px;
+  color: #aab6aa;
+}
 .profile_details .profile_left {
   background: white;
 }
