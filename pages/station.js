@@ -47,7 +47,23 @@ export default function station(props) {
     console.log(stations.data);
     const _nodeIDlist = ["Nd88a6d3b6aa64f98a6ca6ab26b5f757f"]; // รอแก้ api แล้ว => const _nodeIDlist = stations.data.nodeIDlist //
     console.log(stations.data);
+    for (let i = 0; i < _nodeIDlist.length; i++) {
+      const nodeid = _nodeIDlist[i];
+      const nodeidstatus = await axios
+        .post(`http://203.151.136.127:10001/api/${farmID}/n/${nodeid}/status`, {
+          orgId: orgID,
+        })
+        .catch((error) => {
+          /*
+            localStorage.clear();
+            window.location.assign("/login");*/
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        });
 
+      console.log(nodeidstatus);
+    }
     for (let i = 0; i < _nodeIDlist.length; i++) {
       const nodeid = _nodeIDlist[i];
       axios

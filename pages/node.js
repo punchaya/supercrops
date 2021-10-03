@@ -96,7 +96,7 @@ export default function node(props) {
     backgroundColor: "#e4e4e4",
     padding: "5px",
     borderRadius: "10%",
-    color: "#5a5a5a",
+    color: "#7B879C",
   };
   const nodeID = props.nodeID;
   const orgID = props.orgID;
@@ -814,7 +814,9 @@ export default function node(props) {
             </div>
             <div className="col-md-3 col-sm-6  tile_stats_count">
               <span className="count_top">
-                <h2 className={styles.online}>
+                <h2
+                  className={nodeInfo.status ? styles.online : styles.offline}
+                >
                   <i className="fa fa-circle"></i>{" "}
                   <label style={{ color: "#73879C" }}>การทำงาน</label>
                 </h2>
@@ -825,7 +827,11 @@ export default function node(props) {
                     {" "}
                     <i className="fa fa-exchange"></i> สถานะ
                   </span>{" "}
-                  <label className={styles.online}>ออนไลน์</label>
+                  <label
+                    className={nodeInfo.status ? styles.online : styles.offline}
+                  >
+                    {nodeInfo.status ? "ออนไลน์" : "ออฟไลน์"}
+                  </label>
                 </h2>
               </div>
             </div>
@@ -1833,7 +1839,7 @@ export default function node(props) {
                           <h2>
                             รอบที่ 1 : {relay.time1.status ? "เปิด" : "ปิด"}
                           </h2>
-                          <h2 className="brief">
+                          <h2 className={relay.status ? "brief" : ""}>
                             เปิด : <i className="fa fa-clock-o"></i>{" "}
                             {relay.time1.time_on} | ปิด:{" "}
                             <i className="fa fa-clock-o"></i>{" "}
@@ -1923,7 +1929,7 @@ export default function node(props) {
                             รอบที่ 2 :{" "}
                             {relay.time2.status == 1 ? "เปิด" : "ปิด"}
                           </h2>
-                          <h2 className="brief">
+                          <h2 className={relay.status ? "brief" : ""}>
                             เปิด : <i className="fa fa-clock-o"></i>{" "}
                             {relay.time2.time_on} | ปิด:{" "}
                             <i className="fa fa-clock-o"></i>{" "}
@@ -2013,7 +2019,7 @@ export default function node(props) {
                             รอบที่ 3 :{" "}
                             {relay.time3.status == 1 ? "เปิด" : "ปิด"}
                           </h2>
-                          <h2 className="brief">
+                          <h2 className={relay.status ? "brief" : ""}>
                             เปิด : <i className="fa fa-clock-o"></i>{" "}
                             {relay.time3.time_on} | ปิด:{" "}
                             <i className="fa fa-clock-o"></i>{" "}
@@ -2109,14 +2115,14 @@ export default function node(props) {
                             <i className="fa fa-sun-o"></i> {relay.data1.data}{" "}
                             {relay.data1.status ? "เปิด" : "ปิด"}
                           </h2>
-                          <h2 className="brief">
+                          <h2 className={relay.status ? "brief" : ""}>
                             ค่าน้อยสุด:{" "}
-                            <strong className="minvalue">
+                            <strong className={relay.status ? "minvalue" : ""}>
                               {relay.data1.min}{" "}
                               <i className="fa fa-long-arrow-down"></i>
                             </strong>{" "}
                             | ค่ามากสุด:{" "}
-                            <strong className="maxvalue">
+                            <strong className={relay.status ? "maxvalue" : ""}>
                               {relay.data1.max}{" "}
                               <i className="fa fa-long-arrow-up"></i>
                             </strong>
