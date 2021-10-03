@@ -134,6 +134,8 @@ export default function node(props) {
   const [deviceTopic, setdeviceTopic] = useState(null);
   const [devicemsg, setdevicemsg] = useState(null);
 
+  const [graph, setgraph] = useState(false);
+
   const test_data = [
     {
       soil_ec: 23,
@@ -207,7 +209,7 @@ export default function node(props) {
       });
     });
     client.on("message", function (topic, message) {
-      console.log(message.toString());
+      const memtopic = mqttopic;
       setdeviceTopic(topic.toString());
       setdevicemsg(message.toString());
       setmqttStat(!mqttStat);
@@ -231,6 +233,8 @@ export default function node(props) {
         }
       } else {
         console.log("fail");
+        setmqttsending(false);
+        setmqttsending(true);
       }
     }
   }, [mqttStat]);
@@ -885,8 +889,12 @@ export default function node(props) {
             </h2>
             <ul className="nav navbar-right panel_toolbox">
               <li>
-                <a className="collapse-link">
-                  <i className="fa fa-chevron-up"></i>
+                <a className="collapse-link" onClick={() => setgraph(!graph)}>
+                  <i
+                    className={
+                      graph ? "fa fa-chevron-up" : "fa fa-chevron-down"
+                    }
+                  ></i>
                 </a>
               </li>
             </ul>
@@ -894,7 +902,10 @@ export default function node(props) {
           </div>
           <div
             className="x_content"
-            style={{ display: "flex", justifyContent: "center" }}
+            style={{
+              display: graph ? "flex" : "none",
+              justifyContent: "center",
+            }}
           >
             <Scatter
               data={data}
