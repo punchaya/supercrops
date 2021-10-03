@@ -808,7 +808,7 @@ export default function node(props) {
                     {" "}
                     <i className="fa fa-rss"></i> รหัสโหนด
                   </span>{" "}
-                  <label>{nodeInfo.nodeID}</label>
+                  <label className="nodeid">{nodeInfo.nodeID}</label>
                 </h2>
               </div>
             </div>
