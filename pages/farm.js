@@ -8,8 +8,7 @@ import axios from "axios";
 
 export default function farm(props) {
   const router = useRouter();
-  const Data = router.query;
-  const farmName = Data.farm;
+  //const Data = router.query;
   const [stationID, setstationID] = useState([]);
   const [stationList, setstationList] = useState([]);
   const [farmList, setFarmList] = useState([1, 2, 3, 4, 5]);
@@ -65,7 +64,7 @@ export default function farm(props) {
           <h2>
             <i className="fa fa-home"></i>
             <Link href="/"> หน้าหลัก</Link> / <i className="fa fa-sitemap"></i>{" "}
-            <Link href={`/farm?farm=${farmName}`}>ฟาร์ม</Link>
+            <Link href={`/farm`}>ฟาร์ม</Link>
           </h2>
         </div>
       </div>
@@ -77,7 +76,7 @@ export default function farm(props) {
           >
             <span className="count_top">
               <h2>
-                <strong className="farmname">{farmName}</strong>
+                <strong className="farmname">ชื่อฟาร์ม</strong>
               </h2>
               <h2>
                 <i className="fa fa-cubes"></i> จำนวนโรงเรือน
@@ -178,9 +177,7 @@ export default function farm(props) {
                           type="button"
                           className="btn btn-primary btn-sm"
                           onClick={() => {
-                            router.push(
-                              `/station?station=${index + 1}&farm=${farmName}`
-                            );
+                            router.push(`/station`);
                             props.setstationID(station.stationID);
                           }}
                         >

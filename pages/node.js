@@ -10,7 +10,7 @@ import client from "./api/mqtt.js";
 
 export default function node(props) {
   const router = useRouter();
-  const Data = router.query;
+  //const Data = router.query;
   const rand = () => Math.round(Math.random() * 20 - 10);
   const data = {
     datasets: [
@@ -124,22 +124,118 @@ export default function node(props) {
   const [wait, setwait] = useState(false);
   const [fail, setfail] = useState(false);
 
-  const [mqttStat, setmqttStat] = useState(null);
-  const [msgSend, setmsgSend] = useState(null);
-  const [mqtype, setmqtype] = useState(null);
+  const [dataSelect, setdataSelect] = useState(null);
 
+  const [mqttStat, setmqttStat] = useState(false);
+  const [mqttsending, setmqttsending] = useState(false);
+  const [msgSend, setmsgSend] = useState(null);
+  const [mqttopic, setmqttopic] = useState(null);
+
+  const [deviceTopic, setdeviceTopic] = useState(null);
+  const [devicemsg, setdevicemsg] = useState(null);
+
+  const test_data = [
+    {
+      soil_ec: 23,
+      soil_moisture: 12,
+      weather_humidity: 32,
+      weather_light_lux: 64,
+      weather_temperature: 89,
+    },
+    {
+      soil_ec: 12,
+      soil_moisture: 23,
+      soil_ph: 34,
+      soil_temperature: 45,
+      water_cl: 56,
+      water_do: 67,
+      water_ec: 78,
+      water_nh3: 89,
+      water_nitrite: 90,
+      water_ph: 25,
+      water_phosphate: 30,
+      water_temperature: 40,
+      water_turbidity: 60,
+      weather_co2: 11,
+      weather_humidity: 87,
+      weather_light_lux: 54,
+      weather_pm10: 12,
+      weather_pm25: 9,
+      weather_pressure: 15,
+      weather_rain_gauge: 16,
+      weather_temperature: 87,
+      weather_wind_direc: 66,
+      weather_wind_speed: 72,
+    },
+  ];
+
+  function resetmqtt() {
+    setmsgSend(null);
+    setmqttopic(null);
+  }
   useEffect(async () => {
-    /*
     client.on("connect", function () {
-      client.subscribe("device/prototype/alpha/node1/relay", function (err) {
+      client.subscribe("/front/control/farmId/relayId", function (err) {
         if (!err) {
-          client.publish("test", "testStart");
+          client.publish("test", "test1Start");
+        }
+      });
+      client.subscribe("/front/set_time1/farmId/relayId", function (err) {
+        if (!err) {
+          client.publish("test", "test2Start");
+        }
+      });
+      client.subscribe("/front/set_time2/farmId/relayId", function (err) {
+        if (!err) {
+          client.publish("test", "test3Start");
+        }
+      });
+      client.subscribe("/front/set_time3/farmId/relayId", function (err) {
+        if (!err) {
+          client.publish("test", "test4Start");
+        }
+      });
+      client.subscribe("/front/data_fn/farmId/relayId", function (err) {
+        if (!err) {
+          client.publish("test", "test5Start");
+        }
+      });
+      client.subscribe("/front/set_data1/farmId/relayId", function (err) {
+        if (!err) {
+          client.publish("test", "test5Start");
         }
       });
     });
     client.on("message", function (topic, message) {
       console.log(message.toString());
-    });*/
+      setdeviceTopic(topic.toString());
+      setdevicemsg(message.toString());
+      setmqttStat(!mqttStat);
+    });
+    reloadData();
+  }, [mqttsending]);
+
+  useEffect(() => {
+    if (mqttsending == true) {
+      if (deviceTopic == mqttopic) {
+        if (devicemsg == msgSend) {
+          setwait(false);
+          setsuccess(true);
+          setmqttsending(false);
+          reloadData();
+        } else {
+          setwait(false);
+          setfail(true);
+          setmqttsending(false);
+          reloadData();
+        }
+      } else {
+        console.log("fail");
+      }
+    }
+  }, [mqttStat]);
+
+  async function reloadData() {
     if (
       localStorage.getItem("_login") == false ||
       localStorage.getItem("_login") == null ||
@@ -167,31 +263,30 @@ export default function node(props) {
         console.log(error.response.headers);
       });
     const nodeInfores = nodeInfo.data;
-    /*
+
     const testreqdata = {
-      orgId: "O21f42baf3ce842c292092197e17002cb",
+      orgId: "Oea74a83915b2499987e62868c69f3d5c",
       tsdbToken:
-        "mheVFAOhXfaXI-cbT5vfIm4hqYPjcUafZNCxFpHZY2BVCYFdTXgevr1peNWf9EBN_h2qxKXQ9QmNcTprA3AGuQ==",
-      zoneId: "Zf52e5380caf04c7ab0775811bfaab4c3",
-      graphData: "weather_humidity",
-      time1: 1627033952071,
-      time2: 1627035181017,
+        "MHXpIIeM0uQwLqubaADfYvXHdsDi4z2RtQ_QhLPpM76pVLuuzUg-oq0pU9eSAqTC7U6vX_EUHnR5Bt4gbCV4cw==",
+      zoneId: "Ze006815b18d04414aeb598b5befc6450",
+      graphData: "in_humid",
+      time1: 1632762000000,
+      time2: 1632841023498,
     };
-    console.log(testreqdata);
+    //console.log(testreqdata);
     const datapoint = await axios
       .post(
-        `http://203.151.136.127:10002/api/tsdb/service/F4227b07670ec437a9a6bde39d2530d87/Nd88a6d3b6aa64f98a6ca6ab26b5f757f`,
+        `http://203.151.136.127:10002/api/tsdb/service/Ff4440d10ee0e49b299ec379f76fa5a84/Nfa7d193b520e46e187af39e8c15f8910`,
         testreqdata
       )
       .catch((error) => {
-        
-      localStorage.clear();
-      window.location.assign("/login");
+        //localStorage.clear();
+        //window.location.assign("/login");
         console.log(error.response.data);
         console.log(error.response.status);
         console.log(error.response.headers);
       });
-    console.log(datapoint);*/
+    //console.log(datapoint);
     setnodeInfo(nodeInfores);
     setzoneIDlist(nodeInfores.zoneIDlist);
     setrelayIDlist(nodeInfores.relayIDlist);
@@ -212,17 +307,19 @@ export default function node(props) {
           console.log(error.response.status);
           console.log(error.response.headers);
         });
-      z_list.push(zoneres.data);
+      const _zdata = [];
+      for (var key in zoneres.data[0]) {
+        if (zoneres.data[0].hasOwnProperty(key)) {
+          _zdata.push([key, zoneres.data[0][key]]);
+        }
+      }
+      z_list.push(_zdata);
       z_cont.push(false);
     }
     setzoneContent(z_cont);
     setzoneList(z_list);
-    var datalist = [];
-    for (var key in z_list[0][0]) {
-      if (z_list[0][0].hasOwnProperty(key)) {
-        datalist.push([key, z_list[0][0][key]]);
-      }
-    }
+    var datalist = z_list;
+
     setdataList(datalist);
     let r_list = [];
     for (let i = 0; i < nodeInfores.relayIDlist.length; i++) {
@@ -237,51 +334,7 @@ export default function node(props) {
       r_list.push(relay.data);
     }
     setrelayList(r_list);
-  }, []);
-
-  async function reloadData() {
-    const _orgID = localStorage.getItem("_orgID");
-    const _farmID = localStorage.getItem("_farmID");
-    const _nodeID = localStorage.getItem("_nodeID");
-    const nodeInfo = await axios.post(
-      `http://203.151.136.127:10001/api/${_farmID}/n/${_nodeID}`,
-      {
-        orgId: _orgID,
-      }
-    );
-    const nodeInfores = nodeInfo.data;
-    setnodeInfo(nodeInfores);
-    setzoneIDlist(nodeInfores.zoneIDlist);
-    setrelayIDlist(nodeInfores.relayIDlist);
-    let z_list = [];
-    let z_cont = [];
-    for (let j = 0; j < nodeInfores.zoneIDlist.length; j++) {
-      const zoneID = nodeInfores.zoneIDlist[j];
-      const zoneres = await axios.post(
-        `http://203.151.136.127:10001/api/${_farmID}/data`,
-        {
-          orgId: _orgID,
-          zoneId: zoneID,
-        }
-      );
-      z_list.push(zoneres.data);
-      z_cont.push(false);
-    }
-    setzoneContent(z_cont);
-    setzoneList(z_list);
-    let r_list = [];
-    for (let i = 0; i < nodeInfores.relayIDlist.length; i++) {
-      const relayID = nodeInfores.relayIDlist[i];
-      const relay = await axios.post(
-        `http://203.151.136.127:10001/api/${_farmID}/relay`,
-        {
-          orgId: _orgID,
-          relayId: relayID,
-        }
-      );
-      r_list.push(relay.data);
-    }
-    setrelayList(r_list);
+    setdataSelect(null);
   }
 
   function putData(data, relayID, method) {
@@ -401,6 +454,9 @@ export default function node(props) {
   }
   function putminiData(relayIndex, relayID, dataIndex) {
     const _orgId = localStorage.getItem("_orgID");
+    const zoneindex = document.getElementById("selectzone" + relayIndex).value;
+    console.log(zoneindex);
+    const zoneID = zoneIDlist[zoneindex];
     const _dataFunction = document.getElementById(
       "dStatus" + relayIndex
     ).checked;
@@ -423,16 +479,33 @@ export default function node(props) {
     ).value;
     const putmethod = "data";
     if (dataIndex == 1) {
-      const _putData = {
-        orgId: _orgId,
+      const _putdata = {
         data1: {
           status: _dataStatus.toString(),
           data: _dataSelect,
           max: parseInt(_datamax),
           min: parseInt(_datamin),
+          zoneId: zoneID,
+          conpare: "low",
         },
       };
-      console.log(_putData);
+      console.log(zoneIDlist);
+      console.log(_putdata);
+      client.publish(
+        "/set_data1/farmId/relayId",
+        JSON.stringify(_putdata),
+        function (err) {
+          if (!err) {
+            setwait(true);
+            setmqttopic("/front/set_data1/farmId/relayId");
+            setmsgSend(JSON.stringify(_putdata));
+            setmqttsending(true);
+          } else {
+            console.log(err);
+          }
+        }
+      );
+      //console.log(_putData);
       putData(_putData, relayID, putmethod);
     } else {
       console.log("put data error");
@@ -515,7 +588,8 @@ export default function node(props) {
     putData(_putdata, relayID, putmethod);
     modalOff("modalstyleTime" + relayIndex);
   }
-  function putminitime(relayIndex, relayID, timeIndex) {
+
+  async function putminitime(relayIndex, relayID, timeIndex) {
     const _orgId = localStorage.getItem("_orgID");
     const time = [];
     const timecheck = document.getElementById(
@@ -523,9 +597,9 @@ export default function node(props) {
     ).checked;
 
     if (timecheck) {
-      time.push(1);
+      var _status = true;
     } else {
-      time.push(0);
+      var _status = false;
     }
     const timeon = document.getElementById(
       "time" + timeIndex + "on" + relayIndex
@@ -533,9 +607,7 @@ export default function node(props) {
     const timeoff = document.getElementById(
       "time" + timeIndex + "off" + relayIndex
     ).value;
-    time.push(timeon);
-    time.push(timeoff);
-    for (let i = 3; i <= 9; i++) {
+    for (let i = 0; i <= 6; i++) {
       const check = document.getElementById(
         "t" + timeIndex + "day" + i + relayIndex
       ).checked;
@@ -546,32 +618,79 @@ export default function node(props) {
       }
     }
     if (timeIndex == 1) {
-      const _putdata = {
-        orgId: _orgId,
-        time1: time,
+      var _putdata = {
+        time1: {
+          status: _status,
+          time_on: timeon,
+          time_off: timeoff,
+          date: time,
+        },
       };
-      const putmethod = "time";
-      putData(_putdata, relayID, putmethod);
+      client.publish(
+        "/set_time1/farmId/relayId",
+        JSON.stringify(_putdata),
+        function (err) {
+          if (!err) {
+            setwait(true);
+            setmqttopic("/front/set_time1/farmId/relayId");
+            setmsgSend(JSON.stringify(_putdata));
+            setmqttsending(true);
+          } else {
+            console.log(err);
+          }
+        }
+      );
     } else if (timeIndex == 2) {
-      const _putdata = {
-        orgId: _orgId,
-        time2: time,
+      var _putdata = {
+        time2: {
+          status: _status,
+          time_on: timeon,
+          time_off: timeoff,
+          date: time,
+        },
       };
-      const putmethod = "time";
-      putData(_putdata, relayID, putmethod);
+      client.publish(
+        "/set_time2/farmId/relayId",
+        JSON.stringify(_putdata),
+        function (err) {
+          if (!err) {
+            setwait(true);
+            setmsgSend(JSON.stringify(_putdata));
+            setmqttopic("/front/set_time2/farmId/relayId");
+            setmqttsending(true);
+          } else {
+            console.log(err);
+          }
+        }
+      );
     } else if (timeIndex == 3) {
-      const _putdata = {
-        orgId: _orgId,
-        time3: time,
+      var _putdata = {
+        time3: {
+          status: _status,
+          time_on: timeon,
+          time_off: timeoff,
+          date: time,
+        },
       };
-      const putmethod = "time";
-      putData(_putdata, relayID, putmethod);
+      client.publish(
+        "/set_time3/farmId/relayId",
+        JSON.stringify(_putdata),
+        function (err) {
+          if (!err) {
+            setwait(true);
+            setmsgSend(JSON.stringify(_putdata));
+            setmqttopic("/front/set_time3/farmId/relayId");
+            setmqttsending(true);
+          } else {
+            console.log(err);
+          }
+        }
+      );
     } else {
-      const _putdata = {
+      var _putdata = {
         orgId: _orgId,
       };
       const putmethod = "time";
-      putData(_putdata, relayID, putmethod);
     }
     modalOff("modalstyleData" + relayIndex);
   }
@@ -586,11 +705,36 @@ export default function node(props) {
     const _putdata = {
       orgId: _orgId,
       status: status,
-    };
+    }; /*
+    client.publish(
+      "/control/farmId/relayId",
+      JSON.stringify(_putdata),
+      function (err) {
+        if (!err) {
+          setwait(true);
+          setmsgSend(JSON.stringify(_putdata));
+          setmqttopic("/front/control/farmId/relayId");
+          setmqttsending(true);
+        } else {
+          console.log(err);
+        }
+      }
+    );*/
     putData(_putdata, relayID, "status");
   }
   return (
     <>
+      <div
+        id={"Waiting"}
+        className={styles.modal_wait}
+        style={{ display: wait ? "block" : "none" }}
+      >
+        <div className={styles.waiting}>
+          <div className={styles.lds_dual_ring}></div>
+          <div></div>
+          <div>Waiting</div>
+        </div>
+      </div>
       <div
         id={"Success"}
         className={styles.modal_wait}
@@ -608,9 +752,32 @@ export default function node(props) {
           <div className="color-green">Success</div>
           <button
             className="btn btn-success"
-            onClick={() => setsuccess(!success)}
+            onClick={() => {
+              setsuccess(!success);
+              resetmqtt();
+            }}
           >
             OK
+          </button>
+        </div>
+      </div>
+      <div
+        id={"Fail"}
+        className={styles.modal_wait}
+        style={{ display: fail ? "block" : "none" }}
+      >
+        <div className={styles.waiting}>
+          <div className="error-banmark">
+            <div className="ban-icon">
+              <span className="icon-line line-long-invert"></span>
+              <span className="icon-line line-long"></span>
+              <div className="icon-circle"></div>
+              <div className="icon-fix"></div>
+            </div>
+          </div>
+          <div className="color-red">Error</div>
+          <button className="btn btn-danger" onClick={() => setfail(!fail)}>
+            Close
           </button>
         </div>
       </div>
@@ -626,19 +793,19 @@ export default function node(props) {
           </h2>
         </div>
       </div>
-
       <div className="row">
         <div className="x_panel">
           <div className="tile_count">
             <div className="col-md-3 col-sm-6  tile_stats_count">
               <span className="count_top">
                 <h2>
-                  <strong className="farmname">โหนดที่ {"nodeIndex"}</strong>
+                  <strong className="farmname"> โหนด</strong>
                 </h2>
               </span>
               <div>
                 <h2>
                   <span className="brief">
+                    {" "}
                     <i className="fa fa-rss"></i> รหัสโหนด
                   </span>{" "}
                   <label>{nodeInfo.nodeID}</label>
@@ -734,8 +901,6 @@ export default function node(props) {
       <div id="zonebox" className="row">
         <div className="x_panel">
           {zoneList.map((zone, index) => {
-            let dataList = [];
-            const zoneData = zone[0];
             const zIndex = index + 1;
 
             return (
@@ -775,10 +940,10 @@ export default function node(props) {
                       userSelect: "none",
                     }}
                   >
-                    {dataList.map((data, index) => {
+                    {zone.map((data, _index) => {
                       return (
                         <div
-                          key={index}
+                          key={_index}
                           className="well profile_view"
                           style={{ width: "350px", minWidth: "300px" }}
                         >
@@ -806,7 +971,6 @@ export default function node(props) {
           })}
         </div>
       </div>
-
       <div id="relaybox" className="row">
         <div className="x_panel">
           <div className="x_content">
@@ -915,9 +1079,16 @@ export default function node(props) {
                               >
                                 <label>
                                   <h4>
-                                    Data :
+                                    Zone :{" "}
                                     <select
-                                      id={"dataSelect1" + relayIndex}
+                                      id={"selectzone" + relayIndex}
+                                      onChange={() =>
+                                        setdataSelect(
+                                          document.getElementById(
+                                            "selectzone" + relayIndex
+                                          ).value
+                                        )
+                                      }
                                       style={{
                                         color: "#73879C",
                                         height: "30px",
@@ -925,18 +1096,45 @@ export default function node(props) {
                                         borderColor: "#BEBEBE",
                                       }}
                                     >
-                                      <option>เลือกข้อมูล</option>
-                                      {dataList.map((_data) => {
+                                      <option value={null}>เลือกโซน</option>
+                                      {zoneList.map((zone, index) => {
                                         return (
-                                          <option
-                                            key={_data[0]}
-                                            value={_data[0]}
-                                          >
-                                            {_data[0]}
+                                          <option key={index} value={index}>
+                                            {index}
                                           </option>
                                         );
                                       })}
-                                    </select>
+                                    </select>{" "}
+                                    Data :
+                                    {dataList.map((_data, index) => {
+                                      return (
+                                        <select
+                                          key={index}
+                                          id={"dataSelect1" + relayIndex}
+                                          style={
+                                            dataSelect == index
+                                              ? {
+                                                  color: "#73879C",
+                                                  height: "30px",
+                                                  marginLeft: "10px",
+                                                  borderColor: "#BEBEBE",
+                                                }
+                                              : { display: "none" }
+                                          }
+                                        >
+                                          <option value={null}>
+                                            เลือกข้อมูล
+                                          </option>
+                                          {_data.map((data, index) => {
+                                            return (
+                                              <option key={index} value={data}>
+                                                {data}
+                                              </option>
+                                            );
+                                          })}
+                                        </select>
+                                      );
+                                    })}
                                   </h4>
                                 </label>
                                 <label
@@ -1014,25 +1212,6 @@ export default function node(props) {
                               }
                             >
                               ปิด
-                            </button>
-                            <button
-                              type="button"
-                              className="btn btn-primary"
-                              style={{
-                                display: "flex",
-                                gap: "5px",
-                                alignItems: "center",
-                              }}
-                              onClick={() =>
-                                putDataSetting(relay, relayIndex, relay.relayID)
-                              }
-                            >
-                              <Image
-                                src="/save_white.png"
-                                width={20}
-                                height={20}
-                              />{" "}
-                              บันทึก
                             </button>
                           </div>
                         </div>
@@ -1124,14 +1303,14 @@ export default function node(props) {
                                 <input
                                   id={"time1on" + relayIndex}
                                   type="time"
-                                  defaultValue={relay.time1[1]}
+                                  defaultValue={relay.time1.time_on}
                                   style={{ margin: "10px" }}
                                 />
                                 <label> Off :</label>
                                 <input
                                   id={"time1off" + relayIndex}
                                   type="time"
-                                  defaultValue={relay.time1[2]}
+                                  defaultValue={relay.time1.time_off}
                                   style={{ margin: "10px" }}
                                 />
 
@@ -1143,7 +1322,7 @@ export default function node(props) {
                                     id={"t1Status" + relayIndex}
                                     type="checkbox"
                                     defaultChecked={
-                                      relay.time1[0] == 1 ? true : false
+                                      relay.time1.status ? true : false
                                     }
                                   />
                                   <span className={styles.slider}></span>
@@ -1154,13 +1333,49 @@ export default function node(props) {
                                 <label>
                                   <input
                                     type="checkbox"
+                                    id={"t1day0" + relayIndex}
+                                    defaultChecked={
+                                      relay.time1.date[0] == 1 ? true : false
+                                    }
+                                  />
+                                  <label htmlFor={"t1day0" + relayIndex}>
+                                    อาทิตย์
+                                  </label>
+                                </label>
+                                <label>
+                                  <input
+                                    type="checkbox"
+                                    id={"t1day1" + relayIndex}
+                                    defaultChecked={
+                                      relay.time1.date[1] == 1 ? true : false
+                                    }
+                                  />
+                                  <label htmlFor={"t1day1" + relayIndex}>
+                                    จันทร์
+                                  </label>
+                                </label>
+                                <label>
+                                  <input
+                                    type="checkbox"
+                                    id={"t1day2" + relayIndex}
+                                    defaultChecked={
+                                      relay.time1.date[2] == 1 ? true : false
+                                    }
+                                  />
+                                  <label htmlFor={"t1day2" + relayIndex}>
+                                    อังคาร
+                                  </label>
+                                </label>
+                                <label>
+                                  <input
+                                    type="checkbox"
                                     id={"t1day3" + relayIndex}
                                     defaultChecked={
-                                      relay.time1[3] == 1 ? true : false
+                                      relay.time1.date[3] == 1 ? true : false
                                     }
                                   />
                                   <label htmlFor={"t1day3" + relayIndex}>
-                                    อาทิตย์
+                                    พุธ
                                   </label>
                                 </label>
                                 <label>
@@ -1168,11 +1383,11 @@ export default function node(props) {
                                     type="checkbox"
                                     id={"t1day4" + relayIndex}
                                     defaultChecked={
-                                      relay.time1[4] == 1 ? true : false
+                                      relay.time1.date[4] == 1 ? true : false
                                     }
                                   />
                                   <label htmlFor={"t1day4" + relayIndex}>
-                                    จันทร์
+                                    พฤหัส
                                   </label>
                                 </label>
                                 <label>
@@ -1180,11 +1395,11 @@ export default function node(props) {
                                     type="checkbox"
                                     id={"t1day5" + relayIndex}
                                     defaultChecked={
-                                      relay.time1[5] == 1 ? true : false
+                                      relay.time1.date[5] == 1 ? true : false
                                     }
                                   />
                                   <label htmlFor={"t1day5" + relayIndex}>
-                                    อังคาร
+                                    ศุกร์
                                   </label>
                                 </label>
                                 <label>
@@ -1192,46 +1407,10 @@ export default function node(props) {
                                     type="checkbox"
                                     id={"t1day6" + relayIndex}
                                     defaultChecked={
-                                      relay.time1[6] == 1 ? true : false
+                                      relay.time1.date[6] == 1 ? true : false
                                     }
                                   />
                                   <label htmlFor={"t1day6" + relayIndex}>
-                                    พุธ
-                                  </label>
-                                </label>
-                                <label>
-                                  <input
-                                    type="checkbox"
-                                    id={"t1day7" + relayIndex}
-                                    defaultChecked={
-                                      relay.time1[7] == 1 ? true : false
-                                    }
-                                  />
-                                  <label htmlFor={"t1day7" + relayIndex}>
-                                    พฤหัส
-                                  </label>
-                                </label>
-                                <label>
-                                  <input
-                                    type="checkbox"
-                                    id={"t1day8" + relayIndex}
-                                    defaultChecked={
-                                      relay.time1[8] == 1 ? true : false
-                                    }
-                                  />
-                                  <label htmlFor={"t1day8" + relayIndex}>
-                                    ศุกร์
-                                  </label>
-                                </label>
-                                <label>
-                                  <input
-                                    type="checkbox"
-                                    id={"t1day9" + relayIndex}
-                                    defaultChecked={
-                                      relay.time1[9] == 1 ? true : false
-                                    }
-                                  />
-                                  <label htmlFor={"t1day9" + relayIndex}>
                                     เสาร์
                                   </label>
                                 </label>
@@ -1268,14 +1447,14 @@ export default function node(props) {
                                 <input
                                   id={"time2on" + relayIndex}
                                   type="time"
-                                  defaultValue={relay.time2[1]}
+                                  defaultValue={relay.time2.time_on}
                                   style={{ margin: "10px" }}
                                 />
                                 <label> Off :</label>
                                 <input
                                   id={"time2off" + relayIndex}
                                   type="time"
-                                  defaultValue={relay.time2[2]}
+                                  defaultValue={relay.time2.time_off}
                                   style={{ margin: "10px" }}
                                 />
                                 <label
@@ -1286,7 +1465,7 @@ export default function node(props) {
                                     id={"t2Status" + relayIndex}
                                     type="checkbox"
                                     defaultChecked={
-                                      relay.time1[0] == 1 ? true : false
+                                      relay.time1.status ? true : false
                                     }
                                   />
                                   <span className={styles.slider}></span>
@@ -1297,13 +1476,49 @@ export default function node(props) {
                                 <label>
                                   <input
                                     type="checkbox"
+                                    id={"t2day0" + relayIndex}
+                                    defaultChecked={
+                                      relay.time2.date[0] == 1 ? true : false
+                                    }
+                                  />
+                                  <label htmlFor={"t2day0" + relayIndex}>
+                                    อาทิตย์
+                                  </label>
+                                </label>
+                                <label>
+                                  <input
+                                    type="checkbox"
+                                    id={"t2day1" + relayIndex}
+                                    defaultChecked={
+                                      relay.time2.date[1] == 1 ? true : false
+                                    }
+                                  />
+                                  <label htmlFor={"t2day1" + relayIndex}>
+                                    จันทร์
+                                  </label>
+                                </label>
+                                <label>
+                                  <input
+                                    type="checkbox"
+                                    id={"t2day2" + relayIndex}
+                                    defaultChecked={
+                                      relay.time2.date[2] == 1 ? true : false
+                                    }
+                                  />
+                                  <label htmlFor={"t2day2" + relayIndex}>
+                                    อังคาร
+                                  </label>
+                                </label>
+                                <label>
+                                  <input
+                                    type="checkbox"
                                     id={"t2day3" + relayIndex}
                                     defaultChecked={
-                                      relay.time2[3] == 1 ? true : false
+                                      relay.time2.date[3] == 1 ? true : false
                                     }
                                   />
                                   <label htmlFor={"t2day3" + relayIndex}>
-                                    อาทิตย์
+                                    พุธ
                                   </label>
                                 </label>
                                 <label>
@@ -1311,11 +1526,11 @@ export default function node(props) {
                                     type="checkbox"
                                     id={"t2day4" + relayIndex}
                                     defaultChecked={
-                                      relay.time2[4] == 1 ? true : false
+                                      relay.time2.date[4] == 1 ? true : false
                                     }
                                   />
                                   <label htmlFor={"t2day4" + relayIndex}>
-                                    จันทร์
+                                    พฤหัส
                                   </label>
                                 </label>
                                 <label>
@@ -1323,11 +1538,11 @@ export default function node(props) {
                                     type="checkbox"
                                     id={"t2day5" + relayIndex}
                                     defaultChecked={
-                                      relay.time2[5] == 1 ? true : false
+                                      relay.time2.date[5] == 1 ? true : false
                                     }
                                   />
                                   <label htmlFor={"t2day5" + relayIndex}>
-                                    อังคาร
+                                    ศุกร์
                                   </label>
                                 </label>
                                 <label>
@@ -1335,46 +1550,10 @@ export default function node(props) {
                                     type="checkbox"
                                     id={"t2day6" + relayIndex}
                                     defaultChecked={
-                                      relay.time2[6] == 1 ? true : false
+                                      relay.time2.date[6] == 1 ? true : false
                                     }
                                   />
                                   <label htmlFor={"t2day6" + relayIndex}>
-                                    พุธ
-                                  </label>
-                                </label>
-                                <label>
-                                  <input
-                                    type="checkbox"
-                                    id={"t2day7" + relayIndex}
-                                    defaultChecked={
-                                      relay.time2[7] == 1 ? true : false
-                                    }
-                                  />
-                                  <label htmlFor={"t2day7" + relayIndex}>
-                                    พฤหัส
-                                  </label>
-                                </label>
-                                <label>
-                                  <input
-                                    type="checkbox"
-                                    id={"t2day8" + relayIndex}
-                                    defaultChecked={
-                                      relay.time2[8] == 1 ? true : false
-                                    }
-                                  />
-                                  <label htmlFor={"t2day8" + relayIndex}>
-                                    ศุกร์
-                                  </label>
-                                </label>
-                                <label>
-                                  <input
-                                    type="checkbox"
-                                    id={"t2day9" + relayIndex}
-                                    defaultChecked={
-                                      relay.time2[9] == 1 ? true : false
-                                    }
-                                  />
-                                  <label htmlFor={"t2day9" + relayIndex}>
                                     เสาร์
                                   </label>
                                 </label>
@@ -1411,14 +1590,14 @@ export default function node(props) {
                                 <input
                                   id={"time3on" + relayIndex}
                                   type="time"
-                                  defaultValue={relay.time3[1]}
+                                  defaultValue={relay.time3.time_on}
                                   style={{ margin: "10px" }}
                                 />
                                 <label> Off :</label>
                                 <input
                                   id={"time3off" + relayIndex}
                                   type="time"
-                                  defaultValue={relay.time3[2]}
+                                  defaultValue={relay.time3.time_off}
                                   style={{ margin: "10px" }}
                                 />
                                 <label
@@ -1429,7 +1608,7 @@ export default function node(props) {
                                     id={"t3Status" + relayIndex}
                                     type="checkbox"
                                     defaultChecked={
-                                      relay.time1[0] == 1 ? true : false
+                                      relay.time1.status ? true : false
                                     }
                                   />
                                   <span className={styles.slider}></span>
@@ -1440,13 +1619,49 @@ export default function node(props) {
                                 <label>
                                   <input
                                     type="checkbox"
+                                    id={"t3day0" + relayIndex}
+                                    defaultChecked={
+                                      relay.time3.date[0] == 1 ? true : false
+                                    }
+                                  />
+                                  <label htmlFor={"t3day0" + relayIndex}>
+                                    อาทิตย์
+                                  </label>
+                                </label>
+                                <label>
+                                  <input
+                                    type="checkbox"
+                                    id={"t3day1" + relayIndex}
+                                    defaultChecked={
+                                      relay.time3.date[1] == 1 ? true : false
+                                    }
+                                  />
+                                  <label htmlFor={"t3day1" + relayIndex}>
+                                    จันทร์
+                                  </label>
+                                </label>
+                                <label>
+                                  <input
+                                    type="checkbox"
+                                    id={"t3day2" + relayIndex}
+                                    defaultChecked={
+                                      relay.time3.date[2] == 1 ? true : false
+                                    }
+                                  />
+                                  <label htmlFor={"t3day2" + relayIndex}>
+                                    อังคาร
+                                  </label>
+                                </label>
+                                <label>
+                                  <input
+                                    type="checkbox"
                                     id={"t3day3" + relayIndex}
                                     defaultChecked={
-                                      relay.time3[3] == 1 ? true : false
+                                      relay.time3.date[3] == 1 ? true : false
                                     }
                                   />
                                   <label htmlFor={"t3day3" + relayIndex}>
-                                    อาทิตย์
+                                    พุธ
                                   </label>
                                 </label>
                                 <label>
@@ -1454,11 +1669,11 @@ export default function node(props) {
                                     type="checkbox"
                                     id={"t3day4" + relayIndex}
                                     defaultChecked={
-                                      relay.time3[4] == 1 ? true : false
+                                      relay.time3.date[4] == 1 ? true : false
                                     }
                                   />
                                   <label htmlFor={"t3day4" + relayIndex}>
-                                    จันทร์
+                                    พฤหัส
                                   </label>
                                 </label>
                                 <label>
@@ -1466,11 +1681,11 @@ export default function node(props) {
                                     type="checkbox"
                                     id={"t3day5" + relayIndex}
                                     defaultChecked={
-                                      relay.time3[5] == 1 ? true : false
+                                      relay.time3.date[5] == 1 ? true : false
                                     }
                                   />
                                   <label htmlFor={"t3day5" + relayIndex}>
-                                    อังคาร
+                                    ศุกร์
                                   </label>
                                 </label>
                                 <label>
@@ -1478,46 +1693,10 @@ export default function node(props) {
                                     type="checkbox"
                                     id={"t3day6" + relayIndex}
                                     defaultChecked={
-                                      relay.time3[6] == 1 ? true : false
+                                      relay.time3.date[6] == 1 ? true : false
                                     }
                                   />
                                   <label htmlFor={"t3day6" + relayIndex}>
-                                    พุธ
-                                  </label>
-                                </label>
-                                <label>
-                                  <input
-                                    type="checkbox"
-                                    id={"t3day7" + relayIndex}
-                                    defaultChecked={
-                                      relay.time3[7] == 1 ? true : false
-                                    }
-                                  />
-                                  <label htmlFor={"t3day7" + relayIndex}>
-                                    พฤหัส
-                                  </label>
-                                </label>
-                                <label>
-                                  <input
-                                    type="checkbox"
-                                    id={"t3day8" + relayIndex}
-                                    defaultChecked={
-                                      relay.time3[8] == 1 ? true : false
-                                    }
-                                  />
-                                  <label htmlFor={"t3day8" + relayIndex}>
-                                    ศุกร์
-                                  </label>
-                                </label>
-                                <label>
-                                  <input
-                                    type="checkbox"
-                                    id={"t3day9" + relayIndex}
-                                    defaultChecked={
-                                      relay.time3[9] == 1 ? true : false
-                                    }
-                                  />
-                                  <label htmlFor={"t3day9" + relayIndex}>
                                     เสาร์
                                   </label>
                                 </label>
@@ -1546,25 +1725,6 @@ export default function node(props) {
                             >
                               ปิด
                             </button>
-                            <button
-                              type="button"
-                              className="btn btn-primary"
-                              style={{
-                                display: "flex",
-                                gap: "5px",
-                                alignItems: "center",
-                              }}
-                              onClick={() =>
-                                putTimeSetting(relayIndex, relay.relayID)
-                              }
-                            >
-                              <Image
-                                src="/save_white.png"
-                                width={20}
-                                height={20}
-                              />{" "}
-                              บันทึก
-                            </button>
                           </div>
                         </div>
                       </div>
@@ -1575,7 +1735,12 @@ export default function node(props) {
                       style={{ display: "none" }}
                     ></div>
                     <div key={index} className="">
-                      <div className="x_panel">
+                      <div
+                        className="x_panel"
+                        style={{
+                          backgroundColor: !relay.status ? "#eaeaea" : "white",
+                        }}
+                      >
                         <div className="x_title">
                           <h2>รีเลย์ที่ {relayIndex}</h2>
                           <ul className="nav navbar-right panel_toolbox">
@@ -1591,7 +1756,11 @@ export default function node(props) {
                                   display: "flex",
                                   alignItems: "center",
                                 }}
-                                onClick={() => relaysetting(relayIndex)}
+                                onClick={
+                                  relay.status
+                                    ? () => relaysetting(relayIndex)
+                                    : () => {}
+                                }
                               >
                                 <i className="fa fa-wrench"></i>
                               </a>
@@ -1662,180 +1831,269 @@ export default function node(props) {
                             {relay.timeFunction ? "เปิด" : "ปิด"}
                           </h2>
                           <h2>
-                            รอบที่ 1 : {relay.time1[0] == 1 ? "เปิด" : "ปิด"}
+                            รอบที่ 1 : {relay.time1.status ? "เปิด" : "ปิด"}
                           </h2>
                           <h2 className="brief">
                             เปิด : <i className="fa fa-clock-o"></i>{" "}
-                            {relay.time1[1]} | ปิด:{" "}
-                            <i className="fa fa-clock-o"></i> {relay.time1[2]}
+                            {relay.time1.time_on} | ปิด:{" "}
+                            <i className="fa fa-clock-o"></i>{" "}
+                            {relay.time1.time_off}
                           </h2>
                           <h2>
                             <label>วัน </label>{" "}
                             <label
                               style={
-                                relay.time1[3] == 1 ? dayactive : dayunactive
+                                relay.status
+                                  ? relay.time1.date[0] == 1
+                                    ? dayactive
+                                    : dayunactive
+                                  : dayunactive
                               }
                             >
                               อา
                             </label>{" "}
                             <label
                               style={
-                                relay.time1[4] == 1 ? dayactive : dayunactive
+                                relay.status
+                                  ? relay.time1.date[1] == 1
+                                    ? dayactive
+                                    : dayunactive
+                                  : dayunactive
                               }
                             >
                               จ
                             </label>{" "}
                             <label
                               style={
-                                relay.time1[5] == 1 ? dayactive : dayunactive
+                                relay.status
+                                  ? relay.time1.date[2] == 1
+                                    ? dayactive
+                                    : dayunactive
+                                  : dayunactive
                               }
                             >
                               อ
                             </label>{" "}
                             <label
                               style={
-                                relay.time1[6] == 1 ? dayactive : dayunactive
+                                relay.status
+                                  ? relay.time1.date[3] == 1
+                                    ? dayactive
+                                    : dayunactive
+                                  : dayunactive
                               }
                             >
                               พ
                             </label>{" "}
                             <label
                               style={
-                                relay.time1[7] == 1 ? dayactive : dayunactive
+                                relay.status
+                                  ? relay.time1.date[4] == 1
+                                    ? dayactive
+                                    : dayunactive
+                                  : dayunactive
                               }
                             >
                               พฤ
                             </label>{" "}
                             <label
                               style={
-                                relay.time1[8] == 1 ? dayactive : dayunactive
+                                relay.status
+                                  ? relay.time1.date[5] == 1
+                                    ? dayactive
+                                    : dayunactive
+                                  : dayunactive
                               }
                             >
                               ศ
                             </label>{" "}
                             <label
                               style={
-                                relay.time1[9] == 1 ? dayactive : dayunactive
+                                relay.status
+                                  ? relay.time1.date[6] == 1
+                                    ? dayactive
+                                    : dayunactive
+                                  : dayunactive
                               }
                             >
                               ส
                             </label>
                           </h2>
                           <h2>
-                            รอบที่ 2 : {relay.time2[0] == 1 ? "เปิด" : "ปิด"}
+                            รอบที่ 2 :{" "}
+                            {relay.time2.status == 1 ? "เปิด" : "ปิด"}
                           </h2>
                           <h2 className="brief">
                             เปิด : <i className="fa fa-clock-o"></i>{" "}
-                            {relay.time2[1]} | ปิด:{" "}
-                            <i className="fa fa-clock-o"></i> {relay.time2[2]}
+                            {relay.time2.time_on} | ปิด:{" "}
+                            <i className="fa fa-clock-o"></i>{" "}
+                            {relay.time2.time_off}
                           </h2>
                           <h2>
                             <label>วัน </label>{" "}
                             <label
                               style={
-                                relay.time2[3] == 1 ? dayactive : dayunactive
+                                relay.status
+                                  ? relay.time2.date[0] == 1
+                                    ? dayactive
+                                    : dayunactive
+                                  : dayunactive
                               }
                             >
                               อา
                             </label>{" "}
                             <label
                               style={
-                                relay.time2[4] == 1 ? dayactive : dayunactive
+                                relay.status
+                                  ? relay.time2.date[1] == 1
+                                    ? dayactive
+                                    : dayunactive
+                                  : dayunactive
                               }
                             >
                               จ
                             </label>{" "}
                             <label
                               style={
-                                relay.time2[5] == 1 ? dayactive : dayunactive
+                                relay.status
+                                  ? relay.time2.date[2] == 1
+                                    ? dayactive
+                                    : dayunactive
+                                  : dayunactive
                               }
                             >
                               อ
                             </label>{" "}
                             <label
                               style={
-                                relay.time2[6] == 1 ? dayactive : dayunactive
+                                relay.status
+                                  ? relay.time2.date[3] == 1
+                                    ? dayactive
+                                    : dayunactive
+                                  : dayunactive
                               }
                             >
                               พ
                             </label>{" "}
                             <label
                               style={
-                                relay.time2[7] == 1 ? dayactive : dayunactive
+                                relay.status
+                                  ? relay.time2.date[4] == 1
+                                    ? dayactive
+                                    : dayunactive
+                                  : dayunactive
                               }
                             >
                               พฤ
                             </label>{" "}
                             <label
                               style={
-                                relay.time2[8] == 1 ? dayactive : dayunactive
+                                relay.status
+                                  ? relay.time2.date[5] == 1
+                                    ? dayactive
+                                    : dayunactive
+                                  : dayunactive
                               }
                             >
                               ศ
                             </label>{" "}
                             <label
                               style={
-                                relay.time2[9] == 1 ? dayactive : dayunactive
+                                relay.status
+                                  ? relay.time2.date[6] == 1
+                                    ? dayactive
+                                    : dayunactive
+                                  : dayunactive
                               }
                             >
                               ส
                             </label>
                           </h2>
                           <h2>
-                            รอบที่ 3 : {relay.time3[0] == 1 ? "เปิด" : "ปิด"}
+                            รอบที่ 3 :{" "}
+                            {relay.time3.status == 1 ? "เปิด" : "ปิด"}
                           </h2>
                           <h2 className="brief">
                             เปิด : <i className="fa fa-clock-o"></i>{" "}
-                            {relay.time3[1]} | ปิด:{" "}
-                            <i className="fa fa-clock-o"></i> {relay.time3[2]}
+                            {relay.time3.time_on} | ปิด:{" "}
+                            <i className="fa fa-clock-o"></i>{" "}
+                            {relay.time3.time_off}
                           </h2>
                           <h2>
                             <label>วัน </label>{" "}
                             <label
                               style={
-                                relay.time3[3] == 1 ? dayactive : dayunactive
+                                relay.status
+                                  ? relay.time3.date[0] == 1
+                                    ? dayactive
+                                    : dayunactive
+                                  : dayunactive
                               }
                             >
                               อา
                             </label>{" "}
                             <label
                               style={
-                                relay.time3[4] == 1 ? dayactive : dayunactive
+                                relay.status
+                                  ? relay.time3.date[1] == 1
+                                    ? dayactive
+                                    : dayunactive
+                                  : dayunactive
                               }
                             >
                               จ
                             </label>{" "}
                             <label
                               style={
-                                relay.time3[5] == 1 ? dayactive : dayunactive
+                                relay.status
+                                  ? relay.time3.date[2] == 1
+                                    ? dayactive
+                                    : dayunactive
+                                  : dayunactive
                               }
                             >
                               อ
                             </label>{" "}
                             <label
                               style={
-                                relay.time3[6] == 1 ? dayactive : dayunactive
+                                relay.status
+                                  ? relay.time3.date[3] == 1
+                                    ? dayactive
+                                    : dayunactive
+                                  : dayunactive
                               }
                             >
                               พ
                             </label>{" "}
                             <label
                               style={
-                                relay.time3[7] == 1 ? dayactive : dayunactive
+                                relay.status
+                                  ? relay.time3.date[4] == 1
+                                    ? dayactive
+                                    : dayunactive
+                                  : dayunactive
                               }
                             >
                               พฤ
                             </label>{" "}
                             <label
                               style={
-                                relay.time3[8] == 1 ? dayactive : dayunactive
+                                relay.status
+                                  ? relay.time3.date[5] == 1
+                                    ? dayactive
+                                    : dayunactive
+                                  : dayunactive
                               }
                             >
                               ศ
                             </label>{" "}
                             <label
                               style={
-                                relay.time3[9] == 1 ? dayactive : dayunactive
+                                relay.status
+                                  ? relay.time3.date[6] == 1
+                                    ? dayactive
+                                    : dayunactive
+                                  : dayunactive
                               }
                             >
                               ส

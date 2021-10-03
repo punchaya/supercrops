@@ -9,12 +9,6 @@ const options = {
   clean: true,
   reconnectPeriod: 1000,
   connectTimeout: 30 * 1000,
-  will: {
-    topic: "testtopic",
-    payload: "Connection Closed abnormally..!",
-    qos: 0,
-    retain: false,
-  },
 };
 const client = mqtt.connect(host, options);
 export default client;

@@ -54,13 +54,13 @@ export default function Home(props) {
         });
     }
   }, []);
-  const farmList = [
+  /*const farmList = [
     { name: "ฟาร์มภูมิใจ", location: "อุตรดิตถ์", type: "ทุเรียน" },
     { name: "เพิ่มพูลฟาร์ม", location: "สุโขทัย", type: "ลองกอง" },
     { name: "ไร่ตันตระกูล", location: "สุโขทัย", type: "มะม่วง" },
     { name: "ทุ่งสุขสวัสดิ์", location: "น่าน", type: "ข้าวโพด" },
     { name: "สวนสตรอเบอรี่", location: "เพชรบูรณ์", type: "สตรอเบอรี่" },
-  ];
+  ];*/
   function link(url) {
     router.push(url);
   }
@@ -85,7 +85,7 @@ export default function Home(props) {
               </h2>
             </span>
             <div className="count">
-              <h3>{farmList.length}</h3>
+              <h3>{farms.length}</h3>
             </div>
             <span className="count_bottom"></span>
           </div>
@@ -148,7 +148,7 @@ export default function Home(props) {
                           type="button"
                           className="btn btn-primary btn-sm"
                           onClick={() => {
-                            router.push(`/farm?farm=${farm.name}`);
+                            router.push(`/farm`);
                             props.setfarmID(farmIdList[index]);
                           }}
                         >

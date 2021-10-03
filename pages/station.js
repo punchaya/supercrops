@@ -9,9 +9,7 @@ import axios from "axios";
 
 export default function station(props) {
   const router = useRouter();
-  const Data = router.query;
-  const stationIndex = Data.station;
-  const farmName = Data.farm;
+  //const Data = router.query;
   const [stapopup, setstapopup] = useState(false);
 
   const [nodeIDlist, setnodeIDlist] = useState([]);
@@ -46,6 +44,7 @@ export default function station(props) {
         console.log(error.response.headers);
       });
     setstation(stations.data);
+    console.log(stations.data);
     const _nodeIDlist = ["Nd88a6d3b6aa64f98a6ca6ab26b5f757f"]; // รอแก้ api แล้ว => const _nodeIDlist = stations.data.nodeIDlist //
     console.log(stations.data);
 
@@ -76,12 +75,9 @@ export default function station(props) {
         <div className="x_panel">
           <h2>
             <i className="fa fa-home"></i> <Link href="/">หน้าหลัก</Link> /{" "}
-            <i className="fa fa-sitemap"></i>{" "}
-            <Link href={`/farm?farm=${farmName}`}>ฟาร์ม</Link> /{" "}
-            <i className="fa fa-cubes"></i>
-            <Link href={`/station?station=${stationIndex}&farm=${farmName}`}>
-              โรงเรือน
-            </Link>
+            <i className="fa fa-sitemap"></i> <Link href={`/farm`}>ฟาร์ม</Link>{" "}
+            / <i className="fa fa-cubes"></i>
+            <Link href={`/station`}>โรงเรือน</Link>
           </h2>
         </div>
       </div>
@@ -93,7 +89,7 @@ export default function station(props) {
           >
             <span className="count_top">
               <h2>
-                <strong className="farmname">โรงเรือนที่ {stationIndex}</strong>
+                <strong className="farmname">โรงเรือน</strong>
               </h2>
               <h2>
                 <i className="fa fa-dot-circle-o"></i> จำนวนโหนด
@@ -309,11 +305,7 @@ export default function station(props) {
                           type="button"
                           className="btn btn-primary btn-sm"
                           onClick={() => {
-                            router.push(
-                              `/node?node=${
-                                index + 1
-                              }&station=${stationIndex}&farm=${farmName}`
-                            );
+                            router.push(`/node`);
                             props.setnodeID(node.nodeID);
                           }}
                         >
