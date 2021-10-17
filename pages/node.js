@@ -135,6 +135,7 @@ export default function node(props) {
   const [devicemsg, setdevicemsg] = useState(null);
 
   const [graph, setgraph] = useState(false);
+  const [faleTxt, setfaleTxt] = useState("เกิดข้อผิดพลาดบางอย่าง");
 
   const test_data = [
     {
@@ -481,38 +482,44 @@ export default function node(props) {
     const _datamax = document.getElementById(
       "data" + dataIndex + "max" + relayIndex
     ).value;
-    const putmethod = "data";
-    if (dataIndex == 1) {
-      const _putdata = {
-        data1: {
-          status: _dataStatus.toString(),
-          data: _dataSelect,
-          max: parseInt(_datamax),
-          min: parseInt(_datamin),
-          zoneId: zoneID,
-          conpare: "low",
-        },
-      };
-      console.log(zoneIDlist);
-      console.log(_putdata);
-      client.publish(
-        "/set_data1/farmId/relayId",
-        JSON.stringify(_putdata),
-        function (err) {
-          if (!err) {
-            setwait(true);
-            setmqttopic("/front/set_data1/farmId/relayId");
-            setmsgSend(JSON.stringify(_putdata));
-            setmqttsending(true);
-          } else {
-            console.log(err);
-          }
-        }
-      );
-      //console.log(_putData);
-      putData(_putData, relayID, putmethod);
+
+    if (_datamin >= _datamax) {
+      setfail(true);
+      setfaleTxt("ข้อมูลไม่ถูกต้อง");
     } else {
-      console.log("put data error");
+      const putmethod = "data";
+      if (dataIndex == 1) {
+        const _putdata = {
+          data1: {
+            status: _dataStatus.toString(),
+            data: _dataSelect,
+            max: parseInt(_datamax),
+            min: parseInt(_datamin),
+            zoneId: zoneID,
+            conpare: "low",
+          },
+        };
+        console.log(zoneIDlist);
+        console.log(_putdata);
+        client.publish(
+          "/set_data1/farmId/relayId",
+          JSON.stringify(_putdata),
+          function (err) {
+            if (!err) {
+              setwait(true);
+              setmqttopic("/front/set_data1/farmId/relayId");
+              setmsgSend(JSON.stringify(_putdata));
+              setmqttsending(true);
+            } else {
+              console.log(err);
+            }
+          }
+        );
+        //console.log(_putData);
+        //putData(_putdata, relayID, putmethod);
+      } else {
+        console.log("put data error");
+      }
     }
   }
   function putTimeSetting(relayIndex, relayID) {
@@ -593,6 +600,120 @@ export default function node(props) {
     modalOff("modalstyleTime" + relayIndex);
   }
 
+  function timematch(relayid, timeindex, timeon, timeoff, date) {
+    for (let i = 0; i < relayList.length; i++) {
+      const relay = relayList[i];
+      if (relayid == relay.relayID) {
+        if (timeindex == 1) {
+          var relay_time1 = relay.time2;
+          for (let i = 0; i < relay_time1.date.length; i++) {
+            const _date = relay_time1.date[i];
+            const _timeon = relay_time1.time_on;
+            const _timeoff = relay_time1.time_off;
+            if (_date == date[i]) {
+              if (timeon > _timeon && timeon < _timeoff) {
+                return "false";
+              } else if (timeon < _timeon && timeoff > _timeon) {
+                return "false";
+              } else if (timeon == _timeon && timeoff == timeoff) {
+                return "false";
+              } else {
+                return "true";
+              }
+            }
+          }
+          var relay_time2 = relay.time3;
+          for (let i = 0; i < relay_time2.date.length; i++) {
+            const _date = relay_time2.date[i];
+            const _timeon = relay_time2.time_on;
+            const _timeoff = relay_time2.time_off;
+            if (_date == date[i]) {
+              if (timeon > _timeon && timeon < _timeoff) {
+                return "false";
+              } else if (timeon < _timeon && timeoff > _timeon) {
+                return "false";
+              } else if (timeon == _timeon && timeoff == timeoff) {
+                return "false";
+              } else {
+                return "true";
+              }
+            }
+          }
+        } else if (timeindex == 2) {
+          var relay_time1 = relay.time1;
+          for (let i = 0; i < relay_time1.date.length; i++) {
+            const _date = relay_time1.date[i];
+            const _timeon = relay_time1.time_on;
+            const _timeoff = relay_time1.time_off;
+            if (_date == date[i]) {
+              if (timeon > _timeon && timeon < _timeoff) {
+                return "false";
+              } else if (timeon < _timeon && timeoff > _timeon) {
+                return "false";
+              } else if (timeon == _timeon && timeoff == timeoff) {
+                return "false";
+              } else {
+                return "true";
+              }
+            }
+          }
+          var relay_time2 = relay.time3;
+          for (let i = 0; i < relay_time2.date.length; i++) {
+            const _date = relay_time2.date[i];
+            const _timeon = relay_time2.time_on;
+            const _timeoff = relay_time2.time_off;
+            if (_date == date[i]) {
+              if (timeon > _timeon && timeon < _timeoff) {
+                return "false";
+              } else if (timeon < _timeon && timeoff > _timeon) {
+                return "false";
+              } else if (timeon == _timeon && timeoff == timeoff) {
+                return "false";
+              } else {
+                return "true";
+              }
+            }
+          }
+        } else if (timeindex == 3) {
+          var relay_time1 = relay.time2;
+          for (let i = 0; i < relay_time1.date.length; i++) {
+            const _date = relay_time1.date[i];
+            const _timeon = relay_time1.time_on;
+            const _timeoff = relay_time1.time_off;
+            if (_date == date[i]) {
+              if (timeon > _timeon && timeon < _timeoff) {
+                return "false";
+              } else if (timeon < _timeon && timeoff > _timeon) {
+                return "false";
+              } else if (timeon == _timeon && timeoff == timeoff) {
+                return "false";
+              } else {
+                return "true";
+              }
+            }
+          }
+          var relay_time2 = relay.time1;
+          for (let i = 0; i < relay_time2.date.length; i++) {
+            const _date = relay_time2.date[i];
+            const _timeon = relay_time2.time_on;
+            const _timeoff = relay_time2.time_off;
+            if (_date == date[i]) {
+              if (timeon > _timeon && timeon < _timeoff) {
+                return "false";
+              } else if (timeon < _timeon && timeoff > _timeon) {
+                return "false";
+              } else if (timeon == _timeon && timeoff == timeoff) {
+                return "false";
+              } else {
+                return "true";
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   async function putminitime(relayIndex, relayID, timeIndex) {
     const _orgId = localStorage.getItem("_orgID");
     const time = [];
@@ -611,92 +732,138 @@ export default function node(props) {
     const timeoff = document.getElementById(
       "time" + timeIndex + "off" + relayIndex
     ).value;
-    for (let i = 0; i <= 6; i++) {
-      const check = document.getElementById(
-        "t" + timeIndex + "day" + i + relayIndex
-      ).checked;
-      if (check) {
-        time.push(1);
-      } else {
-        time.push(0);
-      }
-    }
-    if (timeIndex == 1) {
-      var _putdata = {
-        time1: {
-          status: _status,
-          time_on: timeon,
-          time_off: timeoff,
-          date: time,
-        },
-      };
-      client.publish(
-        "/set_time1/farmId/relayId",
-        JSON.stringify(_putdata),
-        function (err) {
-          if (!err) {
-            setwait(true);
-            setmqttopic("/front/set_time1/farmId/relayId");
-            setmsgSend(JSON.stringify(_putdata));
-            setmqttsending(true);
-          } else {
-            console.log(err);
-          }
-        }
-      );
-    } else if (timeIndex == 2) {
-      var _putdata = {
-        time2: {
-          status: _status,
-          time_on: timeon,
-          time_off: timeoff,
-          date: time,
-        },
-      };
-      client.publish(
-        "/set_time2/farmId/relayId",
-        JSON.stringify(_putdata),
-        function (err) {
-          if (!err) {
-            setwait(true);
-            setmsgSend(JSON.stringify(_putdata));
-            setmqttopic("/front/set_time2/farmId/relayId");
-            setmqttsending(true);
-          } else {
-            console.log(err);
-          }
-        }
-      );
-    } else if (timeIndex == 3) {
-      var _putdata = {
-        time3: {
-          status: _status,
-          time_on: timeon,
-          time_off: timeoff,
-          date: time,
-        },
-      };
-      client.publish(
-        "/set_time3/farmId/relayId",
-        JSON.stringify(_putdata),
-        function (err) {
-          if (!err) {
-            setwait(true);
-            setmsgSend(JSON.stringify(_putdata));
-            setmqttopic("/front/set_time3/farmId/relayId");
-            setmqttsending(true);
-          } else {
-            console.log(err);
-          }
-        }
-      );
+
+    if (timeon >= timeoff) {
+      setfail(true);
+      setfaleTxt("ระบุวันหรือเวลาไม่ถูกต้อง");
     } else {
-      var _putdata = {
-        orgId: _orgId,
-      };
-      const putmethod = "time";
+      for (let i = 0; i <= 6; i++) {
+        const check = document.getElementById(
+          "t" + timeIndex + "day" + i + relayIndex
+        ).checked;
+        if (check) {
+          time.push(1);
+        } else {
+          time.push(0);
+        }
+      }
+      if (timeIndex == 1) {
+        const ismatch = await timematch(
+          relayID,
+          timeIndex,
+          timeon,
+          timeoff,
+          time
+        );
+        if (ismatch == "false") {
+          setfail(true);
+          setfaleTxt("ระบุวันหรือเวลาไม่ถูกต้อง");
+        } else {
+          var _putdata = {
+            time1: {
+              status: _status,
+              time_on: timeon,
+              time_off: timeoff,
+              date: time,
+            },
+          };
+          client.publish(
+            "/set_time1/farmId/relayId",
+            JSON.stringify(_putdata),
+            function (err) {
+              if (!err) {
+                setwait(true);
+                setmqttopic("/front/set_time1/farmId/relayId");
+                setmsgSend(JSON.stringify(_putdata));
+                setmqttsending(true);
+              } else {
+                console.log(err);
+              }
+            }
+          );
+        }
+      } else if (timeIndex == 2) {
+        const ismatch = await timematch(
+          relayID,
+          timeIndex,
+          timeon,
+          timeoff,
+          time
+        );
+        if (ismatch == "false") {
+          setfail(true);
+          setfaleTxt("ระบุวันหรือเวลาไม่ถูกต้อง");
+        } else {
+          var _putdata = {
+            time2: {
+              status: _status,
+              time_on: timeon,
+              time_off: timeoff,
+              date: time,
+            },
+          };
+          client.publish(
+            "/set_time2/farmId/relayId",
+            JSON.stringify(_putdata),
+            function (err) {
+              if (!err) {
+                setwait(true);
+                setmsgSend(JSON.stringify(_putdata));
+                setmqttopic("/front/set_time2/farmId/relayId");
+                setmqttsending(true);
+              } else {
+                console.log(err);
+              }
+            }
+          );
+        }
+      } else if (timeIndex == 3) {
+        const ismatch = await timematch(
+          relayID,
+          timeIndex,
+          timeon,
+          timeoff,
+          time
+        );
+        if (ismatch == "false") {
+          setfail(true);
+          setfaleTxt("ระบุวันหรือเวลาไม่ถูกต้อง");
+        } else {
+          var _putdata = {
+            time3: {
+              status: _status,
+              time_on: timeon,
+              time_off: timeoff,
+              date: time,
+            },
+          };
+          client.publish(
+            "/set_time3/farmId/relayId",
+            JSON.stringify(_putdata),
+            function (err) {
+              if (!err) {
+                setwait(true);
+                setmsgSend(JSON.stringify(_putdata));
+                setmqttopic("/front/set_time3/farmId/relayId");
+                setmqttsending(true);
+              } else {
+                console.log(err);
+              }
+            }
+          );
+        }
+      } else {
+        var _putdata = {
+          orgId: _orgId,
+        };
+        const putmethod = "time";
+      }
+      modalOff("modalstyleData" + relayIndex);
     }
-    modalOff("modalstyleData" + relayIndex);
+  }
+  function changetdStatus(id, type) {
+    const _orgId = localStorage.getItem("_orgID");
+    const check = document.getElementById(id).checked;
   }
   function changeStatus(id, relayID) {
     const _orgId = localStorage.getItem("_orgID");
@@ -737,6 +904,15 @@ export default function node(props) {
           <div className={styles.lds_dual_ring}></div>
           <div></div>
           <div>Waiting</div>
+          <div>
+            <button
+              onClick={() => setwait(false)}
+              style={{ fontSize: "16px", height: "24px" }}
+            >
+              ออก
+            </button>
+            {/*ใช้ทดสอบ*/}
+          </div>
         </div>
       </div>
       <div
@@ -780,7 +956,18 @@ export default function node(props) {
             </div>
           </div>
           <div className="color-red">Error</div>
-          <button className="btn btn-danger" onClick={() => setfail(!fail)}>
+
+          <div className="color-white" style={{ fontSize: "18px" }}>
+            {faleTxt}
+          </div>
+
+          <button
+            className="btn btn-danger"
+            onClick={() => {
+              setfail(!fail);
+              setfaleTxt("เกิดข้อผิดพลาดบางอย่าง");
+            }}
+          >
             Close
           </button>
         </div>
@@ -803,7 +990,9 @@ export default function node(props) {
             <div className="col-md-3 col-sm-6  tile_stats_count">
               <span className="count_top">
                 <h2>
-                  <strong className="farmname"> โหนด</strong>
+                  <strong className="farmname">
+                    <i className="fa fa-dot-circle-o" /> โหนด
+                  </strong>
                 </h2>
               </span>
               <div>
@@ -2147,6 +2336,12 @@ export default function node(props) {
             </div>
           </div>
         </div>
+      </div>
+      <div>
+        <p style={{ color: "red" }}>ปุ่มทดสอบ Modal success wating fail</p>
+        <button onClick={() => setsuccess(true)}>SUCCESS</button>
+        <button onClick={() => setwait(true)}>WAITING</button>
+        <button onClick={() => setfail(true)}>ERROR</button>
       </div>
     </>
   );
