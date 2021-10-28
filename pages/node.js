@@ -8,6 +8,9 @@ import { Scatter, Bar } from "react-chartjs-2";
 import axios from "axios";
 import client from "./api/mqtt.js";
 
+import Box from "@mui/material/Box";
+import Slider from "@mui/material/Slider";
+
 export default function node(props) {
   const router = useRouter();
   //const Data = router.query;
@@ -136,6 +139,9 @@ export default function node(props) {
 
   const [graph, setgraph] = useState(false);
   const [faleTxt, setfaleTxt] = useState("เกิดข้อผิดพลาดบางอย่าง");
+
+  const [dataValue, setdataValue] = useState([]);
+  const [dataRelay, setdataRelay] = useState("");
 
   const test_data = [
     {
@@ -403,10 +409,22 @@ export default function node(props) {
       settingbox.className = "dropdown-menu";
     }
   }
-  function rangeData(id, pos) {
+  function dataChange(event, newValue) {
+    setdataValue(newValue);
+  }
+  function checkValue() {
+    alert(dataValue + " " + dataRelay);
+  }
+  function rangeData(id, relayIndex) {
     const value = document.getElementById(id).value;
-    document.getElementById(id + "text").innerHTML = value;
-    document.getElementById(id + "text").value = value;
+    //document.getElementById(id + "text").innerHTML = value;
+    //document.getElementById(id + "text").value = value;
+    document.getElementById("data1min" + relayIndex + "text").innerHTML =
+      value[0];
+    document.getElementById("data1max" + relayIndex + "text").innerHTML =
+      value[1];
+    document.getElementById("data1min" + relayIndex + "text").value = value[0];
+    document.getElementById("data1max" + relayIndex + "text").value = value[1];
   }
   function modalOn(id) {
     const modal = document.getElementById(id);
@@ -1357,34 +1375,22 @@ export default function node(props) {
                                   <span className={styles.slider}></span>
                                 </label>
                               </div>
-                              Min :{" "}
-                              <label id={"data1min" + relayIndex + "text"}>
-                                {relay.data1.min}
+                              <label id={"data1" + relayIndex + "text"}>
+                                Min : {dataValue[0]} Max : {dataValue[1]}
                               </label>
-                              <input
-                                id={"data1min" + relayIndex}
-                                type="range"
-                                min="0"
-                                max="100"
-                                defaultValue={relay.data1.min}
-                                onChange={() =>
-                                  rangeData("data1min" + relayIndex, "data1min")
-                                }
+
+                              <Slider
+                                id="data1"
+                                defaultValue={[
+                                  relay.data1.min,
+                                  relay.data1.max,
+                                ]}
+                                onChange={dataChange}
+                                valueLabelDisplay="auto"
+                                disableSwap
+                                disabled={true}
                               />
-                              Max :{" "}
-                              <label id={"data1max" + relayIndex + "text"}>
-                                {relay.data1.max}
-                              </label>
-                              <input
-                                id={"data1max" + relayIndex}
-                                type="range"
-                                min="0"
-                                max="100"
-                                defaultValue={relay.data1.max}
-                                onChange={() =>
-                                  rangeData("data1max" + relayIndex, "data1max")
-                                }
-                              />{" "}
+
                               <button
                                 type="button"
                                 className="btn btn-primary"
@@ -1432,7 +1438,14 @@ export default function node(props) {
                         className="modal-dialog modal-lg"
                         style={{ maxWidth: "600px" }}
                       >
-                        <div className="modal-content">
+                        <div
+                          className="modal-content"
+                          style={{
+                            backgroundColor: !relay.timeFunction
+                              ? "#eaeaea"
+                              : "white",
+                          }}
+                        >
                           <div className="modal-header">
                             <h2 className="modal-title" id="myModalLabel">
                               Time Setting
@@ -1511,6 +1524,7 @@ export default function node(props) {
                                   type="time"
                                   defaultValue={relay.time1.time_on}
                                   style={{ margin: "10px" }}
+                                  disabled={relay.timeFunction ? false : true}
                                 />
                                 <label> Off :</label>
                                 <input
@@ -1518,6 +1532,7 @@ export default function node(props) {
                                   type="time"
                                   defaultValue={relay.time1.time_off}
                                   style={{ margin: "10px" }}
+                                  disabled={relay.timeFunction ? false : true}
                                 />
 
                                 <label
@@ -1528,8 +1543,13 @@ export default function node(props) {
                                     id={"t1Status" + relayIndex}
                                     type="checkbox"
                                     defaultChecked={
-                                      relay.time1.status ? true : false
+                                      relay.timeFunction
+                                        ? relay.time1.status
+                                          ? true
+                                          : false
+                                        : false
                                     }
+                                    disabled={relay.timeFunction ? false : true}
                                   />
                                   <span className={styles.slider}></span>
                                 </label>
@@ -1543,8 +1563,19 @@ export default function node(props) {
                                     defaultChecked={
                                       relay.time1.date[0] == 1 ? true : false
                                     }
+                                    disabled={relay.timeFunction ? false : true}
                                   />
-                                  <label htmlFor={"t1day0" + relayIndex}>
+                                  <label
+                                    htmlFor={"t1day0" + relayIndex}
+                                    style={
+                                      !relay.timeFunction
+                                        ? {
+                                            backgroundColor: "#dddddd",
+                                            color: "#73879C",
+                                          }
+                                        : {}
+                                    }
+                                  >
                                     อาทิตย์
                                   </label>
                                 </label>
@@ -1555,8 +1586,19 @@ export default function node(props) {
                                     defaultChecked={
                                       relay.time1.date[1] == 1 ? true : false
                                     }
+                                    disabled={relay.timeFunction ? false : true}
                                   />
-                                  <label htmlFor={"t1day1" + relayIndex}>
+                                  <label
+                                    htmlFor={"t1day1" + relayIndex}
+                                    style={
+                                      !relay.timeFunction
+                                        ? {
+                                            backgroundColor: "#dddddd",
+                                            color: "#73879C",
+                                          }
+                                        : {}
+                                    }
+                                  >
                                     จันทร์
                                   </label>
                                 </label>
@@ -1567,8 +1609,19 @@ export default function node(props) {
                                     defaultChecked={
                                       relay.time1.date[2] == 1 ? true : false
                                     }
+                                    disabled={relay.timeFunction ? false : true}
                                   />
-                                  <label htmlFor={"t1day2" + relayIndex}>
+                                  <label
+                                    htmlFor={"t1day2" + relayIndex}
+                                    style={
+                                      !relay.timeFunction
+                                        ? {
+                                            backgroundColor: "#dddddd",
+                                            color: "#73879C",
+                                          }
+                                        : {}
+                                    }
+                                  >
                                     อังคาร
                                   </label>
                                 </label>
@@ -1579,8 +1632,19 @@ export default function node(props) {
                                     defaultChecked={
                                       relay.time1.date[3] == 1 ? true : false
                                     }
+                                    disabled={relay.timeFunction ? false : true}
                                   />
-                                  <label htmlFor={"t1day3" + relayIndex}>
+                                  <label
+                                    htmlFor={"t1day3" + relayIndex}
+                                    style={
+                                      !relay.timeFunction
+                                        ? {
+                                            backgroundColor: "#dddddd",
+                                            color: "#73879C",
+                                          }
+                                        : {}
+                                    }
+                                  >
                                     พุธ
                                   </label>
                                 </label>
@@ -1591,8 +1655,19 @@ export default function node(props) {
                                     defaultChecked={
                                       relay.time1.date[4] == 1 ? true : false
                                     }
+                                    disabled={relay.timeFunction ? false : true}
                                   />
-                                  <label htmlFor={"t1day4" + relayIndex}>
+                                  <label
+                                    htmlFor={"t1day4" + relayIndex}
+                                    style={
+                                      !relay.timeFunction
+                                        ? {
+                                            backgroundColor: "#dddddd",
+                                            color: "#73879C",
+                                          }
+                                        : {}
+                                    }
+                                  >
                                     พฤหัส
                                   </label>
                                 </label>
@@ -1603,8 +1678,19 @@ export default function node(props) {
                                     defaultChecked={
                                       relay.time1.date[5] == 1 ? true : false
                                     }
+                                    disabled={relay.timeFunction ? false : true}
                                   />
-                                  <label htmlFor={"t1day5" + relayIndex}>
+                                  <label
+                                    htmlFor={"t1day5" + relayIndex}
+                                    style={
+                                      !relay.timeFunction
+                                        ? {
+                                            backgroundColor: "#dddddd",
+                                            color: "#73879C",
+                                          }
+                                        : {}
+                                    }
+                                  >
                                     ศุกร์
                                   </label>
                                 </label>
@@ -1615,8 +1701,19 @@ export default function node(props) {
                                     defaultChecked={
                                       relay.time1.date[6] == 1 ? true : false
                                     }
+                                    disabled={relay.timeFunction ? false : true}
                                   />
-                                  <label htmlFor={"t1day6" + relayIndex}>
+                                  <label
+                                    htmlFor={"t1day6" + relayIndex}
+                                    style={
+                                      !relay.timeFunction
+                                        ? {
+                                            backgroundColor: "#dddddd",
+                                            color: "#73879C",
+                                          }
+                                        : {}
+                                    }
+                                  >
                                     เสาร์
                                   </label>
                                 </label>
@@ -1624,9 +1721,25 @@ export default function node(props) {
                               <div>
                                 <button
                                   className="btn btn-primary"
-                                  style={{ fontSize: "12px" }}
-                                  onClick={() =>
-                                    putminitime(relayIndex, relay.relayID, 1)
+                                  style={
+                                    relay.timeFunction
+                                      ? { fontSize: "12px" }
+                                      : {
+                                          fontSize: "12px",
+                                          backgroundColor: "#DDDDDD",
+                                          borderColor: "#DDDDDD",
+                                          color: "#73879C",
+                                        }
+                                  }
+                                  onClick={
+                                    relay.timeFunction
+                                      ? () =>
+                                          putminitime(
+                                            relayIndex,
+                                            relay.relayID,
+                                            1
+                                          )
+                                      : () => {}
                                   }
                                 >
                                   บันทึก
@@ -1655,6 +1768,7 @@ export default function node(props) {
                                   type="time"
                                   defaultValue={relay.time2.time_on}
                                   style={{ margin: "10px" }}
+                                  disabled={relay.timeFunction ? false : true}
                                 />
                                 <label> Off :</label>
                                 <input
@@ -1662,6 +1776,7 @@ export default function node(props) {
                                   type="time"
                                   defaultValue={relay.time2.time_off}
                                   style={{ margin: "10px" }}
+                                  disabled={relay.timeFunction ? false : true}
                                 />
                                 <label
                                   className={styles.switch2}
@@ -1671,8 +1786,13 @@ export default function node(props) {
                                     id={"t2Status" + relayIndex}
                                     type="checkbox"
                                     defaultChecked={
-                                      relay.time1.status ? true : false
+                                      relay.timeFunction
+                                        ? relay.time1.status
+                                          ? true
+                                          : false
+                                        : false
                                     }
+                                    disabled={relay.timeFunction ? false : true}
                                   />
                                   <span className={styles.slider}></span>
                                 </label>
@@ -1686,8 +1806,19 @@ export default function node(props) {
                                     defaultChecked={
                                       relay.time2.date[0] == 1 ? true : false
                                     }
+                                    disabled={relay.timeFunction ? false : true}
                                   />
-                                  <label htmlFor={"t2day0" + relayIndex}>
+                                  <label
+                                    htmlFor={"t2day0" + relayIndex}
+                                    style={
+                                      !relay.timeFunction
+                                        ? {
+                                            backgroundColor: "#dddddd",
+                                            color: "#73879C",
+                                          }
+                                        : {}
+                                    }
+                                  >
                                     อาทิตย์
                                   </label>
                                 </label>
@@ -1698,8 +1829,19 @@ export default function node(props) {
                                     defaultChecked={
                                       relay.time2.date[1] == 1 ? true : false
                                     }
+                                    disabled={relay.timeFunction ? false : true}
                                   />
-                                  <label htmlFor={"t2day1" + relayIndex}>
+                                  <label
+                                    htmlFor={"t2day1" + relayIndex}
+                                    style={
+                                      !relay.timeFunction
+                                        ? {
+                                            backgroundColor: "#dddddd",
+                                            color: "#73879C",
+                                          }
+                                        : {}
+                                    }
+                                  >
                                     จันทร์
                                   </label>
                                 </label>
@@ -1710,8 +1852,19 @@ export default function node(props) {
                                     defaultChecked={
                                       relay.time2.date[2] == 1 ? true : false
                                     }
+                                    disabled={relay.timeFunction ? false : true}
                                   />
-                                  <label htmlFor={"t2day2" + relayIndex}>
+                                  <label
+                                    htmlFor={"t2day2" + relayIndex}
+                                    style={
+                                      !relay.timeFunction
+                                        ? {
+                                            backgroundColor: "#dddddd",
+                                            color: "#73879C",
+                                          }
+                                        : {}
+                                    }
+                                  >
                                     อังคาร
                                   </label>
                                 </label>
@@ -1722,8 +1875,19 @@ export default function node(props) {
                                     defaultChecked={
                                       relay.time2.date[3] == 1 ? true : false
                                     }
+                                    disabled={relay.timeFunction ? false : true}
                                   />
-                                  <label htmlFor={"t2day3" + relayIndex}>
+                                  <label
+                                    htmlFor={"t2day3" + relayIndex}
+                                    style={
+                                      !relay.timeFunction
+                                        ? {
+                                            backgroundColor: "#dddddd",
+                                            color: "#73879C",
+                                          }
+                                        : {}
+                                    }
+                                  >
                                     พุธ
                                   </label>
                                 </label>
@@ -1734,8 +1898,19 @@ export default function node(props) {
                                     defaultChecked={
                                       relay.time2.date[4] == 1 ? true : false
                                     }
+                                    disabled={relay.timeFunction ? false : true}
                                   />
-                                  <label htmlFor={"t2day4" + relayIndex}>
+                                  <label
+                                    htmlFor={"t2day4" + relayIndex}
+                                    style={
+                                      !relay.timeFunction
+                                        ? {
+                                            backgroundColor: "#dddddd",
+                                            color: "#73879C",
+                                          }
+                                        : {}
+                                    }
+                                  >
                                     พฤหัส
                                   </label>
                                 </label>
@@ -1746,8 +1921,19 @@ export default function node(props) {
                                     defaultChecked={
                                       relay.time2.date[5] == 1 ? true : false
                                     }
+                                    disabled={relay.timeFunction ? false : true}
                                   />
-                                  <label htmlFor={"t2day5" + relayIndex}>
+                                  <label
+                                    htmlFor={"t2day5" + relayIndex}
+                                    style={
+                                      !relay.timeFunction
+                                        ? {
+                                            backgroundColor: "#dddddd",
+                                            color: "#73879C",
+                                          }
+                                        : {}
+                                    }
+                                  >
                                     ศุกร์
                                   </label>
                                 </label>
@@ -1758,8 +1944,19 @@ export default function node(props) {
                                     defaultChecked={
                                       relay.time2.date[6] == 1 ? true : false
                                     }
+                                    disabled={relay.timeFunction ? false : true}
                                   />
-                                  <label htmlFor={"t2day6" + relayIndex}>
+                                  <label
+                                    htmlFor={"t2day6" + relayIndex}
+                                    style={
+                                      !relay.timeFunction
+                                        ? {
+                                            backgroundColor: "#dddddd",
+                                            color: "#73879C",
+                                          }
+                                        : {}
+                                    }
+                                  >
                                     เสาร์
                                   </label>
                                 </label>
@@ -1767,9 +1964,25 @@ export default function node(props) {
                               <div>
                                 <button
                                   className="btn btn-primary"
-                                  style={{ fontSize: "12px" }}
-                                  onClick={() =>
-                                    putminitime(relayIndex, relay.relayID, 2)
+                                  style={
+                                    relay.timeFunction
+                                      ? { fontSize: "12px" }
+                                      : {
+                                          fontSize: "12px",
+                                          backgroundColor: "#DDDDDD",
+                                          borderColor: "#DDDDDD",
+                                          color: "#73879C",
+                                        }
+                                  }
+                                  onClick={
+                                    relay.timeFunction
+                                      ? () =>
+                                          putminitime(
+                                            relayIndex,
+                                            relay.relayID,
+                                            2
+                                          )
+                                      : () => {}
                                   }
                                 >
                                   บันทึก
@@ -1798,6 +2011,7 @@ export default function node(props) {
                                   type="time"
                                   defaultValue={relay.time3.time_on}
                                   style={{ margin: "10px" }}
+                                  disabled={relay.timeFunction ? false : true}
                                 />
                                 <label> Off :</label>
                                 <input
@@ -1805,6 +2019,7 @@ export default function node(props) {
                                   type="time"
                                   defaultValue={relay.time3.time_off}
                                   style={{ margin: "10px" }}
+                                  disabled={relay.timeFunction ? false : true}
                                 />
                                 <label
                                   className={styles.switch2}
@@ -1814,8 +2029,13 @@ export default function node(props) {
                                     id={"t3Status" + relayIndex}
                                     type="checkbox"
                                     defaultChecked={
-                                      relay.time1.status ? true : false
+                                      relay.timeFunction
+                                        ? relay.time1.status
+                                          ? true
+                                          : false
+                                        : false
                                     }
+                                    disabled={relay.timeFunction ? false : true}
                                   />
                                   <span className={styles.slider}></span>
                                 </label>
@@ -1829,8 +2049,19 @@ export default function node(props) {
                                     defaultChecked={
                                       relay.time3.date[0] == 1 ? true : false
                                     }
+                                    disabled={relay.timeFunction ? false : true}
                                   />
-                                  <label htmlFor={"t3day0" + relayIndex}>
+                                  <label
+                                    htmlFor={"t3day0" + relayIndex}
+                                    style={
+                                      !relay.timeFunction
+                                        ? {
+                                            backgroundColor: "#dddddd",
+                                            color: "#73879C",
+                                          }
+                                        : {}
+                                    }
+                                  >
                                     อาทิตย์
                                   </label>
                                 </label>
@@ -1841,8 +2072,19 @@ export default function node(props) {
                                     defaultChecked={
                                       relay.time3.date[1] == 1 ? true : false
                                     }
+                                    disabled={relay.timeFunction ? false : true}
                                   />
-                                  <label htmlFor={"t3day1" + relayIndex}>
+                                  <label
+                                    htmlFor={"t3day1" + relayIndex}
+                                    style={
+                                      !relay.timeFunction
+                                        ? {
+                                            backgroundColor: "#dddddd",
+                                            color: "#73879C",
+                                          }
+                                        : {}
+                                    }
+                                  >
                                     จันทร์
                                   </label>
                                 </label>
@@ -1853,8 +2095,19 @@ export default function node(props) {
                                     defaultChecked={
                                       relay.time3.date[2] == 1 ? true : false
                                     }
+                                    disabled={relay.timeFunction ? false : true}
                                   />
-                                  <label htmlFor={"t3day2" + relayIndex}>
+                                  <label
+                                    htmlFor={"t3day2" + relayIndex}
+                                    style={
+                                      !relay.timeFunction
+                                        ? {
+                                            backgroundColor: "#dddddd",
+                                            color: "#73879C",
+                                          }
+                                        : {}
+                                    }
+                                  >
                                     อังคาร
                                   </label>
                                 </label>
@@ -1865,8 +2118,19 @@ export default function node(props) {
                                     defaultChecked={
                                       relay.time3.date[3] == 1 ? true : false
                                     }
+                                    disabled={relay.timeFunction ? false : true}
                                   />
-                                  <label htmlFor={"t3day3" + relayIndex}>
+                                  <label
+                                    htmlFor={"t3day3" + relayIndex}
+                                    style={
+                                      !relay.timeFunction
+                                        ? {
+                                            backgroundColor: "#dddddd",
+                                            color: "#73879C",
+                                          }
+                                        : {}
+                                    }
+                                  >
                                     พุธ
                                   </label>
                                 </label>
@@ -1877,8 +2141,19 @@ export default function node(props) {
                                     defaultChecked={
                                       relay.time3.date[4] == 1 ? true : false
                                     }
+                                    disabled={relay.timeFunction ? false : true}
                                   />
-                                  <label htmlFor={"t3day4" + relayIndex}>
+                                  <label
+                                    htmlFor={"t3day4" + relayIndex}
+                                    style={
+                                      !relay.timeFunction
+                                        ? {
+                                            backgroundColor: "#dddddd",
+                                            color: "#73879C",
+                                          }
+                                        : {}
+                                    }
+                                  >
                                     พฤหัส
                                   </label>
                                 </label>
@@ -1889,8 +2164,19 @@ export default function node(props) {
                                     defaultChecked={
                                       relay.time3.date[5] == 1 ? true : false
                                     }
+                                    disabled={relay.timeFunction ? false : true}
                                   />
-                                  <label htmlFor={"t3day5" + relayIndex}>
+                                  <label
+                                    htmlFor={"t3day5" + relayIndex}
+                                    style={
+                                      !relay.timeFunction
+                                        ? {
+                                            backgroundColor: "#dddddd",
+                                            color: "#73879C",
+                                          }
+                                        : {}
+                                    }
+                                  >
                                     ศุกร์
                                   </label>
                                 </label>
@@ -1901,8 +2187,19 @@ export default function node(props) {
                                     defaultChecked={
                                       relay.time3.date[6] == 1 ? true : false
                                     }
+                                    disabled={relay.timeFunction ? false : true}
                                   />
-                                  <label htmlFor={"t3day6" + relayIndex}>
+                                  <label
+                                    htmlFor={"t3day6" + relayIndex}
+                                    style={
+                                      !relay.timeFunction
+                                        ? {
+                                            backgroundColor: "#dddddd",
+                                            color: "#73879C",
+                                          }
+                                        : {}
+                                    }
+                                  >
                                     เสาร์
                                   </label>
                                 </label>
@@ -1910,9 +2207,25 @@ export default function node(props) {
                               <div>
                                 <button
                                   className="btn btn-primary"
-                                  style={{ fontSize: "12px" }}
-                                  onClick={() =>
-                                    putminitime(relayIndex, relay.relayID, 3)
+                                  style={
+                                    relay.timeFunction
+                                      ? { fontSize: "12px" }
+                                      : {
+                                          fontSize: "12px",
+                                          backgroundColor: "#DDDDDD",
+                                          borderColor: "#DDDDDD",
+                                          color: "#73879C",
+                                        }
+                                  }
+                                  onClick={
+                                    relay.timeFunction
+                                      ? () =>
+                                          putminitime(
+                                            relayIndex,
+                                            relay.relayID,
+                                            3
+                                          )
+                                      : () => {}
                                   }
                                 >
                                   บันทึก
@@ -1989,6 +2302,10 @@ export default function node(props) {
                                   onClick={() => {
                                     modalOn("modalstyleData" + relayIndex);
                                     relaysetting(relayIndex);
+                                    setdataValue([
+                                      relay.data1.min,
+                                      relay.data1.max,
+                                    ]);
                                   }}
                                 >
                                   <i className="fa fa-database"></i>{" "}
