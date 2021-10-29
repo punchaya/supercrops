@@ -409,8 +409,10 @@ export default function node(props) {
           relayId: relayID,
         }
       );
+      // set ค่า timefunction และ datafunction ด้วยตัวเอง
       relay.data.dataFunction = true;
       relay.data.timeFunction = true;
+      //=========================================
       r_list.push(relay.data);
     }
     setrelayList(r_list);
