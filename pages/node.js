@@ -10,6 +10,7 @@ import client from "./api/mqtt.js";
 
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
+import { connect } from "mqtt";
 
 export default function node(props) {
   const router = useRouter();
@@ -138,7 +139,7 @@ export default function node(props) {
   const [devicemsg, setdevicemsg] = useState(null);
 
   const [graph, setgraph] = useState(false);
-  const [faleTxt, setfaleTxt] = useState("เกิดข้อผิดพลาดบางอย่าง");
+  const [failTxt, setfailTxt] = useState("เกิดข้อผิดพลาดบางอย่าง");
 
   const [dataValue, setdataValue] = useState([]);
   const [dataRelay, setdataRelay] = useState("");
@@ -182,39 +183,105 @@ export default function node(props) {
     setmsgSend(null);
     setmqttopic(null);
   }
+
+  async function getRelayID() {
+    const _orgID = localStorage.getItem("_orgID");
+    const _farmID = localStorage.getItem("_farmID");
+    const _nodeID = localStorage.getItem("_nodeID");
+    const nodeInfo = await axios
+      .post(`http://203.151.136.127:10001/api/${_farmID}/n/${_nodeID}`, {
+        orgId: _orgID,
+      })
+      .catch((error) => {
+        /*
+      localStorage.clear();
+      window.location.assign("/login");*/
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      });
+    const nodeInfores = nodeInfo.data;
+
+    const testreqdata = {
+      orgId: "Oea74a83915b2499987e62868c69f3d5c",
+      tsdbToken:
+        "MHXpIIeM0uQwLqubaADfYvXHdsDi4z2RtQ_QhLPpM76pVLuuzUg-oq0pU9eSAqTC7U6vX_EUHnR5Bt4gbCV4cw==",
+      zoneId: "Ze006815b18d04414aeb598b5befc6450",
+      graphData: "in_humid",
+      time1: 1632762000000,
+      time2: 1632841023498,
+    };
+    //console.log(testreqdata);
+    const datapoint = await axios
+      .post(
+        `http://203.151.136.127:10002/api/tsdb/service/Ff4440d10ee0e49b299ec379f76fa5a84/Nfa7d193b520e46e187af39e8c15f8910`,
+        testreqdata
+      )
+      .catch((error) => {
+        //localStorage.clear();
+        //window.location.assign("/login");
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      });
+    //console.log(datapoint);
+
+    return nodeInfores.relayIDlist;
+  }
+
   useEffect(async () => {
-    client.on("connect", function () {
-      client.subscribe("/front/control/farmId/relayId", function (err) {
-        if (!err) {
-          client.publish("test", "test1Start");
-        }
+    const _orgID = localStorage.getItem("_orgID");
+    const _farmID = localStorage.getItem("_farmID");
+    const _nodeID = localStorage.getItem("_nodeID");
+    const relayidlist = await getRelayID();
+
+    for (let index = 0; index < relayidlist.length; index++) {
+      const relay = relayidlist[index];
+      //console.log(relay);
+      client.subscribe(`/front/control/${_farmID}/${relay}`, function () {
+        client.publish(
+          `/control/${_farmID}/${relay}`,
+          "Supercrops subscribing"
+        );
       });
-      client.subscribe("/front/set_time1/farmId/relayId", function (err) {
-        if (!err) {
-          client.publish("test", "test2Start");
-        }
+      client.subscribe(`/front/time_fn/${_farmID}/${relay}`, function () {
+        client.publish(
+          `/time_fn/${_farmID}/${relay}`,
+          "Supercrops subscribing"
+        );
       });
-      client.subscribe("/front/set_time2/farmId/relayId", function (err) {
-        if (!err) {
-          client.publish("test", "test3Start");
-        }
+      client.subscribe(`/front/set_time1/${_farmID}/${relay}`, function () {
+        client.publish(
+          `/set_time1/${_farmID}/${relay}`,
+          "Supercrops subscribing"
+        );
       });
-      client.subscribe("/front/set_time3/farmId/relayId", function (err) {
-        if (!err) {
-          client.publish("test", "test4Start");
-        }
+      client.subscribe(`/front/set_time2/${_farmID}/${relay}`, function () {
+        client.publish(
+          `/set_time2/${_farmID}/${relay}`,
+          "Supercrops subscribing"
+        );
       });
-      client.subscribe("/front/data_fn/farmId/relayId", function (err) {
-        if (!err) {
-          client.publish("test", "test5Start");
-        }
+      client.subscribe(`/front/set_time3/${_farmID}/${relay}`, function () {
+        client.publish(
+          `/set_time3/${_farmID}/${relay}`,
+          "Supercrops subscribing"
+        );
       });
-      client.subscribe("/front/set_data1/farmId/relayId", function (err) {
-        if (!err) {
-          client.publish("test", "test5Start");
-        }
+      client.subscribe(`/front/data_fn/${_farmID}/${relay}`, function () {
+        client.publish(
+          `/data_fn/${_farmID}/${relay}`,
+          "Supercrops subscribing"
+        );
       });
-    });
+      client.subscribe(`/front/set_data1/${_farmID}/${relay}`, function () {
+        client.publish(
+          `/set_data1/${_farmID}/${relay}`,
+          "Supercrops subscribing"
+        );
+      });
+    }
+
     client.on("message", function (topic, message) {
       const memtopic = mqttopic;
       setdeviceTopic(topic.toString());
@@ -342,10 +409,13 @@ export default function node(props) {
           relayId: relayID,
         }
       );
+      relay.data.dataFunction = true;
+      relay.data.timeFunction = true;
       r_list.push(relay.data);
     }
     setrelayList(r_list);
     setdataSelect(null);
+    console.log(r_list);
   }
 
   function putData(data, relayID, method) {
@@ -412,9 +482,6 @@ export default function node(props) {
   function dataChange(event, newValue) {
     setdataValue(newValue);
   }
-  function checkValue() {
-    alert(dataValue + " " + dataRelay);
-  }
   function rangeData(id, relayIndex) {
     const value = document.getElementById(id).value;
     //document.getElementById(id + "text").innerHTML = value;
@@ -476,67 +543,74 @@ export default function node(props) {
     modalOff("modalstyleData" + relayIndex);
   }
   function putminiData(relayIndex, relayID, dataIndex) {
+    const _farmID = localStorage.getItem("_farmID");
     const _orgId = localStorage.getItem("_orgID");
     const zoneindex = document.getElementById("selectzone" + relayIndex).value;
-    console.log(zoneindex);
-    const zoneID = zoneIDlist[zoneindex];
-    const _dataFunction = document.getElementById(
-      "dStatus" + relayIndex
-    ).checked;
-    const _dataCheck = document.getElementById(
-      "d" + dataIndex + "Status" + relayIndex
-    ).checked;
-    if (_dataCheck) {
-      var _dataStatus = true;
-    } else {
-      var _dataStatus = false;
-    }
-    const _dataSelect = document.getElementById(
-      "dataSelect" + dataIndex + relayIndex
-    ).value;
-    const _datamin = document.getElementById(
-      "data" + dataIndex + "min" + relayIndex
-    ).value;
-    const _datamax = document.getElementById(
-      "data" + dataIndex + "max" + relayIndex
-    ).value;
-
-    if (_datamin >= _datamax) {
+    console.log("zone index " + zoneindex);
+    if (zoneindex == -1) {
       setfail(true);
-      setfaleTxt("ข้อมูลไม่ถูกต้อง");
+      setfailTxt("กรุณาเลือกโซน");
     } else {
-      const putmethod = "data";
-      if (dataIndex == 1) {
-        const _putdata = {
-          data1: {
-            status: _dataStatus.toString(),
-            data: _dataSelect,
-            max: parseInt(_datamax),
-            min: parseInt(_datamin),
-            zoneId: zoneID,
-            conpare: "low",
-          },
-        };
-        console.log(zoneIDlist);
-        console.log(_putdata);
-        client.publish(
-          "/set_data1/farmId/relayId",
-          JSON.stringify(_putdata),
-          function (err) {
-            if (!err) {
-              setwait(true);
-              setmqttopic("/front/set_data1/farmId/relayId");
-              setmsgSend(JSON.stringify(_putdata));
-              setmqttsending(true);
-            } else {
-              console.log(err);
-            }
-          }
-        );
-        //console.log(_putData);
-        //putData(_putdata, relayID, putmethod);
+      const zoneID = zoneIDlist[zoneindex];
+      const _dataFunction = document.getElementById(
+        "dStatus" + relayIndex
+      ).checked;
+      const _dataCheck = document.getElementById(
+        "d" + dataIndex + "Status" + relayIndex
+      ).checked;
+      if (_dataCheck) {
+        var _dataStatus = true;
       } else {
-        console.log("put data error");
+        var _dataStatus = false;
+      }
+      const _dataSelect = document.getElementById(
+        "dataSelect" + dataIndex + relayIndex
+      ).value;
+      console.log("data index" + _dataSelect);
+      if (_dataSelect == -1) {
+        setfail(true);
+        setfailTxt("กรุณาเลือกชนิดข้อมูล");
+      } else {
+        const _datamin = dataValue[0];
+        const _datamax = dataValue[1];
+        if (_datamin >= _datamax) {
+          setfail(true);
+          setfailTxt("ข้อมูลไม่ถูกต้อง");
+        } else {
+          const putmethod = "data";
+          if (dataIndex == 1) {
+            const _putdata = {
+              data1: {
+                status: _dataStatus.toString(),
+                data: _dataSelect,
+                max: parseInt(_datamax),
+                min: parseInt(_datamin),
+                zoneId: zoneID,
+                conpare: "low",
+              },
+            };
+            console.log(zoneIDlist);
+            console.log(_putdata);
+            client.publish(
+              "/set_data1/farmId/relayId",
+              JSON.stringify(_putdata),
+              function (err) {
+                if (!err) {
+                  setwait(true);
+                  setmqttopic("/front/set_data1/farmId/relayId");
+                  setmsgSend(JSON.stringify(_putdata));
+                  setmqttsending(true);
+                } else {
+                  console.log(err);
+                }
+              }
+            );
+            //console.log(_putData);
+            //putData(_putdata, relayID, putmethod);
+          } else {
+            console.log("put data error");
+          }
+        }
       }
     }
   }
@@ -733,6 +807,7 @@ export default function node(props) {
   }
 
   async function putminitime(relayIndex, relayID, timeIndex) {
+    const _farmID = localStorage.getItem("_farmID");
     const _orgId = localStorage.getItem("_orgID");
     const time = [];
     const timecheck = document.getElementById(
@@ -753,7 +828,7 @@ export default function node(props) {
 
     if (timeon >= timeoff) {
       setfail(true);
-      setfaleTxt("ระบุวันหรือเวลาไม่ถูกต้อง");
+      setfailTxt("ช่วงเวลาไม่ถูกต้อง");
     } else {
       for (let i = 0; i <= 6; i++) {
         const check = document.getElementById(
@@ -775,7 +850,7 @@ export default function node(props) {
         );
         if (ismatch == "false") {
           setfail(true);
-          setfaleTxt("ระบุวันหรือเวลาไม่ถูกต้อง");
+          setfailTxt("ช่วงเวลาทับซ้อนกัน");
         } else {
           var _putdata = {
             time1: {
@@ -791,7 +866,7 @@ export default function node(props) {
             function (err) {
               if (!err) {
                 setwait(true);
-                setmqttopic("/front/set_time1/farmId/relayId");
+                setmqttopic(`/front/set_time1/${_farmID}/${relayID}`);
                 setmsgSend(JSON.stringify(_putdata));
                 setmqttsending(true);
               } else {
@@ -810,7 +885,7 @@ export default function node(props) {
         );
         if (ismatch == "false") {
           setfail(true);
-          setfaleTxt("ระบุวันหรือเวลาไม่ถูกต้อง");
+          setfailTxt("ช่วงเวลาทับซ้อนกัน");
         } else {
           var _putdata = {
             time2: {
@@ -821,7 +896,7 @@ export default function node(props) {
             },
           };
           client.publish(
-            "/set_time2/farmId/relayId",
+            `/set_time2/${_farmID}/${relayID}`,
             JSON.stringify(_putdata),
             function (err) {
               if (!err) {
@@ -845,7 +920,7 @@ export default function node(props) {
         );
         if (ismatch == "false") {
           setfail(true);
-          setfaleTxt("ระบุวันหรือเวลาไม่ถูกต้อง");
+          setfailTxt("ช่วงเวลาทับซ้อนกัน");
         } else {
           var _putdata = {
             time3: {
@@ -856,7 +931,7 @@ export default function node(props) {
             },
           };
           client.publish(
-            "/set_time3/farmId/relayId",
+            `/set_time3/${_farmID}/${relayID}`,
             JSON.stringify(_putdata),
             function (err) {
               if (!err) {
@@ -879,9 +954,53 @@ export default function node(props) {
       modalOff("modalstyleData" + relayIndex);
     }
   }
-  function changetdStatus(id, type) {
+  function setdataFunction(id, relayID) {
+    const _farmID = localStorage.getItem("_farmID");
     const _orgId = localStorage.getItem("_orgID");
     const check = document.getElementById(id).checked;
+    if (check) {
+      var _putdata = { dataFunction: true };
+    } else {
+      var _putdata = { dataFunction: false };
+    }
+    client.publish(
+      `/data_fn/${_farmID}/${relayID}`,
+      JSON.stringify(_putdata),
+      function (err) {
+        if (!err) {
+          setwait(true);
+          setmqttopic(`/front/data_fn/${_farmID}/${relayID}`);
+          setmsgSend(JSON.stringify(_putdata));
+          setmqttsending(true);
+        } else {
+          console.log(err);
+        }
+      }
+    );
+  }
+  function settimeFunction(id, relayID) {
+    const _farmID = localStorage.getItem("_farmID");
+    const _orgId = localStorage.getItem("_orgID");
+    const check = document.getElementById(id).checked;
+    if (check) {
+      var _putdata = { timeFunction: true };
+    } else {
+      var _putdata = { timeFunction: false };
+    }
+    client.publish(
+      `/time_fn/${_farmID}/${relayID}`,
+      JSON.stringify(_putdata),
+      function (err) {
+        if (!err) {
+          setwait(true);
+          setmqttopic(`/front/time_fn/${_farmID}/${relayID}`);
+          setmsgSend(JSON.stringify(_putdata));
+          setmqttsending(true);
+        } else {
+          console.log(err);
+        }
+      }
+    );
   }
   function changeStatus(id, relayID) {
     const _orgId = localStorage.getItem("_orgID");
@@ -921,7 +1040,7 @@ export default function node(props) {
         <div className={styles.waiting}>
           <div className={styles.lds_dual_ring}></div>
           <div></div>
-          <div>Waiting</div>
+          <div>กำลังดำเนินการ</div>
           <div>
             <button
               onClick={() => setwait(false)}
@@ -947,7 +1066,7 @@ export default function node(props) {
               <div className="icon-fix"></div>
             </div>
           </div>
-          <div className="color-green">Success</div>
+          <div className="color-green">สำเร็จ</div>
           <button
             className="btn btn-success"
             onClick={() => {
@@ -973,17 +1092,17 @@ export default function node(props) {
               <div className="icon-fix"></div>
             </div>
           </div>
-          <div className="color-red">Error</div>
+          <div className="color-red">ผิดพลาด</div>
 
           <div className="color-white" style={{ fontSize: "18px" }}>
-            {faleTxt}
+            {failTxt}
           </div>
 
           <button
             className="btn btn-danger"
             onClick={() => {
               setfail(!fail);
-              setfaleTxt("เกิดข้อผิดพลาดบางอย่าง");
+              setfailTxt("เกิดข้อผิดพลาดบางอย่าง");
             }}
           >
             Close
@@ -1218,6 +1337,7 @@ export default function node(props) {
               {relayList.map((relay, index) => {
                 const relayIndex = index + 1;
                 const setting = false;
+                //console.log(relay);
                 return (
                   <div key={index}>
                     <div
@@ -1226,10 +1346,17 @@ export default function node(props) {
                       style={{ display: "none" }}
                     >
                       <div className="modal-dialog modal-lg">
-                        <div className="modal-content">
+                        <div
+                          className="modal-content"
+                          style={{
+                            backgroundColor: !relay.dataFunction
+                              ? "#eaeaea"
+                              : "white",
+                          }}
+                        >
                           <div className="modal-header">
                             <h2 className="modal-title" id="myModalLabel">
-                              Data Setting
+                              ตั้งค่าข้อมูล
                             </h2>
                             <button
                               type="button"
@@ -1269,12 +1396,18 @@ export default function node(props) {
                                 />
                               </label>
 
-                              <h4> Data Setting {"relay " + relayIndex}</h4>
+                              <h4> ตั้งค่าข้อมูล {"relay " + relayIndex}</h4>
                               <label style={{ marginLeft: "auto" }}>
-                                Status
+                                สถานะ
                               </label>
                               <label className={styles.switch2}>
                                 <input
+                                  onClick={() =>
+                                    setdataFunction(
+                                      "dStatus" + relayIndex,
+                                      relay.relayID
+                                    )
+                                  }
                                   id={"dStatus" + relayIndex}
                                   type="checkbox"
                                   defaultChecked={
@@ -1303,7 +1436,7 @@ export default function node(props) {
                               >
                                 <label>
                                   <h4>
-                                    Zone :{" "}
+                                    เลือกโซน :{" "}
                                     <select
                                       id={"selectzone" + relayIndex}
                                       onChange={() =>
@@ -1319,17 +1452,20 @@ export default function node(props) {
                                         marginLeft: "10px",
                                         borderColor: "#BEBEBE",
                                       }}
+                                      disabled={
+                                        relay.dataFunction ? false : true
+                                      }
                                     >
-                                      <option value={null}>เลือกโซน</option>
+                                      <option value={-1}>เลือกโซน</option>
                                       {zoneList.map((zone, index) => {
                                         return (
                                           <option key={index} value={index}>
-                                            {index}
+                                            โซนที่ {index + 1}
                                           </option>
                                         );
                                       })}
                                     </select>{" "}
-                                    Data :
+                                    ข้อมูล :
                                     {dataList.map((_data, index) => {
                                       return (
                                         <select
@@ -1346,9 +1482,7 @@ export default function node(props) {
                                               : { display: "none" }
                                           }
                                         >
-                                          <option value={null}>
-                                            เลือกข้อมูล
-                                          </option>
+                                          <option value={0}>เลือกข้อมูล</option>
                                           {_data.map((data, index) => {
                                             return (
                                               <option key={index} value={data}>
@@ -1369,14 +1503,19 @@ export default function node(props) {
                                     id={"d1Status" + relayIndex}
                                     type="checkbox"
                                     defaultChecked={
-                                      relay.data1.status ? true : false
+                                      relay.dataFunction
+                                        ? relay.data1.status
+                                          ? true
+                                          : false
+                                        : false
                                     }
                                   />
                                   <span className={styles.slider}></span>
                                 </label>
                               </div>
                               <label id={"data1" + relayIndex + "text"}>
-                                Min : {dataValue[0]} Max : {dataValue[1]}
+                                ค่าน้อยสุด : {dataValue[0]} ค่ามากสุด :{" "}
+                                {dataValue[1]}
                               </label>
 
                               <Slider
@@ -1388,21 +1527,41 @@ export default function node(props) {
                                 onChange={dataChange}
                                 valueLabelDisplay="auto"
                                 disableSwap
-                                disabled={true}
+                                disabled={relay.dataFunction ? false : true}
                               />
 
                               <button
                                 type="button"
                                 className="btn btn-primary"
-                                style={{
-                                  display: "flex",
-                                  gap: "5px",
-                                  alignItems: "center",
-                                  fontSize: "12px",
-                                  maxWidth: "80px",
-                                }}
-                                onClick={() =>
-                                  putminiData(relayIndex, relay.relayID, 1)
+                                style={
+                                  relay.dataFunction
+                                    ? {
+                                        display: "flex",
+                                        gap: "5px",
+                                        alignItems: "center",
+                                        fontSize: "12px",
+                                        maxWidth: "80px",
+                                      }
+                                    : {
+                                        display: "flex",
+                                        gap: "5px",
+                                        alignItems: "center",
+                                        maxWidth: "80px",
+                                        fontSize: "12px",
+                                        backgroundColor: "#DDDDDD",
+                                        borderColor: "#DDDDDD",
+                                        color: "#73879C",
+                                      }
+                                }
+                                onClick={
+                                  relay.dataFunction
+                                    ? () =>
+                                        putminiData(
+                                          relayIndex,
+                                          relay.relayID,
+                                          1
+                                        )
+                                    : () => {}
                                 }
                               >
                                 <Image
@@ -1448,7 +1607,7 @@ export default function node(props) {
                         >
                           <div className="modal-header">
                             <h2 className="modal-title" id="myModalLabel">
-                              Time Setting
+                              ตั้งค่าเวลา
                             </h2>
                             <button
                               type="button"
@@ -1487,14 +1646,20 @@ export default function node(props) {
                                 />
                               </label>
 
-                              <h4>Time Setting {relayIndex}</h4>
+                              <h4>ตั้งค่าเวลา {relayIndex}</h4>
                               <label style={{ marginLeft: "auto" }}>
-                                Status
+                                สถานะ
                               </label>
                               <label className={styles.switch2}>
                                 <input
                                   id={"tStatus" + relayIndex}
                                   type="checkbox"
+                                  onClick={() =>
+                                    settimeFunction(
+                                      "tStatus" + relayIndex,
+                                      relay.relayID
+                                    )
+                                  }
                                   defaultChecked={
                                     relay.timeFunction ? true : false
                                   }
@@ -1518,7 +1683,7 @@ export default function node(props) {
                                   alignItems: "center",
                                 }}
                               >
-                                <label>Time 1 Setting : On: </label>
+                                <label>ตั้งค่าเวลา 1 : เวลาเปิด: </label>
                                 <input
                                   id={"time1on" + relayIndex}
                                   type="time"
@@ -1526,7 +1691,7 @@ export default function node(props) {
                                   style={{ margin: "10px" }}
                                   disabled={relay.timeFunction ? false : true}
                                 />
-                                <label> Off :</label>
+                                <label> เวลาปิด :</label>
                                 <input
                                   id={"time1off" + relayIndex}
                                   type="time"
@@ -1554,7 +1719,7 @@ export default function node(props) {
                                   <span className={styles.slider}></span>
                                 </label>
                               </div>
-                              <label>Day1 Setting : </label>
+                              <label>ตั้งค่าวันที่ 1 : </label>
                               <div className={styles.weekday}>
                                 <label>
                                   <input
@@ -1762,7 +1927,7 @@ export default function node(props) {
                                   alignItems: "center",
                                 }}
                               >
-                                <label>Time 2 Setting : On: </label>
+                                <label>ตั้งค่าเวลา 2 : เวลาเปิด: </label>
                                 <input
                                   id={"time2on" + relayIndex}
                                   type="time"
@@ -1770,7 +1935,7 @@ export default function node(props) {
                                   style={{ margin: "10px" }}
                                   disabled={relay.timeFunction ? false : true}
                                 />
-                                <label> Off :</label>
+                                <label> เวลาปิด :</label>
                                 <input
                                   id={"time2off" + relayIndex}
                                   type="time"
@@ -1797,7 +1962,7 @@ export default function node(props) {
                                   <span className={styles.slider}></span>
                                 </label>
                               </div>
-                              <label>Day2 Setting : </label>
+                              <label>ตั้งค่าวันที่ 2 : </label>
                               <div className={styles.weekday}>
                                 <label>
                                   <input
@@ -2005,7 +2170,7 @@ export default function node(props) {
                                   alignItems: "center",
                                 }}
                               >
-                                <label>Time 3 Setting : On: </label>
+                                <label>ตั้งค่าเวลา 3 : เวลาเปิด: </label>
                                 <input
                                   id={"time3on" + relayIndex}
                                   type="time"
@@ -2013,7 +2178,7 @@ export default function node(props) {
                                   style={{ margin: "10px" }}
                                   disabled={relay.timeFunction ? false : true}
                                 />
-                                <label> Off :</label>
+                                <label> เวลาปิด :</label>
                                 <input
                                   id={"time3off" + relayIndex}
                                   type="time"
@@ -2040,7 +2205,7 @@ export default function node(props) {
                                   <span className={styles.slider}></span>
                                 </label>
                               </div>
-                              <label>Day3 Setting : </label>
+                              <label>ตั้งค่าวันที่ 3 : </label>
                               <div className={styles.weekday}>
                                 <label>
                                   <input
