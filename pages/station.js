@@ -45,7 +45,8 @@ export default function station(props) {
       });
     setstation(stations.data);
     console.log(stations.data);
-    const _nodeIDlist = ["Nd88a6d3b6aa64f98a6ca6ab26b5f757f"]; // รอแก้ api แล้ว => const _nodeIDlist = stations.data.nodeIDlist //
+    //const _nodeIDlist = ["Nd88a6d3b6aa64f98a6ca6ab26b5f757f"];  รอแก้ api แล้ว
+    const _nodeIDlist = stations.data.nodeIDlist;
     console.log(stations.data);
     for (let i = 0; i < _nodeIDlist.length; i++) {
       const nodeid = _nodeIDlist[i];

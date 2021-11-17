@@ -7,14 +7,18 @@ import styles from "../styles/node.module.scss";
 import { Scatter, Bar } from "react-chartjs-2";
 import axios from "axios";
 import client from "./api/mqtt.js";
+import { getTHsensor } from "../assets/getTHsensor";
 
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import { connect } from "mqtt";
 
+/*mark กรณีอุปกรณ์เปิดแล้วแต่ในฐานข้อมูลปิดอยู่ ต้องอิงอุปกรณ์ ดึงข้อมูลจากฐานข้อมูลมาเทียบกับอุปกรณ์แล้วอัปเดทหน้าเว็บ */
+
 export default function node(props) {
   const router = useRouter();
   //const Data = router.query;
+
   const rand = () => Math.round(Math.random() * 20 - 10);
   const data = {
     datasets: [
@@ -116,7 +120,7 @@ export default function node(props) {
   if (farmName == undefined) {
     return <div>error</div>;
   }*/
-
+  const [reTime, setreTime] = useState(1800000);
   const [nodeInfo, setnodeInfo] = useState({});
   const [zoneIDlist, setzoneIDlist] = useState([]);
   const [relayIDlist, setrelayIDlist] = useState([]);
@@ -137,6 +141,7 @@ export default function node(props) {
 
   const [deviceTopic, setdeviceTopic] = useState(null);
   const [devicemsg, setdevicemsg] = useState(null);
+  const [onmsg, setonmsg] = useState(0);
 
   const [graph, setgraph] = useState(false);
   const [failTxt, setfailTxt] = useState("เกิดข้อผิดพลาดบางอย่าง");
@@ -229,13 +234,18 @@ export default function node(props) {
     return nodeInfores.relayIDlist;
   }
 
+  async function getRaley() {}
+
+  //=======================================//
+  //=============Supsciption===============//
+  //=======================================//
   useEffect(async () => {
     const _orgID = localStorage.getItem("_orgID");
     const _farmID = localStorage.getItem("_farmID");
     const _nodeID = localStorage.getItem("_nodeID");
     const relayidlist = await getRelayID();
 
-    for (let index = 0; index < relayidlist.length; index++) {
+    for (let index = 0; index < relayidlist.length - 1; index++) {
       const relay = relayidlist[index];
       //console.log(relay);
       client.subscribe(`/front/control/${_farmID}/${relay}`, function () {
@@ -245,51 +255,41 @@ export default function node(props) {
         );
       });
       client.subscribe(`/front/time_fn/${_farmID}/${relay}`, function () {
-        client.publish(
-          `/time_fn/${_farmID}/${relay}`,
-          "Supercrops subscribing"
-        );
+        client.publish(`/time_fn/${_farmID}/${relay}`, "Supercrops subscribed");
       });
       client.subscribe(`/front/set_time1/${_farmID}/${relay}`, function () {
         client.publish(
           `/set_time1/${_farmID}/${relay}`,
-          "Supercrops subscribing"
+          "Supercrops subscribed"
         );
       });
       client.subscribe(`/front/set_time2/${_farmID}/${relay}`, function () {
         client.publish(
           `/set_time2/${_farmID}/${relay}`,
-          "Supercrops subscribing"
+          "Supercrops subscribed"
         );
       });
       client.subscribe(`/front/set_time3/${_farmID}/${relay}`, function () {
         client.publish(
           `/set_time3/${_farmID}/${relay}`,
-          "Supercrops subscribing"
+          "Supercrops subscribed"
         );
       });
       client.subscribe(`/front/data_fn/${_farmID}/${relay}`, function () {
-        client.publish(
-          `/data_fn/${_farmID}/${relay}`,
-          "Supercrops subscribing"
-        );
+        client.publish(`/data_fn/${_farmID}/${relay}`, "Supercrops subscribed");
       });
       client.subscribe(`/front/set_data1/${_farmID}/${relay}`, function () {
         client.publish(
           `/set_data1/${_farmID}/${relay}`,
-          "Supercrops subscribing"
+          "Supercrops subscribed"
         );
       });
     }
-
-    client.on("message", function (topic, message) {
-      const memtopic = mqttopic;
-      setdeviceTopic(topic.toString());
-      setdevicemsg(message.toString());
-      setmqttStat(!mqttStat);
-    });
     reloadData();
   }, [mqttsending]);
+
+  //=======================================//
+  //=======================================//
 
   useEffect(() => {
     if (mqttsending == true) {
@@ -298,12 +298,12 @@ export default function node(props) {
           setwait(false);
           setsuccess(true);
           setmqttsending(false);
-          reloadData();
+          //reloadData();
         } else {
           setwait(false);
           setfail(true);
           setmqttsending(false);
-          reloadData();
+          //reloadData();
         }
       } else {
         console.log("fail");
@@ -313,6 +313,9 @@ export default function node(props) {
     }
   }, [mqttStat]);
 
+  //=======================================//
+  //=======================================//
+  //=======================================//
   async function reloadData() {
     if (
       localStorage.getItem("_login") == false ||
@@ -397,6 +400,7 @@ export default function node(props) {
     setzoneContent(z_cont);
     setzoneList(z_list);
     var datalist = z_list;
+    console.log(z_list);
 
     setdataList(datalist);
     let r_list = [];
@@ -418,7 +422,118 @@ export default function node(props) {
     setrelayList(r_list);
     setdataSelect(null);
     console.log(r_list);
+    setonmsg(onmsg + 1);
   }
+
+  //=======================================//
+  // ON Recive message from device //
+  //=======================================//
+
+  useEffect(() => {
+    client.on("message", function (topic, message) {
+      const memtopic = mqttopic;
+      const msgJson = JSON.parse(message.toString());
+      const _topic = topic.toString();
+      setdeviceTopic(topic.toString());
+      setdevicemsg(message.toString());
+      setmqttStat(!mqttStat);
+      var R_list = relayList;
+      console.log(
+        "#########============================================##########"
+      );
+      console.log("get message from: " + _topic);
+      console.log("massage is :");
+      console.log(message.toString());
+
+      if (_topic.startsWith("/front/control/")) {
+        const msgfarmID = _topic.substring(15, 48);
+        const msgrelayID = _topic.substring(49, 88);
+        for (let i = 0; i < R_list.length; i++) {
+          var relay = R_list[i];
+          const relayindex = i + 1;
+          //console.log("db relay id");
+          //console.log(relay.relayID);
+          // console.log("device relay id");
+          // console.log(msgrelayID);
+          if (relay.relayID == msgrelayID) {
+            if (msgJson.status == "success") {
+              document.getElementById("status" + relayindex).checked = true;
+              R_list[i].status = true;
+              setrelayList(R_list);
+              console.log(relayList[i]); /*
+              if (onmsg > 0) {
+                setonmsg(0);
+              }*/
+              setonmsg(0);
+              break;
+            } else if (msgJson.status == "fail") {
+              document.getElementById("status" + relayindex).checked = false;
+              R_list[i].status = false;
+              setrelayList(R_list);
+              console.log(relayList[i]); /*
+              if (onmsg > 0) {
+                setonmsg(0);
+              }*/
+              setonmsg(0);
+              break;
+            } else {
+              console.log(relayList[i]); /*
+              if (onmsg > 0) {
+                setonmsg(0);
+              }*/
+              setonmsg(0);
+              break;
+            }
+          }
+        }
+        //
+      } else if (_topic.startsWith("/front/time_fn/")) {
+        const msgfarmID = _topic.substring(15, 48);
+        const msgrelayID = _topic.substring(49, 88);
+        console.log("============================================");
+        console.log(_topic);
+        console.log("farm id is " + msgfarmID);
+        console.log("relay id is " + msgrelayID);
+        console.log(message.toString());
+      } else if (_topic.startsWith("/front/set_time1/")) {
+        const msgfarmID = _topic.substring(17, 50);
+        const msgrelayID = _topic.substring(51, 90);
+        console.log("============================================");
+        console.log(_topic);
+        console.log("farm id is " + msgfarmID);
+        console.log("relay id is " + msgrelayID);
+        console.log(message.toString());
+      } else if (_topic.startsWith("/front/set_time2/")) {
+        const msgfarmID = _topic.substring(17, 50);
+        const msgrelayID = _topic.substring(51, 90);
+        console.log("============================================");
+        console.log(_topic);
+        console.log("farm id is " + msgfarmID);
+        console.log("relay id is " + msgrelayID);
+        console.log(message.toString());
+      } else if (_topic.startsWith("/front/set_time3/")) {
+        const msgfarmID = _topic.substring(17, 50);
+        const msgrelayID = _topic.substring(51, 90);
+        console.log("============================================");
+        console.log(_topic);
+        console.log("farm id is " + msgfarmID);
+        console.log("relay id is " + msgrelayID);
+        console.log(message.toString());
+      } else if (_topic.startsWith("/front/set_data1/")) {
+        const msgfarmID = _topic.substring(17, 50);
+        const msgrelayID = _topic.substring(51, 90);
+        console.log("============================================");
+        console.log(_topic);
+        console.log("farm id is " + msgfarmID);
+        console.log("relay id is " + msgrelayID);
+        console.log(message.toString());
+      } else {
+        console.log("!!!============================================!!!");
+        console.log(_topic);
+        console.log(message.toString());
+      }
+    });
+  }, [onmsg]);
 
   function putData(data, relayID, method) {
     const _farmID = localStorage.getItem("_farmID");
@@ -1005,9 +1120,10 @@ export default function node(props) {
     );
   }
   function changeStatus(id, relayID) {
-    const _orgId = localStorage.getItem("_orgID");
-    const check = document.getElementById(id).checked;
-    if (check) {
+    /*
+    //const _orgId = localStorage.getItem("_orgID");
+    //const check = document.getElementById(id).checked;
+    /*if (check) {
       var status = "true";
     } else {
       var status = "false";
@@ -1015,7 +1131,7 @@ export default function node(props) {
     const _putdata = {
       orgId: _orgId,
       status: status,
-    }; /*
+    }; 
     client.publish(
       "/control/farmId/relayId",
       JSON.stringify(_putdata),
@@ -1030,8 +1146,15 @@ export default function node(props) {
         }
       }
     );*/
-    putData(_putdata, relayID, "status");
+    //putData(_putdata, relayID, "status");
   }
+  useEffect(() => {
+    const interval = setInterval(function () {
+      reloadData();
+      console.log("testtime " + reTime);
+    }, reTime);
+    return () => clearInterval(interval);
+  }, [reTime]);
   return (
     <>
       <div
@@ -1194,14 +1317,20 @@ export default function node(props) {
                     id="refreshTime"
                     className="form-control"
                     style={{ color: "#73879C" }}
+                    onChange={() =>
+                      setreTime(document.getElementById("refreshTime").value)
+                    }
                   >
                     <option value="volvo">เลือกเวลาอัพเดตข้อมูล</option>
-                    <option value={300}>ทุก 5 นาที</option>
-                    <option value={600}>ทุก 10 นาที</option>
-                    <option value={900}>ทุก 15 นาที</option>
-                    <option value={1200}>ทุก 20 นาที</option>
-                    <option value={1500}>ทุก 25 นาที</option>
-                    <option value={1800}>ทุก 30 นาที</option>
+                    <option value={3000}>ทุก 3 วินาที</option>
+                    <option value={5000}>ทุก 5 วินาที</option>
+                    <option value={10000}>ทุก 10 วินาที</option>
+                    <option value={300000}>ทุก 5 นาที</option>
+                    <option value={600000}>ทุก 10 นาที</option>
+                    <option value={900000}>ทุก 15 นาที</option>
+                    <option value={1200000}>ทุก 20 นาที</option>
+                    <option value={1500000}>ทุก 25 นาที</option>
+                    <option value={1800000}>ทุก 30 นาที</option>
                   </select>
                 </h2>
               </div>
@@ -1301,7 +1430,8 @@ export default function node(props) {
                               }}
                             >
                               <h2 className="brief">
-                                <i className="fa fa-sun-o"></i> {data[0]}{" "}
+                                <i className="fa fa-sun-o"></i>{" "}
+                                {getTHsensor(data[0])}{" "}
                               </h2>
                               <h4>{data[1]}</h4>
                             </div>
@@ -1484,11 +1614,13 @@ export default function node(props) {
                                               : { display: "none" }
                                           }
                                         >
-                                          <option value={0}>เลือกข้อมูล</option>
+                                          <option value={-1}>
+                                            เลือกข้อมูล
+                                          </option>
                                           {_data.map((data, index) => {
                                             return (
                                               <option key={index} value={data}>
-                                                {data}
+                                                {getTHsensor(data[0])}
                                               </option>
                                             );
                                           })}
@@ -2443,7 +2575,7 @@ export default function node(props) {
                                   alignItems: "center",
                                 }}
                                 onClick={
-                                  relay.status
+                                  !relay.status
                                     ? () => relaysetting(relayIndex)
                                     : () => {}
                                 }
