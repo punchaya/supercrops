@@ -1042,15 +1042,15 @@ export default function node(props) {
         <div className={styles.waiting}>
           <div className={styles.lds_dual_ring}></div>
           <div></div>
-          <div>กำลังดำเนินการ</div>
+          <div className="color-blue">กำลังดำเนินการ</div>
           <div>
             <button
+              className="btn btn-primary"
               onClick={() => setwait(false)}
-              style={{ fontSize: "16px", height: "24px" }}
+              // style={{ fontSize: "16px", height: "24px" }}
             >
-              ออก
+              ตกลง
             </button>
-            {/*ใช้ทดสอบ*/}
           </div>
         </div>
       </div>
@@ -1076,7 +1076,7 @@ export default function node(props) {
               resetmqtt();
             }}
           >
-            OK
+            ตกลง
           </button>
         </div>
       </div>
@@ -1107,7 +1107,7 @@ export default function node(props) {
               setfailTxt("เกิดข้อผิดพลาดบางอย่าง");
             }}
           >
-            Close
+            ปิด
           </button>
         </div>
       </div>
@@ -1476,11 +1476,11 @@ export default function node(props) {
                                           style={
                                             dataSelect == index
                                               ? {
-                                                  color: "#73879C",
-                                                  height: "30px",
-                                                  marginLeft: "10px",
-                                                  borderColor: "#BEBEBE",
-                                                }
+                                                color: "#73879C",
+                                                height: "30px",
+                                                marginLeft: "10px",
+                                                borderColor: "#BEBEBE",
+                                              }
                                               : { display: "none" }
                                           }
                                         >
@@ -1538,32 +1538,32 @@ export default function node(props) {
                                 style={
                                   relay.dataFunction
                                     ? {
-                                        display: "flex",
-                                        gap: "5px",
-                                        alignItems: "center",
-                                        fontSize: "12px",
-                                        maxWidth: "80px",
-                                      }
+                                      display: "flex",
+                                      gap: "5px",
+                                      alignItems: "center",
+                                      fontSize: "12px",
+                                      maxWidth: "80px",
+                                    }
                                     : {
-                                        display: "flex",
-                                        gap: "5px",
-                                        alignItems: "center",
-                                        maxWidth: "80px",
-                                        fontSize: "12px",
-                                        backgroundColor: "#DDDDDD",
-                                        borderColor: "#DDDDDD",
-                                        color: "#73879C",
-                                      }
+                                      display: "flex",
+                                      gap: "5px",
+                                      alignItems: "center",
+                                      maxWidth: "80px",
+                                      fontSize: "12px",
+                                      backgroundColor: "#DDDDDD",
+                                      borderColor: "#DDDDDD",
+                                      color: "#73879C",
+                                    }
                                 }
                                 onClick={
                                   relay.dataFunction
                                     ? () =>
-                                        putminiData(
-                                          relayIndex,
-                                          relay.relayID,
-                                          1
-                                        )
-                                    : () => {}
+                                      putminiData(
+                                        relayIndex,
+                                        relay.relayID,
+                                        1
+                                      )
+                                    : () => { }
                                 }
                               >
                                 <Image
@@ -1737,9 +1737,9 @@ export default function node(props) {
                                     style={
                                       !relay.timeFunction
                                         ? {
-                                            backgroundColor: "#dddddd",
-                                            color: "#73879C",
-                                          }
+                                          backgroundColor: "#dddddd",
+                                          color: "#73879C",
+                                        }
                                         : {}
                                     }
                                   >
@@ -1760,9 +1760,9 @@ export default function node(props) {
                                     style={
                                       !relay.timeFunction
                                         ? {
-                                            backgroundColor: "#dddddd",
-                                            color: "#73879C",
-                                          }
+                                          backgroundColor: "#dddddd",
+                                          color: "#73879C",
+                                        }
                                         : {}
                                     }
                                   >
@@ -1783,9 +1783,9 @@ export default function node(props) {
                                     style={
                                       !relay.timeFunction
                                         ? {
-                                            backgroundColor: "#dddddd",
-                                            color: "#73879C",
-                                          }
+                                          backgroundColor: "#dddddd",
+                                          color: "#73879C",
+                                        }
                                         : {}
                                     }
                                   >
@@ -1806,9 +1806,9 @@ export default function node(props) {
                                     style={
                                       !relay.timeFunction
                                         ? {
-                                            backgroundColor: "#dddddd",
-                                            color: "#73879C",
-                                          }
+                                          backgroundColor: "#dddddd",
+                                          color: "#73879C",
+                                        }
                                         : {}
                                     }
                                   >
@@ -1829,9 +1829,9 @@ export default function node(props) {
                                     style={
                                       !relay.timeFunction
                                         ? {
-                                            backgroundColor: "#dddddd",
-                                            color: "#73879C",
-                                          }
+                                          backgroundColor: "#dddddd",
+                                          color: "#73879C",
+                                        }
                                         : {}
                                     }
                                   >
@@ -1852,9 +1852,9 @@ export default function node(props) {
                                     style={
                                       !relay.timeFunction
                                         ? {
-                                            backgroundColor: "#dddddd",
-                                            color: "#73879C",
-                                          }
+                                          backgroundColor: "#dddddd",
+                                          color: "#73879C",
+                                        }
                                         : {}
                                     }
                                   >
@@ -1875,9 +1875,9 @@ export default function node(props) {
                                     style={
                                       !relay.timeFunction
                                         ? {
-                                            backgroundColor: "#dddddd",
-                                            color: "#73879C",
-                                          }
+                                          backgroundColor: "#dddddd",
+                                          color: "#73879C",
+                                        }
                                         : {}
                                     }
                                   >
@@ -1892,21 +1892,21 @@ export default function node(props) {
                                     relay.timeFunction
                                       ? { fontSize: "12px" }
                                       : {
-                                          fontSize: "12px",
-                                          backgroundColor: "#DDDDDD",
-                                          borderColor: "#DDDDDD",
-                                          color: "#73879C",
-                                        }
+                                        fontSize: "12px",
+                                        backgroundColor: "#DDDDDD",
+                                        borderColor: "#DDDDDD",
+                                        color: "#73879C",
+                                      }
                                   }
                                   onClick={
                                     relay.timeFunction
                                       ? () =>
-                                          putminitime(
-                                            relayIndex,
-                                            relay.relayID,
-                                            1
-                                          )
-                                      : () => {}
+                                        putminitime(
+                                          relayIndex,
+                                          relay.relayID,
+                                          1
+                                        )
+                                      : () => { }
                                   }
                                 >
                                   บันทึก
@@ -1980,9 +1980,9 @@ export default function node(props) {
                                     style={
                                       !relay.timeFunction
                                         ? {
-                                            backgroundColor: "#dddddd",
-                                            color: "#73879C",
-                                          }
+                                          backgroundColor: "#dddddd",
+                                          color: "#73879C",
+                                        }
                                         : {}
                                     }
                                   >
@@ -2003,9 +2003,9 @@ export default function node(props) {
                                     style={
                                       !relay.timeFunction
                                         ? {
-                                            backgroundColor: "#dddddd",
-                                            color: "#73879C",
-                                          }
+                                          backgroundColor: "#dddddd",
+                                          color: "#73879C",
+                                        }
                                         : {}
                                     }
                                   >
@@ -2026,9 +2026,9 @@ export default function node(props) {
                                     style={
                                       !relay.timeFunction
                                         ? {
-                                            backgroundColor: "#dddddd",
-                                            color: "#73879C",
-                                          }
+                                          backgroundColor: "#dddddd",
+                                          color: "#73879C",
+                                        }
                                         : {}
                                     }
                                   >
@@ -2049,9 +2049,9 @@ export default function node(props) {
                                     style={
                                       !relay.timeFunction
                                         ? {
-                                            backgroundColor: "#dddddd",
-                                            color: "#73879C",
-                                          }
+                                          backgroundColor: "#dddddd",
+                                          color: "#73879C",
+                                        }
                                         : {}
                                     }
                                   >
@@ -2072,9 +2072,9 @@ export default function node(props) {
                                     style={
                                       !relay.timeFunction
                                         ? {
-                                            backgroundColor: "#dddddd",
-                                            color: "#73879C",
-                                          }
+                                          backgroundColor: "#dddddd",
+                                          color: "#73879C",
+                                        }
                                         : {}
                                     }
                                   >
@@ -2095,9 +2095,9 @@ export default function node(props) {
                                     style={
                                       !relay.timeFunction
                                         ? {
-                                            backgroundColor: "#dddddd",
-                                            color: "#73879C",
-                                          }
+                                          backgroundColor: "#dddddd",
+                                          color: "#73879C",
+                                        }
                                         : {}
                                     }
                                   >
@@ -2118,9 +2118,9 @@ export default function node(props) {
                                     style={
                                       !relay.timeFunction
                                         ? {
-                                            backgroundColor: "#dddddd",
-                                            color: "#73879C",
-                                          }
+                                          backgroundColor: "#dddddd",
+                                          color: "#73879C",
+                                        }
                                         : {}
                                     }
                                   >
@@ -2135,21 +2135,21 @@ export default function node(props) {
                                     relay.timeFunction
                                       ? { fontSize: "12px" }
                                       : {
-                                          fontSize: "12px",
-                                          backgroundColor: "#DDDDDD",
-                                          borderColor: "#DDDDDD",
-                                          color: "#73879C",
-                                        }
+                                        fontSize: "12px",
+                                        backgroundColor: "#DDDDDD",
+                                        borderColor: "#DDDDDD",
+                                        color: "#73879C",
+                                      }
                                   }
                                   onClick={
                                     relay.timeFunction
                                       ? () =>
-                                          putminitime(
-                                            relayIndex,
-                                            relay.relayID,
-                                            2
-                                          )
-                                      : () => {}
+                                        putminitime(
+                                          relayIndex,
+                                          relay.relayID,
+                                          2
+                                        )
+                                      : () => { }
                                   }
                                 >
                                   บันทึก
@@ -2223,9 +2223,9 @@ export default function node(props) {
                                     style={
                                       !relay.timeFunction
                                         ? {
-                                            backgroundColor: "#dddddd",
-                                            color: "#73879C",
-                                          }
+                                          backgroundColor: "#dddddd",
+                                          color: "#73879C",
+                                        }
                                         : {}
                                     }
                                   >
@@ -2246,9 +2246,9 @@ export default function node(props) {
                                     style={
                                       !relay.timeFunction
                                         ? {
-                                            backgroundColor: "#dddddd",
-                                            color: "#73879C",
-                                          }
+                                          backgroundColor: "#dddddd",
+                                          color: "#73879C",
+                                        }
                                         : {}
                                     }
                                   >
@@ -2269,9 +2269,9 @@ export default function node(props) {
                                     style={
                                       !relay.timeFunction
                                         ? {
-                                            backgroundColor: "#dddddd",
-                                            color: "#73879C",
-                                          }
+                                          backgroundColor: "#dddddd",
+                                          color: "#73879C",
+                                        }
                                         : {}
                                     }
                                   >
@@ -2292,9 +2292,9 @@ export default function node(props) {
                                     style={
                                       !relay.timeFunction
                                         ? {
-                                            backgroundColor: "#dddddd",
-                                            color: "#73879C",
-                                          }
+                                          backgroundColor: "#dddddd",
+                                          color: "#73879C",
+                                        }
                                         : {}
                                     }
                                   >
@@ -2315,9 +2315,9 @@ export default function node(props) {
                                     style={
                                       !relay.timeFunction
                                         ? {
-                                            backgroundColor: "#dddddd",
-                                            color: "#73879C",
-                                          }
+                                          backgroundColor: "#dddddd",
+                                          color: "#73879C",
+                                        }
                                         : {}
                                     }
                                   >
@@ -2338,9 +2338,9 @@ export default function node(props) {
                                     style={
                                       !relay.timeFunction
                                         ? {
-                                            backgroundColor: "#dddddd",
-                                            color: "#73879C",
-                                          }
+                                          backgroundColor: "#dddddd",
+                                          color: "#73879C",
+                                        }
                                         : {}
                                     }
                                   >
@@ -2361,9 +2361,9 @@ export default function node(props) {
                                     style={
                                       !relay.timeFunction
                                         ? {
-                                            backgroundColor: "#dddddd",
-                                            color: "#73879C",
-                                          }
+                                          backgroundColor: "#dddddd",
+                                          color: "#73879C",
+                                        }
                                         : {}
                                     }
                                   >
@@ -2378,21 +2378,21 @@ export default function node(props) {
                                     relay.timeFunction
                                       ? { fontSize: "12px" }
                                       : {
-                                          fontSize: "12px",
-                                          backgroundColor: "#DDDDDD",
-                                          borderColor: "#DDDDDD",
-                                          color: "#73879C",
-                                        }
+                                        fontSize: "12px",
+                                        backgroundColor: "#DDDDDD",
+                                        borderColor: "#DDDDDD",
+                                        color: "#73879C",
+                                      }
                                   }
                                   onClick={
                                     relay.timeFunction
                                       ? () =>
-                                          putminitime(
-                                            relayIndex,
-                                            relay.relayID,
-                                            3
-                                          )
-                                      : () => {}
+                                        putminitime(
+                                          relayIndex,
+                                          relay.relayID,
+                                          3
+                                        )
+                                      : () => { }
                                   }
                                 >
                                   บันทึก
@@ -2445,7 +2445,7 @@ export default function node(props) {
                                 onClick={
                                   relay.status
                                     ? () => relaysetting(relayIndex)
-                                    : () => {}
+                                    : () => { }
                                 }
                               >
                                 <i className="fa fa-wrench"></i>

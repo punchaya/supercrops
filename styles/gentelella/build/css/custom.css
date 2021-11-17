@@ -2933,6 +2933,7 @@ input.parsley-error, textarea.parsley-error, select.parsley-error {
 
 a.btn-success, a.btn-primary, a.btn-warning, a.btn-danger {
   color: #fff; }
+  
 
 .btn-success {
   background: #26B99A;
@@ -2940,6 +2941,13 @@ a.btn-success, a.btn-primary, a.btn-warning, a.btn-danger {
 
 .btn-success:hover, .btn-success:focus, .btn-success:active, .btn-success.active, .open .dropdown-toggle.btn-success {
   background: #169F85; }
+
+.btn-waiting {
+    background: #fcf801;
+    border: 1px solid #fcf801; }
+  
+.btn-waiting:hover, .btn-waiting:focus, .btn-waiting:active, .btn-waiting.active, .open .dropdown-toggle.btn-waiting {
+    background: #fcf801; }
 
 .btn-dark {
   color: #E9EDEF;
