@@ -1545,30 +1545,20 @@ export default function node(props) {
                               />
 
                               <button
-                                type="button"
                                 className="btn btn-primary"
                                 style={
-                                  relay.dataFunction
-                                    ? {
-                                      display: "flex",
-                                      gap: "5px",
-                                      alignItems: "center",
-                                      fontSize: "12px",
-                                      maxWidth: "80px",
-                                    }
+                                  relay.timeFunction
+                                    ? { fontSize: "16px", width: "70px" }
                                     : {
-                                      display: "flex",
-                                      gap: "5px",
-                                      alignItems: "center",
-                                      maxWidth: "80px",
-                                      fontSize: "12px",
+                                      fontSize: "16px",
                                       backgroundColor: "#DDDDDD",
                                       borderColor: "#DDDDDD",
                                       color: "#73879C",
+                                      width: "70px",
                                     }
                                 }
                                 onClick={
-                                  relay.dataFunction
+                                  relay.timeFunction
                                     ? () =>
                                       putminiData(
                                         relayIndex,
@@ -1578,11 +1568,6 @@ export default function node(props) {
                                     : () => { }
                                 }
                               >
-                                <Image
-                                  src="/save_white.png"
-                                  width={16}
-                                  height={16}
-                                />{" "}
                                 บันทึก
                               </button>
                             </div>
@@ -1660,8 +1645,8 @@ export default function node(props) {
                                 />
                               </label>
 
-                              <h4>ตั้งค่าเวลา {relayIndex}</h4>
-                              <label style={{ marginLeft: "auto" }}>
+                              <h4 className="brief2">ตั้งค่าเวลา {relayIndex}</h4>
+                              <label className="brief2" style={{ marginLeft: "auto" }}>
                                 สถานะ
                               </label>
                               <label className={styles.switch2}>
@@ -1697,7 +1682,7 @@ export default function node(props) {
                                   alignItems: "center",
                                 }}
                               >
-                                <label>ตั้งค่าเวลา 1 : เวลาเปิด: </label>
+                                <label className="brief2">ตั้งค่าเวลา 1 : เวลาเปิด: </label>
                                 <input
                                   id={"time1on" + relayIndex}
                                   type="time"
@@ -1705,7 +1690,7 @@ export default function node(props) {
                                   style={{ margin: "10px" }}
                                   disabled={relay.timeFunction ? false : true}
                                 />
-                                <label> เวลาปิด :</label>
+                                <label className="brief2"> เวลาปิด :</label>
                                 <input
                                   id={"time1off" + relayIndex}
                                   type="time"
@@ -1733,7 +1718,7 @@ export default function node(props) {
                                   <span className={styles.slider}></span>
                                 </label>
                               </div>
-                              <label>ตั้งค่าวันที่ 1 : </label>
+                              <label className="brief2">ตั้งค่าวันที่ 1 : </label>
                               <div className={styles.weekday}>
                                 <label>
                                   <input
@@ -1744,8 +1729,8 @@ export default function node(props) {
                                     }
                                     disabled={relay.timeFunction ? false : true}
                                   />
-                                  <label
-                                    htmlFor={"t1day0" + relayIndex}
+                                  <label>
+                                  htmlFor={"t1day1" + relayIndex}
                                     style={
                                       !relay.timeFunction
                                         ? {
@@ -1754,8 +1739,7 @@ export default function node(props) {
                                         }
                                         : {}
                                     }
-                                  >
-                                    อาทิตย์
+                                    อา
                                   </label>
                                 </label>
                                 <label>
@@ -1778,7 +1762,7 @@ export default function node(props) {
                                         : {}
                                     }
                                   >
-                                    จันทร์
+                                    จ
                                   </label>
                                 </label>
                                 <label>
@@ -1801,7 +1785,7 @@ export default function node(props) {
                                         : {}
                                     }
                                   >
-                                    อังคาร
+                                    อ
                                   </label>
                                 </label>
                                 <label>
@@ -1824,7 +1808,7 @@ export default function node(props) {
                                         : {}
                                     }
                                   >
-                                    พุธ
+                                    พ
                                   </label>
                                 </label>
                                 <label>
@@ -1847,7 +1831,7 @@ export default function node(props) {
                                         : {}
                                     }
                                   >
-                                    พฤหัส
+                                    พฤ
                                   </label>
                                 </label>
                                 <label>
@@ -1870,7 +1854,7 @@ export default function node(props) {
                                         : {}
                                     }
                                   >
-                                    ศุกร์
+                                    ศ
                                   </label>
                                 </label>
                                 <label>
@@ -1893,7 +1877,7 @@ export default function node(props) {
                                         : {}
                                     }
                                   >
-                                    เสาร์
+                                    ส
                                   </label>
                                 </label>
                               </div>
@@ -1902,9 +1886,9 @@ export default function node(props) {
                                   className="btn btn-primary"
                                   style={
                                     relay.timeFunction
-                                      ? { fontSize: "12px" }
+                                      ? { fontSize: "16px" }
                                       : {
-                                        fontSize: "12px",
+                                        fontSize: "16px",
                                         backgroundColor: "#DDDDDD",
                                         borderColor: "#DDDDDD",
                                         color: "#73879C",
@@ -1941,7 +1925,7 @@ export default function node(props) {
                                   alignItems: "center",
                                 }}
                               >
-                                <label>ตั้งค่าเวลา 2 : เวลาเปิด: </label>
+                                <label className="brief2">ตั้งค่าเวลา 2 : เวลาเปิด: </label>
                                 <input
                                   id={"time2on" + relayIndex}
                                   type="time"
@@ -1949,7 +1933,7 @@ export default function node(props) {
                                   style={{ margin: "10px" }}
                                   disabled={relay.timeFunction ? false : true}
                                 />
-                                <label> เวลาปิด :</label>
+                                <label className="brief2"> เวลาปิด :</label>
                                 <input
                                   id={"time2off" + relayIndex}
                                   type="time"
@@ -1976,7 +1960,7 @@ export default function node(props) {
                                   <span className={styles.slider}></span>
                                 </label>
                               </div>
-                              <label>ตั้งค่าวันที่ 2 : </label>
+                              <label className="brief2">ตั้งค่าวันที่ 2 : </label>
                               <div className={styles.weekday}>
                                 <label>
                                   <input
@@ -1998,7 +1982,7 @@ export default function node(props) {
                                         : {}
                                     }
                                   >
-                                    อาทิตย์
+                                    อ
                                   </label>
                                 </label>
                                 <label>
@@ -2021,7 +2005,7 @@ export default function node(props) {
                                         : {}
                                     }
                                   >
-                                    จันทร์
+                                    จ
                                   </label>
                                 </label>
                                 <label>
@@ -2044,7 +2028,7 @@ export default function node(props) {
                                         : {}
                                     }
                                   >
-                                    อังคาร
+                                    อ
                                   </label>
                                 </label>
                                 <label>
@@ -2067,7 +2051,7 @@ export default function node(props) {
                                         : {}
                                     }
                                   >
-                                    พุธ
+                                    พ
                                   </label>
                                 </label>
                                 <label>
@@ -2090,7 +2074,7 @@ export default function node(props) {
                                         : {}
                                     }
                                   >
-                                    พฤหัส
+                                    พฤ
                                   </label>
                                 </label>
                                 <label>
@@ -2113,7 +2097,7 @@ export default function node(props) {
                                         : {}
                                     }
                                   >
-                                    ศุกร์
+                                    ศ
                                   </label>
                                 </label>
                                 <label>
@@ -2136,7 +2120,7 @@ export default function node(props) {
                                         : {}
                                     }
                                   >
-                                    เสาร์
+                                    ส
                                   </label>
                                 </label>
                               </div>
@@ -2145,9 +2129,9 @@ export default function node(props) {
                                   className="btn btn-primary"
                                   style={
                                     relay.timeFunction
-                                      ? { fontSize: "12px" }
+                                      ? { fontSize: "16px" }
                                       : {
-                                        fontSize: "12px",
+                                        fontSize: "16px",
                                         backgroundColor: "#DDDDDD",
                                         borderColor: "#DDDDDD",
                                         color: "#73879C",
@@ -2184,7 +2168,7 @@ export default function node(props) {
                                   alignItems: "center",
                                 }}
                               >
-                                <label>ตั้งค่าเวลา 3 : เวลาเปิด: </label>
+                                <label className="brief2">ตั้งค่าเวลา 3 : เวลาเปิด: </label>
                                 <input
                                   id={"time3on" + relayIndex}
                                   type="time"
@@ -2192,7 +2176,7 @@ export default function node(props) {
                                   style={{ margin: "10px" }}
                                   disabled={relay.timeFunction ? false : true}
                                 />
-                                <label> เวลาปิด :</label>
+                                <label className="brief2"> เวลาปิด :</label>
                                 <input
                                   id={"time3off" + relayIndex}
                                   type="time"
@@ -2219,7 +2203,7 @@ export default function node(props) {
                                   <span className={styles.slider}></span>
                                 </label>
                               </div>
-                              <label>ตั้งค่าวันที่ 3 : </label>
+                              <label className="brief2">ตั้งค่าวันที่ 3 : </label>
                               <div className={styles.weekday}>
                                 <label>
                                   <input
@@ -2241,7 +2225,7 @@ export default function node(props) {
                                         : {}
                                     }
                                   >
-                                    อาทิตย์
+                                    อา
                                   </label>
                                 </label>
                                 <label>
@@ -2264,7 +2248,7 @@ export default function node(props) {
                                         : {}
                                     }
                                   >
-                                    จันทร์
+                                    จ
                                   </label>
                                 </label>
                                 <label>
@@ -2287,7 +2271,7 @@ export default function node(props) {
                                         : {}
                                     }
                                   >
-                                    อังคาร
+                                    อ
                                   </label>
                                 </label>
                                 <label>
@@ -2310,7 +2294,7 @@ export default function node(props) {
                                         : {}
                                     }
                                   >
-                                    พุธ
+                                    พ
                                   </label>
                                 </label>
                                 <label>
@@ -2333,7 +2317,7 @@ export default function node(props) {
                                         : {}
                                     }
                                   >
-                                    พฤหัส
+                                    พฤ
                                   </label>
                                 </label>
                                 <label>
@@ -2356,7 +2340,7 @@ export default function node(props) {
                                         : {}
                                     }
                                   >
-                                    ศุกร์
+                                    ศ
                                   </label>
                                 </label>
                                 <label>
@@ -2379,7 +2363,7 @@ export default function node(props) {
                                         : {}
                                     }
                                   >
-                                    เสาร์
+                                    ส
                                   </label>
                                 </label>
                               </div>
@@ -2388,9 +2372,9 @@ export default function node(props) {
                                   className="btn btn-primary"
                                   style={
                                     relay.timeFunction
-                                      ? { fontSize: "12px" }
+                                      ? { fontSize: "16px" }
                                       : {
-                                        fontSize: "12px",
+                                        fontSize: "16px",
                                         backgroundColor: "#DDDDDD",
                                         borderColor: "#DDDDDD",
                                         color: "#73879C",
