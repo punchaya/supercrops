@@ -2378,7 +2378,7 @@ export default function node(props) {
                                         backgroundColor: "#DDDDDD",
                                         borderColor: "#DDDDDD",
                                         color: "#73879C",
-                                      }
+                                      } 
                                   }
                                   onClick={
                                     relay.timeFunction
