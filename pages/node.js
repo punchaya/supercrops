@@ -1047,7 +1047,7 @@ export default function node(props) {
             <button
               className="btn btn-primary"
               onClick={() => setwait(false)}
-              // style={{ fontSize: "16px", height: "24px" }}
+            // style={{ fontSize: "16px", height: "24px" }}
             >
               ตกลง
             </button>
@@ -1436,8 +1436,8 @@ export default function node(props) {
                                   display: "flex",
                                 }}
                               >
-                                <label>
-                                  <h4>
+                                <label >
+                                  <h4 >
                                     เลือกโซน :{" "}
                                     <select
                                       id={"selectzone" + relayIndex}
@@ -1516,8 +1516,20 @@ export default function node(props) {
                                 </label>
                               </div>
                               <label id={"data1" + relayIndex + "text"}>
-                                ค่าน้อยสุด : {dataValue[0]} ค่ามากสุด :{" "}
-                                {dataValue[1]}
+                                <h2 className={relay.status ? "brief2" : ""}>
+                                  ค่าน้อยสุด:{" "}
+                                  <strong className={relay.status ? "minvalue" : ""}>
+                                    {dataValue[0]}{" "}
+                                    <i className="fa fa-long-arrow-down"></i>
+                                  </strong>{" "}
+                                  | ค่ามากสุด:{" "}
+                                  <strong className={relay.status ? "maxvalue" : ""}>
+                                    {dataValue[1]}{" "}
+                                    <i className="fa fa-long-arrow-up"></i>
+                                  </strong>
+                                </h2>
+                                {/* ค่าน้อยสุด : {dataValue[0]} ค่ามากสุด :{" "}
+                                {dataValue[1]} */}
                               </label>
 
                               <Slider
