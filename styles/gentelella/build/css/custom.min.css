@@ -5210,20 +5210,20 @@ ul.notifications {
 }
 
 .farmname {
-  color:#FB4F14;
+  color: #fb4f14;
 }
 
 .newusername {
-  padding:10px;
-  color:#73879c;
+  padding: 10px;
+  color: #73879c;
 }
 
 .minvalue {
-  color:green;
+  color: green;
 }
 
 .maxvalue {
-  color:orangered;
+  color: orangered;
 }
 
 .newuser-card {
@@ -5232,10 +5232,9 @@ ul.notifications {
 
 .newuser-label {
   display: inline-block;
-    margin-bottom: .5rem;
-    color: #73879c;
-    font-size: 16px;
-    font-weight: 100;
-    text-align: left;
+  margin-bottom: 0.5rem;
+  color: #73879c;
+  font-size: 16px;
+  font-weight: 100;
+  text-align: left;
 }
-

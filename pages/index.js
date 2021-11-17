@@ -27,6 +27,7 @@ export default function Home(props) {
     ) {
       window.location.assign("/login");
     }
+    // test orgid = O21f42baf3ce842c292092197e17002cb
     const responce = await axios
       .post(
         "http://203.151.136.127:10001/api/getFarmID/Uda237c338beb4483afdbd961fb7f6dfb",
@@ -39,13 +40,14 @@ export default function Home(props) {
         console.log(error.response.status);
         console.log(error.response.headers);
       });
-    setfarmIdList(responce.data.farmIDlist);
-    const testFarmIDList = ["F4227b07670ec437a9a6bde39d2530d87"];
+    //setfarmIdList(responce.data.farmIDlist);
+    setfarmIdList(["F184b91fec195443c829aaaebcdaeae16"]);
+    const testFarmIDList = ["F184b91fec195443c829aaaebcdaeae16"];
     for (let i = 0; i < testFarmIDList.length; i++) {
       const farmid = testFarmIDList[i];
       axios
         .post("http://203.151.136.127:10001/api/farmDetail/", {
-          orgId: "O21f42baf3ce842c292092197e17002cb",
+          orgId: "Oc780373b0fa34391a5f987cc095f680a",
           farmId: farmid,
         })
         .then((res, eror) => {
