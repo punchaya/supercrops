@@ -1858,6 +1858,22 @@ legend {
   color: #aab6aa;
 }
 
+.brief2 {
+  margin: 0;
+  font-weight: 300;
+  padding-left: 10px;
+  font-size: 16px;
+  color: #73879c;
+}
+
+.day {
+  background: #2196f3;
+  color: #ffffff;
+  border-radius: 10%;
+  font-size: 16px;
+  width: 40px;
+}
+
 .nodeid {
   margin: 0;
   font-size: 14px;
@@ -5194,20 +5210,20 @@ ul.notifications {
 }
 
 .farmname {
-  color:#FB4F14;
+  color: #fb4f14;
 }
 
 .newusername {
-  padding:10px;
-  color:#73879c;
+  padding: 10px;
+  color: #73879c;
 }
 
 .minvalue {
-  color:green;
+  color: green;
 }
 
 .maxvalue {
-  color:orangered;
+  color: orangered;
 }
 
 .newuser-card {
@@ -5216,10 +5232,9 @@ ul.notifications {
 
 .newuser-label {
   display: inline-block;
-    margin-bottom: .5rem;
-    color: #73879c;
-    font-size: 16px;
-    font-weight: 100;
-    text-align: left;
+  margin-bottom: 0.5rem;
+  color: #73879c;
+  font-size: 16px;
+  font-weight: 100;
+  text-align: left;
 }
-
