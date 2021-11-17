@@ -1165,11 +1165,12 @@ export default function node(props) {
         <div className={styles.waiting}>
           <div className={styles.lds_dual_ring}></div>
           <div></div>
-          <div>กำลังดำเนินการ</div>
+          <div className="color-blue">กำลังดำเนินการ</div>
           <div>
             <button
+              className="btn btn-primary"
               onClick={() => setwait(false)}
-              style={{ fontSize: "16px", height: "24px" }}
+              //style={{ fontSize: "16px", height: "24px" }}
             >
               ออก
             </button>
@@ -1199,7 +1200,7 @@ export default function node(props) {
               resetmqtt();
             }}
           >
-            OK
+            ตกลง
           </button>
         </div>
       </div>
@@ -1230,7 +1231,7 @@ export default function node(props) {
               setfailTxt("เกิดข้อผิดพลาดบางอย่าง");
             }}
           >
-            Close
+            ปิด
           </button>
         </div>
       </div>
@@ -1648,8 +1649,24 @@ export default function node(props) {
                                 </label>
                               </div>
                               <label id={"data1" + relayIndex + "text"}>
-                                ค่าน้อยสุด : {dataValue[0]} ค่ามากสุด :{" "}
-                                {dataValue[1]}
+                                <h2 className={!relay.status ? "brief2" : ""}>
+                                  ค่าน้อยสุด:{" "}
+                                  <strong
+                                    className={!relay.status ? "minvalue" : ""}
+                                  >
+                                    {dataValue[0]}{" "}
+                                    <i className="fa fa-long-arrow-down"></i>
+                                  </strong>{" "}
+                                  | ค่ามากสุด:{" "}
+                                  <strong
+                                    className={!relay.status ? "maxvalue" : ""}
+                                  >
+                                    {dataValue[1]}{" "}
+                                    <i className="fa fa-long-arrow-up"></i>
+                                  </strong>
+                                </h2>
+                                {/* ค่าน้อยสุด : {dataValue[0]} ค่ามากสุด :{" "}
+                                {dataValue[1]} */}
                               </label>
 
                               <Slider
