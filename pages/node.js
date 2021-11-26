@@ -4,66 +4,20 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import styles from "../styles/node.module.scss";
-import { Scatter, Bar } from "react-chartjs-2";
+import { Bar, Scatter, Line } from "react-chartjs-2";
 import axios from "axios";
 import client from "./api/mqtt.js";
 import { getTHsensor } from "../assets/getTHsensor";
+import { isDatakeys } from "../assets/isDatakeys";
 
-import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import { connect } from "mqtt";
-
-/*mark กรณีอุปกรณ์เปิดแล้วแต่ในฐานข้อมูลปิดอยู่ ต้องอิงอุปกรณ์ ดึงข้อมูลจากฐานข้อมูลมาเทียบกับอุปกรณ์แล้วอัปเดทหน้าเว็บ */
 
 export default function node(props) {
   const router = useRouter();
   //const Data = router.query;
 
   const rand = () => Math.round(Math.random() * 20 - 10);
-  const data = {
-    datasets: [
-      {
-        label: "A dataset",
-        data: [
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-        ],
-        backgroundColor: "rgb(0, 219, 65)",
-      },
-      {
-        label: "B dataset",
-        data: [
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-        ],
-        backgroundColor: "rgba(255, 99, 12, 1)",
-      },
-    ],
-  };
 
   const options = {
     responsive: true,
@@ -94,6 +48,7 @@ export default function node(props) {
       ],
     },
   };
+
   const dayactive = {
     backgroundColor: "#007bff",
     padding: "5px",
@@ -143,46 +98,23 @@ export default function node(props) {
   const [devicemsg, setdevicemsg] = useState(null);
   const [onmsg, setonmsg] = useState(0);
 
-  const [graph, setgraph] = useState(false);
+  const [graph, setgraph] = useState(true);
   const [failTxt, setfailTxt] = useState("เกิดข้อผิดพลาดบางอย่าง");
 
   const [dataValue, setdataValue] = useState([]);
   const [dataRelay, setdataRelay] = useState("");
 
-  const test_data = [
-    {
-      soil_ec: 23,
-      soil_moisture: 12,
-      weather_humidity: 32,
-      weather_light_lux: 64,
-      weather_temperature: 89,
-    },
-    {
-      soil_ec: 12,
-      soil_moisture: 23,
-      soil_ph: 34,
-      soil_temperature: 45,
-      water_cl: 56,
-      water_do: 67,
-      water_ec: 78,
-      water_nh3: 89,
-      water_nitrite: 90,
-      water_ph: 25,
-      water_phosphate: 30,
-      water_temperature: 40,
-      water_turbidity: 60,
-      weather_co2: 11,
-      weather_humidity: 87,
-      weather_light_lux: 54,
-      weather_pm10: 12,
-      weather_pm25: 9,
-      weather_pressure: 15,
-      weather_rain_gauge: 16,
-      weather_temperature: 87,
-      weather_wind_direc: 66,
-      weather_wind_speed: 72,
-    },
-  ];
+  const [garphData, setgarphData] = useState({
+    labels: [],
+    datasets: [
+      {
+        label: "",
+        data: [],
+        backgroundColor: "rgb(0, 219, 65)",
+      },
+    ],
+  });
+  const [dataPoint, setdataPoint] = useState("");
 
   function resetmqtt() {
     setmsgSend(null);
@@ -207,30 +139,6 @@ export default function node(props) {
       });
     const nodeInfores = nodeInfo.data;
 
-    const testreqdata = {
-      orgId: "Oea74a83915b2499987e62868c69f3d5c",
-      tsdbToken:
-        "MHXpIIeM0uQwLqubaADfYvXHdsDi4z2RtQ_QhLPpM76pVLuuzUg-oq0pU9eSAqTC7U6vX_EUHnR5Bt4gbCV4cw==",
-      zoneId: "Ze006815b18d04414aeb598b5befc6450",
-      graphData: "in_humid",
-      time1: 1632762000000,
-      time2: 1632841023498,
-    };
-    //console.log(testreqdata);
-    const datapoint = await axios
-      .post(
-        `http://203.151.136.127:10002/api/tsdb/service/Ff4440d10ee0e49b299ec379f76fa5a84/Nfa7d193b520e46e187af39e8c15f8910`,
-        testreqdata
-      )
-      .catch((error) => {
-        //localStorage.clear();
-        //window.location.assign("/login");
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      });
-    //console.log(datapoint);
-
     return nodeInfores.relayIDlist;
   }
 
@@ -245,14 +153,12 @@ export default function node(props) {
     const _nodeID = localStorage.getItem("_nodeID");
     const relayidlist = await getRelayID();
 
-    for (let index = 0; index < relayidlist.length - 1; index++) {
+    for (let index = 0; index < relayidlist.length; index++) {
       const relay = relayidlist[index];
       //console.log(relay);
       client.subscribe(`/front/control/${_farmID}/${relay}`, function () {
-        client.publish(
-          `/control/${_farmID}/${relay}`,
-          "Supercrops subscribing"
-        );
+        client.publish(`/control/${_farmID}/${relay}`, "Supercrops subscribed");
+        console.log(`subscribe to => /front/control/${_farmID}/${relay}`);
       });
       client.subscribe(`/front/time_fn/${_farmID}/${relay}`, function () {
         client.publish(`/time_fn/${_farmID}/${relay}`, "Supercrops subscribed");
@@ -286,11 +192,11 @@ export default function node(props) {
       });
     }
     reloadData();
-  }, [mqttsending]);
+  }, []);
 
   //=======================================//
   //=======================================//
-
+  /*
   useEffect(() => {
     if (mqttsending == true) {
       if (deviceTopic == mqttopic) {
@@ -298,12 +204,10 @@ export default function node(props) {
           setwait(false);
           setsuccess(true);
           setmqttsending(false);
-          //reloadData();
         } else {
           setwait(false);
           setfail(true);
           setmqttsending(false);
-          //reloadData();
         }
       } else {
         console.log("fail");
@@ -311,7 +215,7 @@ export default function node(props) {
         setmqttsending(true);
       }
     }
-  }, [mqttStat]);
+  }, [mqttStat]);*/
 
   //=======================================//
   //=======================================//
@@ -344,30 +248,102 @@ export default function node(props) {
         console.log(error.response.headers);
       });
     const nodeInfores = nodeInfo.data;
-
+    const time1send = parseInt(new Date().getTime() / 1000) - 84 * 60 * 60;
+    const time2send = parseInt(new Date().getTime() / 1000);
     const testreqdata = {
-      orgId: "Oea74a83915b2499987e62868c69f3d5c",
+      orgId: "Oc780373b0fa34391a5f987cc095f680a",
       tsdbToken:
-        "MHXpIIeM0uQwLqubaADfYvXHdsDi4z2RtQ_QhLPpM76pVLuuzUg-oq0pU9eSAqTC7U6vX_EUHnR5Bt4gbCV4cw==",
-      zoneId: "Ze006815b18d04414aeb598b5befc6450",
-      graphData: "in_humid",
-      time1: 1632762000000,
-      time2: 1632841023498,
+        "YVTWev3u1OiqnX4rK7BUSExsYdHucUdCF6_90x4DgP_vHuIJjkh3Bi0XjqbUUwqln_KsLtnuS--8YqECk1C2SA==",
+      zoneId: "Z38df17286723448abd27f8866bba39b5",
+      graphData: "weather_humidity",
+      time1: time1send,
+      time2: time2send,
     };
+
     //console.log(testreqdata);
-    const datapoint = await axios
+    const _datapoint = await axios
       .post(
-        `http://203.151.136.127:10002/api/tsdb/service/Ff4440d10ee0e49b299ec379f76fa5a84/Nfa7d193b520e46e187af39e8c15f8910`,
+        `http://203.151.136.127:10002/api/tsdb/service/F184b91fec195443c829aaaebcdaeae16/N1f8003e446ef4e6eaacb06551796f412`,
         testreqdata
       )
       .catch((error) => {
-        //localStorage.clear();
-        //window.location.assign("/login");
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
+        if (error) {
+          console.log("tsdb requset error");
+          console.log(error);
+          console.log("time 2:" + parseInt(new Date().getTime() / 1000));
+          console.log(
+            "time 1 :" +
+              parseInt((new Date().getTime() - 96 * 60 * 60 * 1000) / 1000)
+          );
+        } else {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
       });
-    //console.log(datapoint);
+    const aztime1 = new Date().getTime() - 2 * 60 * 60 * 1000;
+    const aztime2 = new Date().getTime();
+    const ztime1 = new Date(time1send * 1000);
+    const ztime2 = new Date(time2send * 1000);
+    console.log("time 1 :" + ztime1 + "=>" + time1send);
+    console.log("time 2 :" + ztime2 + "=>" + time2send);
+    //console.log("Data point: ");
+
+    console.log(_datapoint);
+    //setdataPoint(_datapoint);
+    //console.log(_datapoint.data);
+
+    let _garphData = {
+      labels: [],
+      datasets: [],
+    };
+    let adata = {
+      label: "",
+      data: [],
+      backgroundColor: "rgb(0, 219, 65)",
+    };
+
+    for (let i = 0; i < _datapoint.data.length; i++) {
+      const data = _datapoint.data[i];
+      const atime = new Date(data._time);
+      const keys = Object.keys(data);
+
+      for (let i = 0; i < keys.length; i++) {
+        const akey = keys[i];
+        if (isDatakeys(akey)) {
+          adata.label = getTHsensor(akey).name;
+          adata.data.push(data[akey]);
+        }
+      }
+      _garphData.labels.push(
+        `${atime.getDate()}/${atime.getMonth()} | ${atime.getHours()}:${atime.getMinutes()}`
+      );
+    }
+    _garphData.datasets.push(adata);
+    /*
+    let adata2 = {
+      label: "",
+      data: [],
+      backgroundColor: "rgb(219, 0, 65)",
+    };
+    for (let i = 0; i < _datapoint2.data.length; i++) {
+      const data = _datapoint2.data[i];
+      const atime = new Date(data._time);
+      const keys = Object.keys(data);
+
+      for (let i = 0; i < keys.length; i++) {
+        const akey = keys[i];
+        if (isDatakeys(akey)) {
+          adata2.label = getTHsensor(akey).name;
+          adata2.data.push(data[akey]);
+        }
+      }
+    }
+    _garphData.datasets.push(adata2);*/
+
+    console.log(_garphData);
+    setgarphData(_garphData);
+
     setnodeInfo(nodeInfores);
     setzoneIDlist(nodeInfores.zoneIDlist);
     setrelayIDlist(nodeInfores.relayIDlist);
@@ -384,6 +360,7 @@ export default function node(props) {
           /*
           localStorage.clear();
           window.location.assign("/login");*/
+
           console.log(error.response.data);
           console.log(error.response.status);
           console.log(error.response.headers);
@@ -431,102 +408,330 @@ export default function node(props) {
 
   useEffect(() => {
     client.on("message", function (topic, message) {
-      const memtopic = mqttopic;
       const msgJson = JSON.parse(message.toString());
+      const _msgSend = JSON.parse(msgSend);
+
       const _topic = topic.toString();
       setdeviceTopic(topic.toString());
       setdevicemsg(message.toString());
       setmqttStat(!mqttStat);
-      var R_list = relayList;
-      console.log(
-        "#########============================================##########"
-      );
-      console.log("get message from: " + _topic);
-      console.log("massage is :");
-      console.log(message.toString());
 
       if (_topic.startsWith("/front/control/")) {
+        var _relayList = relayList;
         const msgfarmID = _topic.substring(15, 48);
         const msgrelayID = _topic.substring(49, 88);
-        for (let i = 0; i < R_list.length; i++) {
-          var relay = R_list[i];
-          const relayindex = i + 1;
-          //console.log("db relay id");
-          //console.log(relay.relayID);
-          // console.log("device relay id");
-          // console.log(msgrelayID);
-          if (relay.relayID == msgrelayID) {
+        if (mqttsending) {
+          console.log("============================================");
+          console.log(_topic);
+          console.log(msgJson);
+          if (mqttopic == _topic) {
             if (msgJson.status == "success") {
-              document.getElementById("status" + relayindex).checked = true;
-              R_list[i].status = true;
-              setrelayList(R_list);
-              console.log(relayList[i]); /*
-              if (onmsg > 0) {
-                setonmsg(0);
-              }*/
-              setonmsg(0);
-              break;
-            } else if (msgJson.status == "fail") {
-              document.getElementById("status" + relayindex).checked = false;
-              R_list[i].status = false;
-              setrelayList(R_list);
-              console.log(relayList[i]); /*
-              if (onmsg > 0) {
-                setonmsg(0);
-              }*/
-              setonmsg(0);
-              break;
+              for (let i = 0; i < _relayList.length; i++) {
+                const relay = _relayList[i];
+                if (relay.relayID == msgrelayID) {
+                  if (_msgSend.status == "true") {
+                    _relayList[i].status = true;
+                  } else if (_msgSend.status == "false") {
+                    _relayList[i].status = false;
+                  }
+                  setrelayList(_relayList);
+                  console.log(_relayList);
+                  setwait(false);
+                  setsuccess(true);
+                  setmqttsending(false);
+                  setonmsg(0);
+                  break;
+                }
+              }
             } else {
-              console.log(relayList[i]); /*
-              if (onmsg > 0) {
-                setonmsg(0);
-              }*/
+              setwait(false);
+              //setfail(true);
+              //setfailTxt(message.toString());
+              setmqttsending(false);
               setonmsg(0);
-              break;
+            }
+          }
+        } else {
+          var _relayList = relayList;
+          console.log("============================================");
+          console.log(_topic);
+          console.log(msgJson);
+          console.log(_relayList);
+          for (let i = 0; i < _relayList.length; i++) {
+            const relay = _relayList[i];
+            if (relay.relayID == msgrelayID) {
+              if (msgJson.status == "true") {
+                _relayList[i].status = true;
+                setrelayList(_relayList);
+                setonmsg(0);
+                break;
+              } else if (msgJson.status == "false") {
+                console.log("relay " + relay.relayID + " off");
+                _relayList[i].status = false;
+                setrelayList(_relayList);
+                setonmsg(0);
+                break;
+              } else {
+                console.log(relayList[i]);
+                setonmsg(0);
+                break;
+              }
             }
           }
         }
-        //
       } else if (_topic.startsWith("/front/time_fn/")) {
+        var _relayList = relayList;
         const msgfarmID = _topic.substring(15, 48);
         const msgrelayID = _topic.substring(49, 88);
-        console.log("============================================");
-        console.log(_topic);
-        console.log("farm id is " + msgfarmID);
-        console.log("relay id is " + msgrelayID);
-        console.log(message.toString());
+        if (mqttsending) {
+          console.log("============================================");
+          console.log(_topic);
+          console.log(msgJson);
+          if (mqttopic == _topic) {
+            if (msgJson.status == "success") {
+              for (let i = 0; i < _relayList.length; i++) {
+                const relay = _relayList[i];
+                if (relay.relayID == msgrelayID) {
+                  if (_msgSend.timeFunction == "true") {
+                    _relayList[i].timeFunction = true;
+                  } else if (_msgSend.timeFunction == "false") {
+                    _relayList[i].timeFunction = false;
+                  }
+                  setrelayList(_relayList);
+                  console.log(_relayList);
+                  setwait(false);
+                  setsuccess(true);
+                  setmqttsending(false);
+                  setonmsg(0);
+                  break;
+                }
+              }
+            } else {
+              setwait(false);
+              //setfail(true);
+              //setfailTxt(message.toString());
+              setmqttsending(false);
+              setonmsg(0);
+            }
+          }
+        } else {
+          var _relayList = relayList;
+          console.log("============================================");
+          console.log(_topic);
+          console.log(msgJson);
+          console.log(_relayList);
+          for (let i = 0; i < _relayList.length; i++) {
+            const relay = _relayList[i];
+            if (relay.relayID == msgrelayID) {
+              if (msgJson.status == "true") {
+                _relayList[i].timeFunction = true;
+                setrelayList(_relayList);
+                setonmsg(0);
+                break;
+              } else if (msgJson.status == "false") {
+                _relayList[i].timeFunction = false;
+                setrelayList(_relayList);
+                setonmsg(0);
+                break;
+              } else {
+                console.log(relayList[i]);
+                setonmsg(0);
+                break;
+              }
+            }
+          }
+        }
       } else if (_topic.startsWith("/front/set_time1/")) {
+        var _relayList = relayList;
         const msgfarmID = _topic.substring(17, 50);
         const msgrelayID = _topic.substring(51, 90);
         console.log("============================================");
         console.log(_topic);
-        console.log("farm id is " + msgfarmID);
-        console.log("relay id is " + msgrelayID);
-        console.log(message.toString());
+        console.log(msgJson);
+        if (mqttsending) {
+          if (mqttopic == _topic) {
+            if (msgJson.status == "success") {
+              for (let i = 0; i < _relayList.length; i++) {
+                const relay = _relayList[i];
+                if (relay.relayID == msgrelayID) {
+                  _relayList[i].time1 = _msgSend.time1;
+                  setrelayList(_relayList);
+                  console.log(_relayList);
+                  setwait(false);
+                  setsuccess(true);
+                  setmqttsending(false);
+                  setonmsg(0);
+                  break;
+                }
+              }
+            } else {
+              setwait(false);
+              setfail(true);
+              //setfailTxt(message.toString());
+              //setmqttsending(false);
+              setonmsg(0);
+            }
+          }
+        }
       } else if (_topic.startsWith("/front/set_time2/")) {
+        var _relayList = relayList;
         const msgfarmID = _topic.substring(17, 50);
         const msgrelayID = _topic.substring(51, 90);
         console.log("============================================");
         console.log(_topic);
-        console.log("farm id is " + msgfarmID);
-        console.log("relay id is " + msgrelayID);
-        console.log(message.toString());
+        console.log(msgJson);
+        if (mqttsending) {
+          if (mqttopic == _topic) {
+            if (msgJson.status == "success") {
+              for (let i = 0; i < _relayList.length; i++) {
+                const relay = _relayList[i];
+                if (relay.relayID == msgrelayID) {
+                  _relayList[i].time2 = _msgSend.time2;
+                  setrelayList(_relayList);
+                  console.log(_relayList);
+                  setwait(false);
+                  setsuccess(true);
+                  setmqttsending(false);
+                  setonmsg(0);
+                  break;
+                }
+              }
+            } else {
+              setwait(false);
+              setfail(true);
+              //setfailTxt(message.toString());
+              //setmqttsending(false);
+              setonmsg(0);
+            }
+          }
+        }
       } else if (_topic.startsWith("/front/set_time3/")) {
+        var _relayList = relayList;
         const msgfarmID = _topic.substring(17, 50);
         const msgrelayID = _topic.substring(51, 90);
         console.log("============================================");
         console.log(_topic);
-        console.log("farm id is " + msgfarmID);
-        console.log("relay id is " + msgrelayID);
-        console.log(message.toString());
+        console.log(msgJson);
+        if (mqttsending) {
+          if (mqttopic == _topic) {
+            if (msgJson.status == "success") {
+              for (let i = 0; i < _relayList.length; i++) {
+                const relay = _relayList[i];
+                if (relay.relayID == msgrelayID) {
+                  _relayList[i].time3 = _msgSend.time3;
+                  setrelayList(_relayList);
+                  console.log(_relayList);
+                  setwait(false);
+                  setsuccess(true);
+                  setmqttsending(false);
+                  setonmsg(0);
+                  break;
+                }
+              }
+            } else {
+              setwait(false);
+              setfail(true);
+              //setfailTxt(message.toString());
+              //setmqttsending(false);
+              setonmsg(0);
+            }
+          }
+        }
+      } else if (_topic.startsWith("/front/data_fn/")) {
+        var _relayList = relayList;
+        const msgfarmID = _topic.substring(15, 48);
+        const msgrelayID = _topic.substring(49, 88);
+        if (mqttsending) {
+          console.log("============================================");
+          console.log(_topic);
+          console.log(msgJson);
+          if (mqttopic == _topic) {
+            if (msgJson.status == "success") {
+              for (let i = 0; i < _relayList.length; i++) {
+                const relay = _relayList[i];
+                if (relay.relayID == msgrelayID) {
+                  if (_msgSend.dataFunction == "true") {
+                    _relayList[i].dataFunction = true;
+                  } else if (_msgSend.dataFunction == "false") {
+                    _relayList[i].dataFunction = false;
+                  }
+                  setrelayList(_relayList);
+                  console.log(_relayList);
+                  setwait(false);
+                  setsuccess(true);
+                  setmqttsending(false);
+                  setonmsg(0);
+                  break;
+                }
+              }
+            } else {
+              setwait(false);
+              setfail(true);
+              //setfailTxt(message.toString());
+              //setmqttsending(false);
+              setonmsg(0);
+            }
+          }
+        } else {
+          var _relayList = relayList;
+          console.log("============================================");
+          console.log(_topic);
+          console.log(msgJson);
+          console.log(_relayList);
+          for (let i = 0; i < _relayList.length; i++) {
+            const relay = _relayList[i];
+            if (relay.relayID == msgrelayID) {
+              if (msgJson.status == "true") {
+                _relayList[i].dataFunction = true;
+                setrelayList(_relayList);
+                setonmsg(0);
+                break;
+              } else if (msgJson.status == "false") {
+                _relayList[i].dataFunction = false;
+                setrelayList(_relayList);
+                setonmsg(0);
+                break;
+              } else {
+                console.log(relayList[i]);
+                setonmsg(0);
+                break;
+              }
+            }
+          }
+        }
       } else if (_topic.startsWith("/front/set_data1/")) {
+        var _relayList = relayList;
         const msgfarmID = _topic.substring(17, 50);
         const msgrelayID = _topic.substring(51, 90);
         console.log("============================================");
         console.log(_topic);
-        console.log("farm id is " + msgfarmID);
-        console.log("relay id is " + msgrelayID);
         console.log(message.toString());
+        if (mqttsending) {
+          console.log(mqttopic + "=" + _topic);
+          if (mqttopic == _topic) {
+            if (msgJson.status == "success") {
+              for (let i = 0; i < _relayList.length; i++) {
+                const relay = _relayList[i];
+                if (relay.relayID == msgrelayID) {
+                  _relayList[i].data1 = _msgSend.data1;
+                  setrelayList(_relayList);
+                  console.log(_relayList);
+                  setwait(false);
+                  setsuccess(true);
+                  setmqttsending(false);
+                  setonmsg(0);
+                  break;
+                }
+              }
+            } else {
+              setwait(false);
+              setfail(true);
+              //setfailTxt(message.toString());
+              //setmqttsending(false);
+              setonmsg(0);
+            }
+          }
+        }
       } else {
         console.log("!!!============================================!!!");
         console.log(_topic);
@@ -656,7 +861,7 @@ export default function node(props) {
       },
     };
     const putmethod = "data";
-    putData(_putdata, relayID, putmethod);
+    //putData(_putdata, relayID, putmethod);
     modalOff("modalstyleData" + relayIndex);
   }
   function putminiData(relayIndex, relayID, dataIndex) {
@@ -683,49 +888,57 @@ export default function node(props) {
       const _dataSelect = document.getElementById(
         "dataSelect" + dataIndex + relayIndex
       ).value;
-      console.log("data index" + _dataSelect);
+
       if (_dataSelect == -1) {
         setfail(true);
         setfailTxt("กรุณาเลือกชนิดข้อมูล");
       } else {
-        const _datamin = dataValue[0];
-        const _datamax = dataValue[1];
-        if (_datamin >= _datamax) {
+        const _compareSelect = document.getElementById(
+          "compare" + relayIndex
+        ).value;
+        if (_compareSelect == -1) {
           setfail(true);
-          setfailTxt("ข้อมูลไม่ถูกต้อง");
+          setfailTxt("กรุณาเลือกรูปแบบการทำงาน");
         } else {
-          const putmethod = "data";
-          if (dataIndex == 1) {
-            const _putdata = {
-              data1: {
-                status: _dataStatus.toString(),
-                data: _dataSelect,
-                max: parseInt(_datamax),
-                min: parseInt(_datamin),
-                zoneId: zoneID,
-                conpare: "low",
-              },
-            };
-            console.log(zoneIDlist);
-            console.log(_putdata);
-            client.publish(
-              "/set_data1/farmId/relayId",
-              JSON.stringify(_putdata),
-              function (err) {
-                if (!err) {
-                  setwait(true);
-                  setmqttopic("/front/set_data1/farmId/relayId");
-                  setmsgSend(JSON.stringify(_putdata));
-                  setmqttsending(true);
-                } else {
-                  console.log(err);
-                }
-              }
-            );
-            //console.log(_putData);
-            //putData(_putdata, relayID, putmethod);
+          const _datamin = dataValue[0];
+          const _datamax = dataValue[1];
+          if (_datamin >= _datamax) {
+            setfail(true);
+            setfailTxt("ข้อมูลไม่ถูกต้อง");
           } else {
-            console.log("put data error");
+            const putmethod = "data";
+            if (dataIndex == 1) {
+              const _putdata = {
+                data1: {
+                  status: _dataStatus.toString(),
+                  data: _dataSelect,
+                  max: parseInt(_datamax),
+                  min: parseInt(_datamin),
+                  zoneId: zoneID,
+                  compare: _compareSelect,
+                },
+              };
+              console.log(_putdata);
+              client.publish(
+                `/set_data1/${_farmID}/${relayID}`,
+                JSON.stringify(_putdata),
+                function (err) {
+                  if (!err) {
+                    setwait(true);
+                    setmqttopic(`/front/set_data1/${_farmID}/${relayID}`);
+                    setmsgSend(JSON.stringify(_putdata));
+                    setmqttsending(true);
+                    setonmsg(onmsg + 1);
+                  } else {
+                    console.log(err);
+                  }
+                }
+              );
+              //console.log(_putData);
+              //putData(_putdata, relayID, putmethod);
+            } else {
+              console.log("put data error");
+            }
           }
         }
       }
@@ -805,7 +1018,7 @@ export default function node(props) {
       time2: time2,
       time3: time3,
     };
-    putData(_putdata, relayID, putmethod);
+    //putData(_putdata, relayID, putmethod);
     modalOff("modalstyleTime" + relayIndex);
   }
 
@@ -978,14 +1191,20 @@ export default function node(props) {
             },
           };
           client.publish(
-            "/set_time1/farmId/relayId",
+            `/set_time1/${_farmID}/${relayID}`,
             JSON.stringify(_putdata),
             function (err) {
               if (!err) {
+                console.log(
+                  "$******Publich to :" +
+                    `/front/set_time1/${_farmID}/${relayID}`
+                );
+                console.log(_putdata);
                 setwait(true);
                 setmqttopic(`/front/set_time1/${_farmID}/${relayID}`);
                 setmsgSend(JSON.stringify(_putdata));
                 setmqttsending(true);
+                setonmsg(onmsg + 1);
               } else {
                 console.log(err);
               }
@@ -1017,10 +1236,16 @@ export default function node(props) {
             JSON.stringify(_putdata),
             function (err) {
               if (!err) {
+                console.log(
+                  "$******Publich to :" +
+                    `/front/set_time1/${_farmID}/${relayID}`
+                );
+                console.log(_putdata);
                 setwait(true);
                 setmsgSend(JSON.stringify(_putdata));
-                setmqttopic("/front/set_time2/farmId/relayId");
+                setmqttopic(`/front/set_time2/${_farmID}/${relayID}`);
                 setmqttsending(true);
+                setonmsg(onmsg + 1);
               } else {
                 console.log(err);
               }
@@ -1052,10 +1277,16 @@ export default function node(props) {
             JSON.stringify(_putdata),
             function (err) {
               if (!err) {
+                console.log(
+                  "$******Publich to :" +
+                    `/front/set_time1/${_farmID}/${relayID}`
+                );
+                console.log(_putdata);
                 setwait(true);
                 setmsgSend(JSON.stringify(_putdata));
-                setmqttopic("/front/set_time3/farmId/relayId");
+                setmqttopic(`/front/set_time3/${_farmID}/${relayID}`);
                 setmqttsending(true);
+                setonmsg(onmsg + 1);
               } else {
                 console.log(err);
               }
@@ -1076,9 +1307,9 @@ export default function node(props) {
     const _orgId = localStorage.getItem("_orgID");
     const check = document.getElementById(id).checked;
     if (check) {
-      var _putdata = { dataFunction: true };
+      var _putdata = { dataFunction: "true" };
     } else {
-      var _putdata = { dataFunction: false };
+      var _putdata = { dataFunction: "false" };
     }
     client.publish(
       `/data_fn/${_farmID}/${relayID}`,
@@ -1089,6 +1320,7 @@ export default function node(props) {
           setmqttopic(`/front/data_fn/${_farmID}/${relayID}`);
           setmsgSend(JSON.stringify(_putdata));
           setmqttsending(true);
+          setonmsg(onmsg + 1);
         } else {
           console.log(err);
         }
@@ -1100,9 +1332,9 @@ export default function node(props) {
     const _orgId = localStorage.getItem("_orgID");
     const check = document.getElementById(id).checked;
     if (check) {
-      var _putdata = { timeFunction: true };
+      var _putdata = { timeFunction: "true" };
     } else {
-      var _putdata = { timeFunction: false };
+      var _putdata = { timeFunction: "false" };
     }
     client.publish(
       `/time_fn/${_farmID}/${relayID}`,
@@ -1113,6 +1345,7 @@ export default function node(props) {
           setmqttopic(`/front/time_fn/${_farmID}/${relayID}`);
           setmsgSend(JSON.stringify(_putdata));
           setmqttsending(true);
+          setonmsg(onmsg + 1);
         } else {
           console.log(err);
         }
@@ -1120,10 +1353,11 @@ export default function node(props) {
     );
   }
   function changeStatus(id, relayID) {
-    /*
-    //const _orgId = localStorage.getItem("_orgID");
-    //const check = document.getElementById(id).checked;
-    /*if (check) {
+    const _orgId = localStorage.getItem("_orgID");
+    const _farmID = localStorage.getItem("_farmID");
+    const check = document.getElementById(id).checked;
+
+    if (check) {
       var status = "true";
     } else {
       var status = "false";
@@ -1131,22 +1365,22 @@ export default function node(props) {
     const _putdata = {
       orgId: _orgId,
       status: status,
-    }; 
+    };
     client.publish(
-      "/control/farmId/relayId",
+      `/control/${_farmID}/${relayID}`,
       JSON.stringify(_putdata),
       function (err) {
         if (!err) {
           setwait(true);
           setmsgSend(JSON.stringify(_putdata));
-          setmqttopic("/front/control/farmId/relayId");
+          setmqttopic(`/front/control/${_farmID}/${relayID}`);
           setmqttsending(true);
+          setonmsg(onmsg + 1);
         } else {
           console.log(err);
         }
       }
-    );*/
-    //putData(_putdata, relayID, "status");
+    );
   }
   useEffect(() => {
     const interval = setInterval(function () {
@@ -1166,16 +1400,6 @@ export default function node(props) {
           <div className={styles.lds_dual_ring}></div>
           <div></div>
           <div className="color-blue">กำลังดำเนินการ</div>
-          <div>
-            <button
-              className="btn btn-primary"
-              onClick={() => setwait(false)}
-              //style={{ fontSize: "16px", height: "24px" }}
-            >
-              ออก
-            </button>
-            {/*ใช้ทดสอบ*/}
-          </div>
         </div>
       </div>
       <div
@@ -1323,9 +1547,7 @@ export default function node(props) {
                     }
                   >
                     <option value="volvo">เลือกเวลาอัพเดตข้อมูล</option>
-                    <option value={3000}>ทุก 3 วินาที</option>
-                    <option value={5000}>ทุก 5 วินาที</option>
-                    <option value={10000}>ทุก 10 วินาที</option>
+
                     <option value={300000}>ทุก 5 นาที</option>
                     <option value={600000}>ทุก 10 นาที</option>
                     <option value={900000}>ทุก 15 นาที</option>
@@ -1365,10 +1587,9 @@ export default function node(props) {
               justifyContent: "center",
             }}
           >
-            <Scatter
-              data={data}
-              option={options}
-              style={{ maxWidth: "650px", maxHeight: "350px" }}
+            <Line
+              data={garphData}
+              style={{ maxWidth: "100%", maxHeight: "350px" }}
             />
           </div>
         </div>
@@ -1416,29 +1637,41 @@ export default function node(props) {
                     }}
                   >
                     {zone.map((data, _index) => {
-                      return (
-                        <div
-                          key={_index}
-                          className="well profile_view"
-                          style={{ width: "350px", minWidth: "300px" }}
-                        >
-                          <div className="col">
-                            <div
-                              style={{
-                                display: "flex",
-                                width: "100%",
-                                flexDirection: "column",
-                              }}
-                            >
-                              <h2 className="brief">
-                                <i className="fa fa-sun-o"></i>{" "}
-                                {getTHsensor(data[0])}{" "}
-                              </h2>
-                              <h4>{data[1]}</h4>
+                      if (data[1] != null) {
+                        return (
+                          <div
+                            key={_index}
+                            className="well profile_view"
+                            style={{ width: "350px", minWidth: "300px" }}
+                          >
+                            <div className="col">
+                              <div
+                                style={{
+                                  display: "flex",
+                                  width: "100%",
+                                  flexDirection: "column",
+                                }}
+                              >
+                                <h2 className="brief">
+                                  <i className="fa fa-sun-o"></i>{" "}
+                                  {getTHsensor(data[0]).name}{" "}
+                                </h2>
+                                <h4>
+                                  {data[1]}{" "}
+                                  <label
+                                    style={{
+                                      fontWeight: "bold",
+                                      color: "#AAB6AA",
+                                    }}
+                                  >
+                                    {getTHsensor(data[0]).vocabulary}
+                                  </label>
+                                </h4>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      );
+                        );
+                      }
                     })}
                   </div>
                 </div>
@@ -1535,6 +1768,7 @@ export default function node(props) {
                               </label>
                               <label className={styles.switch2}>
                                 <input
+                                  key={relay.dataFunction}
                                   onClick={() =>
                                     setdataFunction(
                                       "dStatus" + relayIndex,
@@ -1614,16 +1848,24 @@ export default function node(props) {
                                                 }
                                               : { display: "none" }
                                           }
+                                          disabled={
+                                            relay.dataFunction ? false : true
+                                          }
                                         >
                                           <option value={-1}>
                                             เลือกข้อมูล
                                           </option>
                                           {_data.map((data, index) => {
-                                            return (
-                                              <option key={index} value={data}>
-                                                {getTHsensor(data[0])}
-                                              </option>
-                                            );
+                                            if (data[1] != null) {
+                                              return (
+                                                <option
+                                                  key={index}
+                                                  value={data[0]}
+                                                >
+                                                  {getTHsensor(data[0]).name}
+                                                </option>
+                                              );
+                                            }
                                           })}
                                         </select>
                                       );
@@ -1635,6 +1877,7 @@ export default function node(props) {
                                   style={{ marginLeft: "auto" }}
                                 >
                                   <input
+                                    key={relay.dataFunction}
                                     id={"d1Status" + relayIndex}
                                     type="checkbox"
                                     defaultChecked={
@@ -1644,22 +1887,52 @@ export default function node(props) {
                                           : false
                                         : false
                                     }
+                                    disabled={relay.dataFunction ? false : true}
                                   />
                                   <span className={styles.slider}></span>
                                 </label>
                               </div>
+                              <label>
+                                <h4>
+                                  การทำงาน:{" "}
+                                  <select
+                                    id={"compare" + relayIndex}
+                                    style={{
+                                      color: "#73879C",
+                                      height: "30px",
+                                      marginLeft: "10px",
+                                      borderColor: "#BEBEBE",
+                                    }}
+                                    disabled={relay.dataFunction ? false : true}
+                                  >
+                                    <option value={-1}>เลือกการทำงาน</option>
+                                    <option value={"high"}>
+                                      เปิดเมื่อค่ามากกว่า
+                                    </option>
+                                    <option value={"low"}>
+                                      เปิดเมื่อค่าน้อยกว่า
+                                    </option>
+                                  </select>
+                                </h4>
+                              </label>
                               <label id={"data1" + relayIndex + "text"}>
-                                <h2 className={!relay.status ? "brief2" : ""}>
+                                <h2
+                                  className={relay.dataFunction ? "brief2" : ""}
+                                >
                                   ค่าน้อยสุด:{" "}
                                   <strong
-                                    className={!relay.status ? "minvalue" : ""}
+                                    className={
+                                      relay.dataFunction ? "minvalue" : ""
+                                    }
                                   >
                                     {dataValue[0]}{" "}
                                     <i className="fa fa-long-arrow-down"></i>
                                   </strong>{" "}
                                   | ค่ามากสุด:{" "}
                                   <strong
-                                    className={!relay.status ? "maxvalue" : ""}
+                                    className={
+                                      relay.dataFunction ? "maxvalue" : ""
+                                    }
                                   >
                                     {dataValue[1]}{" "}
                                     <i className="fa fa-long-arrow-up"></i>
@@ -1670,6 +1943,10 @@ export default function node(props) {
                               </label>
 
                               <Slider
+                                key={`slider-${[
+                                  relay.data1.min,
+                                  relay.data1.max,
+                                ]}`}
                                 id="data1"
                                 defaultValue={[
                                   relay.data1.min,
@@ -1803,6 +2080,7 @@ export default function node(props) {
                               </label>
                               <label className={styles.switch2}>
                                 <input
+                                  key={relay.timeFunction}
                                   id={"tStatus" + relayIndex}
                                   type="checkbox"
                                   onClick={() =>
@@ -1856,6 +2134,7 @@ export default function node(props) {
                                   style={{ marginLeft: "auto" }}
                                 >
                                   <input
+                                    key={relay.time1.status}
                                     id={"t1Status" + relayIndex}
                                     type="checkbox"
                                     defaultChecked={
@@ -2099,6 +2378,7 @@ export default function node(props) {
                                   style={{ marginLeft: "auto" }}
                                 >
                                   <input
+                                    key={relay.time2.status}
                                     id={"t2Status" + relayIndex}
                                     type="checkbox"
                                     defaultChecked={
@@ -2342,6 +2622,7 @@ export default function node(props) {
                                   style={{ marginLeft: "auto" }}
                                 >
                                   <input
+                                    key={relay.time3.status}
                                     id={"t3Status" + relayIndex}
                                     type="checkbox"
                                     defaultChecked={
@@ -2592,7 +2873,7 @@ export default function node(props) {
                                   alignItems: "center",
                                 }}
                                 onClick={
-                                  !relay.status
+                                  relay.status
                                     ? () => relaysetting(relayIndex)
                                     : () => {}
                                 }
@@ -2638,6 +2919,7 @@ export default function node(props) {
                               >
                                 <label className={styles.switch2}>
                                   <input
+                                    key={relay.status}
                                     id={"status" + relayIndex}
                                     type="checkbox"
                                     style={{
