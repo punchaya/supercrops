@@ -12,6 +12,7 @@ import { isDatakeys } from "../assets/isDatakeys";
 
 import Slider from "@mui/material/Slider";
 import { connect } from "mqtt";
+import { border } from "@mui/system";
 
 export default function node(props) {
   const router = useRouter();
@@ -101,6 +102,37 @@ export default function node(props) {
 
   const [graph, setgraph] = useState(true);
   const [failTxt, setfailTxt] = useState("เกิดข้อผิดพลาดบางอย่าง");
+  //graphdata pattern//
+  /* const [graphDataList, setgarphDataList] = useState([
+    {
+      id: "gp01",
+      labels: ["a", "a", "a", "a", "a", "a"],
+      datasets: [
+        {
+          label: "data1",
+          data: [1, 2, 3, 4, 5, 6],
+          borderColor: "rgb(255, 99, 132)",
+          backgroundColor: "rgba(255, 99, 132, 0.5)",
+        },
+      ],
+    },
+    {
+      id: "gp02",
+      labels: ["b", "b", "b", "b", "b", "b"],
+      datasets: [
+        {
+          label: "data2",
+          data: [6, 5, 4, 3, 2, 1],
+          borderColor: "rgb(255, 99, 132)",
+          backgroundColor: "rgba(255, 99, 132, 0.5)",
+        },
+      ],
+    },
+  ]);*/
+
+  const [graphDataList, setgarphDataList] = useState([]);
+  const [graphDataSelect, setgarphDataSelect] = useState([]);
+  const [graphZone, setgraphZone] = useState([]);
 
   const [dataValue, setdataValue] = useState([]);
   const [dataRelay, setdataRelay] = useState("");
@@ -116,10 +148,57 @@ export default function node(props) {
     ],
   });
   const [dataPoint, setdataPoint] = useState("");
+  function updategraphZone(index, id) {
+    const _zoneindex = document.getElementById(id).value;
 
+    let temp_state = graphZone;
+    let temp_element = temp_state[index];
+    temp_element = { index: _zoneindex };
+    temp_state[index] = temp_element;
+
+    setgraphZone((graphZone) => [...temp_state]);
+  }
   function resetmqtt() {
     setmsgSend(null);
     setmqttopic(null);
+  }
+  function genid(length) {
+    var result = [];
+    var characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result.push(
+        characters.charAt(Math.floor(Math.random() * charactersLength))
+      );
+    }
+    return result.join("");
+  }
+
+  function addgraph(func) {
+    var genid = 1;
+    while (genid) {
+      var newid = func(16);
+      for (let i = 0; i < graphDataList.length; i++) {
+        if (graphDataList[i].id === newid) {
+          genid = 1;
+        }
+      }
+      genid = 0;
+    }
+    var newGraph = {
+      id: "graph" + newid,
+      labels: [],
+      datasets: [
+        {
+          label: "",
+          data: [],
+          borderColor: "rgb(255, 99, 132)",
+          backgroundColor: "rgba(255, 99, 132, 0.5)",
+        },
+      ],
+    };
+    setgarphDataList((graphDataList) => [...graphDataList, newGraph]);
   }
   async function updateRelay() {
     console.log("Updating relay: ");
@@ -153,6 +232,91 @@ export default function node(props) {
     console.log(_relayList);
     setrelayList(_relayList);
     console.log("Update success relay: ");
+  }
+
+  async function getGraphData(zoneindex, data, index) {
+    const _orgID = localStorage.getItem("_orgID");
+
+    const zoneID = zoneIDlist[zoneindex];
+
+    const time1send = parseInt(new Date().getTime() / 1000) - 30 * 24 * 60 * 60;
+    const time2send = parseInt(new Date().getTime() / 1000);
+    const reqdata = {
+      orgId: _orgID,
+      tsdbToken:
+        "YVTWev3u1OiqnX4rK7BUSExsYdHucUdCF6_90x4DgP_vHuIJjkh3Bi0XjqbUUwqln_KsLtnuS--8YqECk1C2SA==",
+      zoneId: zoneID,
+      graphData: data,
+      time1: time1send,
+      time2: time2send,
+    };
+
+    console.log(reqdata);
+    const _datapoint = await axios
+      .post(
+        `http://203.151.136.127:10002/api/tsdb/service/F184b91fec195443c829aaaebcdaeae16/N1f8003e446ef4e6eaacb06551796f412`,
+        reqdata
+      )
+      .catch((error) => {
+        if (error) {
+          console.log("tsdb requset error");
+          console.log(error);
+          console.log("time 2:" + parseInt(new Date().getTime() / 1000));
+          console.log(
+            "time 1 :" +
+              parseInt((new Date().getTime() - 96 * 60 * 60 * 1000) / 1000)
+          );
+        } else {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });
+    const aztime1 = new Date().getTime() - 90 * 24 * 60 * 60 * 1000;
+    const aztime2 = new Date().getTime();
+    const ztime1 = new Date(time1send * 1000);
+    const ztime2 = new Date(time2send * 1000);
+    console.log("time 1 :" + ztime1 + "=>" + time1send);
+    console.log("time 2 :" + ztime2 + "=>" + time2send);
+    //console.log("Data point: ");
+
+    //console.log(_datapoint);
+    //setdataPoint(_datapoint);
+    console.log(_datapoint);
+
+    let _garphData = {
+      labels: [],
+      datasets: [],
+    };
+    let adata = {
+      label: "",
+      data: [],
+      backgroundColor: "rgb(0, 219, 65)",
+    };
+
+    for (let i = 0; i < _datapoint.data.length; i++) {
+      const data = _datapoint.data[i];
+      const atime = new Date(data._time);
+      const keys = Object.keys(data);
+
+      for (let i = 0; i < keys.length; i++) {
+        const akey = keys[i];
+        if (isDatakeys(akey)) {
+          adata.label = getTHsensor(akey).name;
+          adata.data.push(data[akey]);
+        }
+      }
+      _garphData.labels.push(
+        `${atime.getDate()}/${atime.getMonth()} | ${atime.getHours()}:${atime.getMinutes()}`
+      );
+    }
+    _garphData.datasets.push(adata);
+    console.log(_garphData);
+
+    let temp_state = graphDataList;
+    temp_state[index] = _garphData;
+
+    setgarphDataList((graphDataList) => [...temp_state]);
   }
 
   async function getRelayID() {
@@ -257,101 +421,6 @@ export default function node(props) {
         console.log(error.response.headers);
       });
     const nodeInfores = nodeInfo.data;
-    const time1send = parseInt(new Date().getTime() / 1000) - 84 * 60 * 60;
-    const time2send = parseInt(new Date().getTime() / 1000);
-    const testreqdata = {
-      orgId: "Oc780373b0fa34391a5f987cc095f680a",
-      tsdbToken:
-        "YVTWev3u1OiqnX4rK7BUSExsYdHucUdCF6_90x4DgP_vHuIJjkh3Bi0XjqbUUwqln_KsLtnuS--8YqECk1C2SA==",
-      zoneId: "Z38df17286723448abd27f8866bba39b5",
-      graphData: "weather_humidity",
-      time1: time1send,
-      time2: time2send,
-    };
-
-    //console.log(testreqdata);
-    const _datapoint = await axios
-      .post(
-        `http://203.151.136.127:10002/api/tsdb/service/F184b91fec195443c829aaaebcdaeae16/N1f8003e446ef4e6eaacb06551796f412`,
-        testreqdata
-      )
-      .catch((error) => {
-        if (error) {
-          console.log("tsdb requset error");
-          console.log(error);
-          console.log("time 2:" + parseInt(new Date().getTime() / 1000));
-          console.log(
-            "time 1 :" +
-              parseInt((new Date().getTime() - 96 * 60 * 60 * 1000) / 1000)
-          );
-        } else {
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        }
-      });
-    const aztime1 = new Date().getTime() - 2 * 60 * 60 * 1000;
-    const aztime2 = new Date().getTime();
-    const ztime1 = new Date(time1send * 1000);
-    const ztime2 = new Date(time2send * 1000);
-    //console.log("time 1 :" + ztime1 + "=>" + time1send);
-    //console.log("time 2 :" + ztime2 + "=>" + time2send);
-    //console.log("Data point: ");
-
-    //console.log(_datapoint);
-    //setdataPoint(_datapoint);
-    //console.log(_datapoint.data);
-
-    let _garphData = {
-      labels: [],
-      datasets: [],
-    };
-    let adata = {
-      label: "",
-      data: [],
-      backgroundColor: "rgb(0, 219, 65)",
-    };
-
-    for (let i = 0; i < _datapoint.data.length; i++) {
-      const data = _datapoint.data[i];
-      const atime = new Date(data._time);
-      const keys = Object.keys(data);
-
-      for (let i = 0; i < keys.length; i++) {
-        const akey = keys[i];
-        if (isDatakeys(akey)) {
-          adata.label = getTHsensor(akey).name;
-          adata.data.push(data[akey]);
-        }
-      }
-      _garphData.labels.push(
-        `${atime.getDate()}/${atime.getMonth()} | ${atime.getHours()}:${atime.getMinutes()}`
-      );
-    }
-    _garphData.datasets.push(adata);
-    /*
-    let adata2 = {
-      label: "",
-      data: [],
-      backgroundColor: "rgb(219, 0, 65)",
-    };
-    for (let i = 0; i < _datapoint2.data.length; i++) {
-      const data = _datapoint2.data[i];
-      const atime = new Date(data._time);
-      const keys = Object.keys(data);
-
-      for (let i = 0; i < keys.length; i++) {
-        const akey = keys[i];
-        if (isDatakeys(akey)) {
-          adata2.label = getTHsensor(akey).name;
-          adata2.data.push(data[akey]);
-        }
-      }
-    }
-    _garphData.datasets.push(adata2);*/
-
-    //console.log(_garphData);
-    setgarphData(_garphData);
 
     setnodeInfo(nodeInfores);
     setzoneIDlist(nodeInfores.zoneIDlist);
@@ -842,6 +911,9 @@ export default function node(props) {
       }
     }
   }
+  function deleteGraph(id) {
+    setgarphDataList(graphDataList.filter((value) => value.id !== id));
+  }
 
   async function putminitime(relayIndex, relayID, timeIndex) {
     const _farmID = localStorage.getItem("_farmID");
@@ -1324,77 +1396,135 @@ export default function node(props) {
             </ul>
             <div className="clearfix"></div>
           </div>
-          <div>
-            <div style={{ marginTop: "20px", fontSize: "16px" }}>
-              เลือกโซน :{" "}
-              <select
-                id={"selectzone_garph"}
-                onChange={() =>
-                  setdataSelect(
-                    document.getElementById("selectzone_garph").value
-                  )
-                }
-                style={{
-                  color: "#73879C",
-                  height: "30px",
-                  marginLeft: "10px",
-                  borderColor: "#BEBEBE",
-                }}
-              >
-                <option value={-1}>เลือกโซน</option>
-                {zoneList.map((zone, index) => {
-                  return (
-                    <option key={index} value={index}>
-                      โซนที่ {index + 1}
-                    </option>
-                  );
-                })}
-              </select>{" "}
-              <label style={{ marginLeft: "10px" }}>ข้อมูล :</label>
-              {dataList.map((_data, index) => {
-                return (
-                  <select
-                    key={index}
-                    id={"dataSelect_garph"}
-                    style={
-                      dataSelect == index
-                        ? {
-                            color: "#73879C",
-                            height: "30px",
-                            marginLeft: "10px",
-                            borderColor: "#BEBEBE",
-                          }
-                        : { display: "none" }
-                    }
-                    onChange={() => {}}
-                  >
-                    <option value={-1}>เลือกข้อมูล</option>
-                    {_data.map((data, index) => {
-                      if (data[1] != null) {
-                        return (
-                          <option key={index} value={data[0]}>
-                            {getTHsensor(data[0]).name}
-                          </option>
-                        );
-                      }
-                    })}
-                  </select>
-                );
-              })}
-            </div>
-          </div>
-
           <div
             className="x_content"
             style={{
               display: graph ? "flex" : "none",
               justifyContent: "center",
+              flexDirection: "column",
             }}
           >
-            <Line
-              data={garphData}
-              style={{ maxWidth: "100%", maxHeight: "350px" }}
-            />
+            {graphDataList.map((graphdata, graphindex) => {
+              return (
+                <div
+                  key={graphdata.id}
+                  id={"graph" + graphindex}
+                  style={{
+                    border: "solid 0.5px",
+                    marginBottom: "10px",
+                    borderRadius: "10px",
+                    borderColor: "#BEBEBE",
+                    padding: "10px",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      fontSize: "16px",
+                    }}
+                  >
+                    {graphindex}เลือกโซน :{" "}
+                    <select
+                      id={"selectzone_graph" + graphindex}
+                      style={{
+                        color: "#73879C",
+                        height: "30px",
+                        marginLeft: "10px",
+                        borderColor: "#BEBEBE",
+                        borderRadius: "5px",
+                      }}
+                      onChange={() =>
+                        updategraphZone(
+                          graphindex,
+                          "selectzone_graph" + graphindex
+                        )
+                      }
+                    >
+                      <option value={-1}>เลือกโซน</option>
+                      {zoneIDlist.map((zone, index) => {
+                        return (
+                          <option key={index} value={index}>
+                            โซนที่ {index + 1}
+                          </option>
+                        );
+                      })}
+                    </select>
+                    <div style={{ marginLeft: "10px" }}>ข้อมูล :</div>
+                    {dataList.map((_data, index) => {
+                      return (
+                        <select
+                          key={index}
+                          id={"dataSelect_graph" + graphindex}
+                          style={
+                            graphZone[graphindex]
+                              ? graphZone[graphindex].index == index
+                                ? {
+                                    color: "#73879C",
+                                    height: "30px",
+                                    marginLeft: "10px",
+                                    borderColor: "#BEBEBE",
+                                    borderRadius: "5px",
+                                  }
+                                : { display: "none" }
+                              : { display: "none" }
+                          }
+                          onChange={() =>
+                            getGraphData(
+                              document.getElementById(
+                                "selectzone_graph" + graphindex
+                              ).value,
+                              document.getElementById(
+                                "dataSelect_graph" + graphindex
+                              ).value,
+                              graphindex
+                            )
+                          }
+                        >
+                          <option value={-1}>เลือกข้อมูล</option>
+                          {_data.map((data, index) => {
+                            if (data[1] != null) {
+                              return (
+                                <option key={index} value={data[0]}>
+                                  {getTHsensor(data[0]).name}
+                                </option>
+                              );
+                            }
+                          })}
+                        </select>
+                      );
+                    })}
+                    <button
+                      className="btn btn-danger"
+                      style={{
+                        marginLeft: "auto",
+                        border: "none",
+                        backgroundColor: "white",
+                        outline: "none",
+                        color: "grey",
+                      }}
+                      onClick={() => deleteGraph(graphdata.id)}
+                    >
+                      x
+                    </button>
+                  </div>
+
+                  <Line
+                    data={graphdata}
+                    style={{ maxWidth: "100%", maxHeight: "350px" }}
+                  />
+                </div>
+              );
+            })}{" "}
+            <button
+              className="btn btn-primary"
+              style={{
+                borderRadius: "10px",
+              }}
+              onClick={() => addgraph(genid)}
+            >
+              เพิ่มกราฟข้อมูล
+            </button>
           </div>
         </div>
       </div>

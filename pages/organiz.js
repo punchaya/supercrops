@@ -162,15 +162,10 @@ export default function organiz() {
                           <i className="fa fa-user"></i>{" "}
                           <b> สิทธิ์ผู้ใช้งาน: </b> {val.role}
                         </li>
-
                       </ul>
                     </div>
                     <div className="right col-md-5 col-sm-5 text-center">
-                      <Image
-                        src={val.picSrc}
-                        width={64}
-                        height={64}
-                      />
+                      <Image src={val.picSrc} width={64} height={64} />
                     </div>
                   </div>
                   <div className=" bottom text-right">
@@ -193,11 +188,10 @@ export default function organiz() {
                         style={{ marginBottom: "20px" }}
                         type="button"
                         className="btn btn-danger btn-sm"
-                        onClick={() =>
-                          removeUser(val.id)}
-                      ><i className="fa fa-remove"> </i> ลบ
+                        onClick={() => removeUser(val.id)}
+                      >
+                        <i className="fa fa-remove"> </i> ลบ
                       </button>
-
                     </div>
                   </div>
                 </div>
@@ -215,18 +209,13 @@ export default function organiz() {
                   </h2>
                   <ul className="list-unstyled">
                     <li>
-                      <i className="fa fa-user"></i>{" "}
-                      <b> สิทธิ์ผู้ใช้งาน: </b> {"ยังไม่กำหนด"}
+                      <i className="fa fa-user"></i> <b> สิทธิ์ผู้ใช้งาน: </b>{" "}
+                      {"ยังไม่กำหนด"}
                     </li>
-
                   </ul>
                 </div>
                 <div className="right col-md-5 col-sm-5 text-center">
-                  <Image
-                    src="/user.png"
-                    width={64}
-                    height={64}
-                  />
+                  <Image src="/user.png" width={64} height={64} />
                 </div>
               </div>
               <div className=" bottom text-right">
@@ -239,7 +228,6 @@ export default function organiz() {
                   >
                     <i className="fa fa-plus"> </i> เพิ่มสมาชิกใหม่
                   </button>
-
                 </div>
               </div>
             </div>
@@ -260,7 +248,9 @@ export default function organiz() {
             width="80"
             height="80"
           />
-          <p className={styles.pic_change}><i className="fa fa-camera"> </i> เปลี่ยน</p>
+          <p className={styles.pic_change}>
+            <i className="fa fa-camera"> </i> เปลี่ยน
+          </p>
           <div className={styles.modal_form}>
             <label class="newuser-label">ชื่อ</label>
             <input
@@ -296,13 +286,15 @@ export default function organiz() {
               type="button"
               className="btn btn-primary btn-sm"
               onClick={() => addUser(genid)}
-            >บันทึก
+            >
+              บันทึก
             </button>
             <button
               type="button"
               className="btn btn-primary btn-sm"
               onClick={() => modalOff("createUser")}
-            >ยกเลิก
+            >
+              ยกเลิก
             </button>
           </div>
         </div>
@@ -320,7 +312,9 @@ export default function organiz() {
             width="80"
             height="80"
           />
-          <p className={styles.pic_change}><i className="fa fa-camera"> </i> เปลี่ยน</p>
+          <p className={styles.pic_change}>
+            <i className="fa fa-camera"> </i> เปลี่ยน
+          </p>
           <input id="hiden_value" className={styles.hiden} />
           <div className={styles.modal_form}>
             <label class="newuser-label">ชื่อ</label>
@@ -356,13 +350,15 @@ export default function organiz() {
             <button
               type="button"
               className="btn btn-primary btn-sm"
-              onClick={editUser}>
+              onClick={editUser}
+            >
               บันทึก
             </button>
             <button
               type="button"
               className="btn btn-primary btn-sm"
-              onClick={() => modalOff("editUser")}>
+              onClick={() => modalOff("editUser")}
+            >
               ยกเลิก
             </button>
           </div>
@@ -370,9 +366,6 @@ export default function organiz() {
       </div>
       {/*==========================_End_Of_Modal_=========================*/}
     </div>
-
-
-
   );
 }
 organiz.Layout = Layout;
