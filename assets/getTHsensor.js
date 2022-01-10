@@ -1,72 +1,72 @@
 export function getTHsensor(text) {
   if (text == "weather_temperature") {
-    return "อุณหภูมิอากาศ";
+    return { name: "อุณหภูมิอากาศ", vocabulary: "°C" };
   } else if (text == "weather_humidity") {
-    return "ความชื้นอากาศ";
+    return { name: "ความชื้นอากาศ", vocabulary: "%RH" };
   } else if (text == "weather_light_lux") {
-    return "ความเข้มแสง";
+    return { name: "ความเข้มแสง", vocabulary: "Lux" };
   } else if (text == "weather_Light_par") {
-    return "ความเข้มแสง";
+    return { name: "ความเข้มแสง", vocabulary: "umol" };
   } else if (text == "weather_co2") {
-    return "คาร์บอนไดออกไซด์ในอากาศ";
+    return { name: "คาร์บอนไดออกไซด์ในอากาศ", vocabulary: "ppm" };
   } else if (text == "weather_pm25") {
-    return "PM2.5 ในอากาศ";
+    return { name: "PM2.5 ในอากาศ", vocabulary: "ug/m" };
   } else if (text == "weather_pm10") {
-    return "PM10 ในอากาศ";
+    return { name: "PM10 ในอากาศ", vocabulary: "ug/m" };
   } else if (text == "weather_wind_direc") {
-    return "ทิศทางลม";
+    return { name: "ทิศทางลม", vocabulary: "" };
   } else if (text == "weather_wind_speed") {
-    return "ความเร็วลม";
+    return { name: "ความเร็วลม", vocabulary: "m/s" };
   } else if (text == "weather_rain_gauge") {
-    return "ปริมาณน้ำฝน";
+    return { name: "ปริมาณน้ำฝน", vocabulary: "mm/h" };
   } else if (text == "weather_pressure") {
-    return "ความดันอากาศ";
+    return { name: "ความดันอากาศ", vocabulary: "kPa" };
   } else if (text == "weather_o2") {
-    return "ออกซิเจน";
+    return { name: "ออกซิเจน", vocabulary: "ppm" };
   } else if (text == "weather_smoke") {
-    return "ควัน";
+    return { name: "ควัน", vocabulary: "ppm" };
   } else if (text == "soil_temperature") {
-    return "อุณหภูมิในดิน";
+    return { name: "อุณหภูมิในดิน", vocabulary: "°C" };
   } else if (text == "soil_moisture") {
-    return "ความชื้นในดิน";
+    return { name: "ความชื้นในดิน", vocabulary: "%" };
   } else if (text == "soil_ec") {
-    return "การนำไฟฟ้า:EC";
+    return { name: "การนำไฟฟ้า:EC", vocabulary: "uS/cm" };
   } else if (text == "soil_ph") {
-    return "กรด-ด่าง";
+    return { name: "กรด-ด่าง", vocabulary: "pH" };
   } else if (text == "soil_n") {
-    return "ไนโตรเจน:N";
+    return { name: "ไนโตรเจน:N", vocabulary: "uS/Cm" };
   } else if (text == "soil_p") {
-    return "ฟอสฟอรัส:P";
+    return { name: "ฟอสฟอรัส:P", vocabulary: "uS/Cm" };
   } else if (text == "soil_k") {
-    return "โพรแทสเซียม:K";
+    return { name: "โพรแทสเซียม:K", vocabulary: "uS/Cm" };
   } else if (text == "water_temperature") {
-    return "อุณหภูมิ";
+    return { name: "อุณหภูมิน้ำ", vocabulary: "°C" };
   } else if (text == "water_ph") {
-    return "กรด-ด่าง";
+    return { name: "กรด-ด่าง", vocabulary: "pH" };
   } else if (text == "water_do") {
-    return "ปริมาณออกซิเจนละลายในน้ำ";
+    return { name: "ปริมาณออกซิเจนละลายในน้ำ", vocabulary: "mg/L" };
   } else if (text == "water_ec") {
-    return "การนำไฟฟ้า:EC";
+    return { name: "การนำไฟฟ้า:EC", vocabulary: "uS/cm" };
   } else if (text == "water_nh3") {
-    return "แอมโนเนีย";
+    return { name: "แอมโนเนีย", vocabulary: "ppm" };
   } else if (text == "water_cl") {
-    return "คลอรีน";
+    return { name: "คลอรีน", vocabulary: "mg/L" };
   } else if (text == "water_phosphate") {
-    return "ฟอสฟีน";
+    return { name: "ฟอสฟีน", vocabulary: "ppm" };
   } else if (text == "water_nitrite") {
-    return "ไนไตรท์";
+    return { name: "ไนไตรท์", vocabulary: "mg/L" };
   } else if (text == "water_turbidity") {
-    return "ความขุ่นน้ำ";
+    return { name: "ความขุ่นน้ำ", vocabulary: "mg/L" };
   } else if (text == "gas_pressure") {
-    return "ความดัน";
+    return { name: "ความดัน", vocabulary: "Pa" };
   } else if (text == "gas_no2") {
-    return "ไนโตรเจนไดออกไซด์";
+    return { name: "ไนโตรเจนไดออกไซด์", vocabulary: "ppm" };
   } else if (text == "gas_so2") {
-    return "ซัลเฟอร์ไดออกไซด์";
+    return { name: "ซัลเฟอร์ไดออกไซด์", vocabulary: "ppm" };
   } else if (text == "gas_pm25") {
-    return "PM2.5";
+    return { name: "PM 2.5", vocabulary: "ug/m" };
   } else if (text == "gas_temperature") {
-    return "อุณหภูมิ";
+    return { name: "อุณหภูมิ", vocabulary: "°C" };
   } else {
     return text;
   }

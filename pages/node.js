@@ -1,69 +1,24 @@
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, useRef } from "react";
 import Layout from "../layout/layout";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import styles from "../styles/node.module.scss";
-import { Scatter, Bar } from "react-chartjs-2";
+import { Bar, Scatter, Line } from "react-chartjs-2";
 import axios from "axios";
 import client from "./api/mqtt.js";
 import { getTHsensor } from "../assets/getTHsensor";
+import { isDatakeys } from "../assets/isDatakeys";
 
-import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import { connect } from "mqtt";
-
-/*mark กรณีอุปกรณ์เปิดแล้วแต่ในฐานข้อมูลปิดอยู่ ต้องอิงอุปกรณ์ ดึงข้อมูลจากฐานข้อมูลมาเทียบกับอุปกรณ์แล้วอัปเดทหน้าเว็บ */
+import { border } from "@mui/system";
 
 export default function node(props) {
   const router = useRouter();
   //const Data = router.query;
 
   const rand = () => Math.round(Math.random() * 20 - 10);
-  const data = {
-    datasets: [
-      {
-        label: "A dataset",
-        data: [
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-        ],
-        backgroundColor: "rgb(0, 219, 65)",
-      },
-      {
-        label: "B dataset",
-        data: [
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-          { x: rand(), y: rand() },
-        ],
-        backgroundColor: "rgba(255, 99, 12, 1)",
-      },
-    ],
-  };
 
   const options = {
     responsive: true,
@@ -94,6 +49,7 @@ export default function node(props) {
       ],
     },
   };
+
   const dayactive = {
     backgroundColor: "#007bff",
     padding: "5px",
@@ -133,6 +89,7 @@ export default function node(props) {
   const [fail, setfail] = useState(false);
 
   const [dataSelect, setdataSelect] = useState(null);
+  const isInitialMount = useRef(true);
 
   const [mqttStat, setmqttStat] = useState(false);
   const [mqttsending, setmqttsending] = useState(false);
@@ -143,50 +100,223 @@ export default function node(props) {
   const [devicemsg, setdevicemsg] = useState(null);
   const [onmsg, setonmsg] = useState(0);
 
-  const [graph, setgraph] = useState(false);
+  const [graph, setgraph] = useState(true);
   const [failTxt, setfailTxt] = useState("เกิดข้อผิดพลาดบางอย่าง");
+  //graphdata pattern//
+  /* const [graphDataList, setgarphDataList] = useState([
+    {
+      id: "gp01",
+      labels: ["a", "a", "a", "a", "a", "a"],
+      datasets: [
+        {
+          label: "data1",
+          data: [1, 2, 3, 4, 5, 6],
+          borderColor: "rgb(255, 99, 132)",
+          backgroundColor: "rgba(255, 99, 132, 0.5)",
+        },
+      ],
+    },
+    {
+      id: "gp02",
+      labels: ["b", "b", "b", "b", "b", "b"],
+      datasets: [
+        {
+          label: "data2",
+          data: [6, 5, 4, 3, 2, 1],
+          borderColor: "rgb(255, 99, 132)",
+          backgroundColor: "rgba(255, 99, 132, 0.5)",
+        },
+      ],
+    },
+  ]);*/
+
+  const [graphDataList, setgarphDataList] = useState([]);
+  const [graphDataSelect, setgarphDataSelect] = useState([]);
+  const [graphZone, setgraphZone] = useState([]);
 
   const [dataValue, setdataValue] = useState([]);
   const [dataRelay, setdataRelay] = useState("");
 
-  const test_data = [
-    {
-      soil_ec: 23,
-      soil_moisture: 12,
-      weather_humidity: 32,
-      weather_light_lux: 64,
-      weather_temperature: 89,
-    },
-    {
-      soil_ec: 12,
-      soil_moisture: 23,
-      soil_ph: 34,
-      soil_temperature: 45,
-      water_cl: 56,
-      water_do: 67,
-      water_ec: 78,
-      water_nh3: 89,
-      water_nitrite: 90,
-      water_ph: 25,
-      water_phosphate: 30,
-      water_temperature: 40,
-      water_turbidity: 60,
-      weather_co2: 11,
-      weather_humidity: 87,
-      weather_light_lux: 54,
-      weather_pm10: 12,
-      weather_pm25: 9,
-      weather_pressure: 15,
-      weather_rain_gauge: 16,
-      weather_temperature: 87,
-      weather_wind_direc: 66,
-      weather_wind_speed: 72,
-    },
-  ];
+  const [garphData, setgarphData] = useState({
+    labels: [],
+    datasets: [
+      {
+        label: "",
+        data: [],
+        backgroundColor: "rgb(0, 219, 65)",
+      },
+    ],
+  });
+  const [dataPoint, setdataPoint] = useState("");
+  function updategraphZone(index, id) {
+    const _zoneindex = document.getElementById(id).value;
 
+    let temp_state = graphZone;
+    let temp_element = temp_state[index];
+    temp_element = { index: _zoneindex };
+    temp_state[index] = temp_element;
+
+    setgraphZone((graphZone) => [...temp_state]);
+  }
   function resetmqtt() {
     setmsgSend(null);
     setmqttopic(null);
+  }
+  function genid(length) {
+    var result = [];
+    var characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result.push(
+        characters.charAt(Math.floor(Math.random() * charactersLength))
+      );
+    }
+    return result.join("");
+  }
+
+  function addgraph(func) {
+    var genid = 1;
+    while (genid) {
+      var newid = func(16);
+      for (let i = 0; i < graphDataList.length; i++) {
+        if (graphDataList[i].id === newid) {
+          genid = 1;
+        }
+      }
+      genid = 0;
+    }
+    var newGraph = {
+      id: "graph" + newid,
+      labels: [],
+      datasets: [
+        {
+          label: "",
+          data: [],
+          borderColor: "rgb(255, 99, 132)",
+          backgroundColor: "rgba(255, 99, 132, 0.5)",
+        },
+      ],
+    };
+    setgarphDataList((graphDataList) => [...graphDataList, newGraph]);
+  }
+  async function updateRelay() {
+    console.log("Updating relay: ");
+    const _orgID = localStorage.getItem("_orgID");
+    const _farmID = localStorage.getItem("_farmID");
+    const _nodeID = localStorage.getItem("_nodeID");
+    var _relayList = [];
+
+    const nodeInfo = await axios
+      .post(`http://203.151.136.127:10001/api/${_farmID}/n/${_nodeID}`, {
+        orgId: _orgID,
+      })
+      .catch((error) => {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      });
+    const relayIdList = nodeInfo.data.relayIDlist;
+    for (let i = 0; i < relayIdList.length; i++) {
+      const _id = relayIdList[i];
+      const _relay = await axios.post(
+        `http://203.151.136.127:10001/api/${_farmID}/relay`,
+        {
+          orgId: _orgID,
+          relayId: _id,
+        }
+      );
+      _relayList.push(_relay.data);
+    }
+    console.log(relayIdList);
+    console.log(_relayList);
+    setrelayList(_relayList);
+    console.log("Update success relay: ");
+  }
+
+  async function getGraphData(zoneindex, data, index) {
+    const _orgID = localStorage.getItem("_orgID");
+
+    const zoneID = zoneIDlist[zoneindex];
+
+    const time1send = parseInt(new Date().getTime() / 1000) - 30 * 24 * 60 * 60;
+    const time2send = parseInt(new Date().getTime() / 1000);
+    const reqdata = {
+      orgId: _orgID,
+      tsdbToken:
+        "YVTWev3u1OiqnX4rK7BUSExsYdHucUdCF6_90x4DgP_vHuIJjkh3Bi0XjqbUUwqln_KsLtnuS--8YqECk1C2SA==",
+      zoneId: zoneID,
+      graphData: data,
+      time1: time1send,
+      time2: time2send,
+    };
+
+    console.log(reqdata);
+    const _datapoint = await axios
+      .post(
+        `http://203.151.136.127:10002/api/tsdb/service/F184b91fec195443c829aaaebcdaeae16/N1f8003e446ef4e6eaacb06551796f412`,
+        reqdata
+      )
+      .catch((error) => {
+        if (error) {
+          console.log("tsdb requset error");
+          console.log(error);
+          console.log("time 2:" + parseInt(new Date().getTime() / 1000));
+          console.log(
+            "time 1 :" +
+              parseInt((new Date().getTime() - 96 * 60 * 60 * 1000) / 1000)
+          );
+        } else {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });
+    const aztime1 = new Date().getTime() - 90 * 24 * 60 * 60 * 1000;
+    const aztime2 = new Date().getTime();
+    const ztime1 = new Date(time1send * 1000);
+    const ztime2 = new Date(time2send * 1000);
+    console.log("time 1 :" + ztime1 + "=>" + time1send);
+    console.log("time 2 :" + ztime2 + "=>" + time2send);
+    //console.log("Data point: ");
+
+    //console.log(_datapoint);
+    //setdataPoint(_datapoint);
+    console.log(_datapoint);
+
+    let _garphData = {
+      labels: [],
+      datasets: [],
+    };
+    let adata = {
+      label: "",
+      data: [],
+      backgroundColor: "rgb(0, 219, 65)",
+    };
+
+    for (let i = 0; i < _datapoint.data.length; i++) {
+      const data = _datapoint.data[i];
+      const atime = new Date(data._time);
+      const keys = Object.keys(data);
+
+      for (let i = 0; i < keys.length; i++) {
+        const akey = keys[i];
+        if (isDatakeys(akey)) {
+          adata.label = getTHsensor(akey).name;
+          adata.data.push(data[akey]);
+        }
+      }
+      _garphData.labels.push(
+        `${atime.getDate()}/${atime.getMonth()} | ${atime.getHours()}:${atime.getMinutes()}`
+      );
+    }
+    _garphData.datasets.push(adata);
+    console.log(_garphData);
+
+    let temp_state = graphDataList;
+    temp_state[index] = _garphData;
+
+    setgarphDataList((graphDataList) => [...temp_state]);
   }
 
   async function getRelayID() {
@@ -201,35 +331,12 @@ export default function node(props) {
         /*
       localStorage.clear();
       window.location.assign("/login");*/
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
+        //console.log(error.response.data);
+        //console.log(error.response.status);
+        //console.log(error.response.headers);
+        console.log("getRelayID Error");
       });
     const nodeInfores = nodeInfo.data;
-
-    const testreqdata = {
-      orgId: "Oea74a83915b2499987e62868c69f3d5c",
-      tsdbToken:
-        "MHXpIIeM0uQwLqubaADfYvXHdsDi4z2RtQ_QhLPpM76pVLuuzUg-oq0pU9eSAqTC7U6vX_EUHnR5Bt4gbCV4cw==",
-      zoneId: "Ze006815b18d04414aeb598b5befc6450",
-      graphData: "in_humid",
-      time1: 1632762000000,
-      time2: 1632841023498,
-    };
-    //console.log(testreqdata);
-    const datapoint = await axios
-      .post(
-        `http://203.151.136.127:10002/api/tsdb/service/Ff4440d10ee0e49b299ec379f76fa5a84/Nfa7d193b520e46e187af39e8c15f8910`,
-        testreqdata
-      )
-      .catch((error) => {
-        //localStorage.clear();
-        //window.location.assign("/login");
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      });
-    //console.log(datapoint);
 
     return nodeInfores.relayIDlist;
   }
@@ -245,52 +352,23 @@ export default function node(props) {
     const _nodeID = localStorage.getItem("_nodeID");
     const relayidlist = await getRelayID();
 
-    for (let index = 0; index < relayidlist.length - 1; index++) {
+    for (let index = 0; index < relayidlist.length; index++) {
       const relay = relayidlist[index];
       //console.log(relay);
-      client.subscribe(`/front/control/${_farmID}/${relay}`, function () {
-        client.publish(
-          `/control/${_farmID}/${relay}`,
-          "Supercrops subscribing"
-        );
-      });
-      client.subscribe(`/front/time_fn/${_farmID}/${relay}`, function () {
-        client.publish(`/time_fn/${_farmID}/${relay}`, "Supercrops subscribed");
-      });
-      client.subscribe(`/front/set_time1/${_farmID}/${relay}`, function () {
-        client.publish(
-          `/set_time1/${_farmID}/${relay}`,
-          "Supercrops subscribed"
-        );
-      });
-      client.subscribe(`/front/set_time2/${_farmID}/${relay}`, function () {
-        client.publish(
-          `/set_time2/${_farmID}/${relay}`,
-          "Supercrops subscribed"
-        );
-      });
-      client.subscribe(`/front/set_time3/${_farmID}/${relay}`, function () {
-        client.publish(
-          `/set_time3/${_farmID}/${relay}`,
-          "Supercrops subscribed"
-        );
-      });
-      client.subscribe(`/front/data_fn/${_farmID}/${relay}`, function () {
-        client.publish(`/data_fn/${_farmID}/${relay}`, "Supercrops subscribed");
-      });
-      client.subscribe(`/front/set_data1/${_farmID}/${relay}`, function () {
-        client.publish(
-          `/set_data1/${_farmID}/${relay}`,
-          "Supercrops subscribed"
-        );
-      });
+      client.subscribe(`/front/control/${_farmID}/${relay}`);
+      client.subscribe(`/front/time_fn/${_farmID}/${relay}`);
+      client.subscribe(`/front/set_time1/${_farmID}/${relay}`);
+      client.subscribe(`/front/set_time2/${_farmID}/${relay}`);
+      client.subscribe(`/front/set_time3/${_farmID}/${relay}`);
+      client.subscribe(`/front/data_fn/${_farmID}/${relay}`);
+      client.subscribe(`/front/set_data1/${_farmID}/${relay}`);
     }
     reloadData();
-  }, [mqttsending]);
+  }, []);
 
   //=======================================//
   //=======================================//
-
+  /*
   useEffect(() => {
     if (mqttsending == true) {
       if (deviceTopic == mqttopic) {
@@ -298,12 +376,10 @@ export default function node(props) {
           setwait(false);
           setsuccess(true);
           setmqttsending(false);
-          //reloadData();
         } else {
           setwait(false);
           setfail(true);
           setmqttsending(false);
-          //reloadData();
         }
       } else {
         console.log("fail");
@@ -311,12 +387,13 @@ export default function node(props) {
         setmqttsending(true);
       }
     }
-  }, [mqttStat]);
+  }, [mqttStat]);*/
 
   //=======================================//
   //=======================================//
   //=======================================//
   async function reloadData() {
+    console.log("reloading");
     if (
       localStorage.getItem("_login") == false ||
       localStorage.getItem("_login") == null ||
@@ -345,29 +422,6 @@ export default function node(props) {
       });
     const nodeInfores = nodeInfo.data;
 
-    const testreqdata = {
-      orgId: "Oea74a83915b2499987e62868c69f3d5c",
-      tsdbToken:
-        "MHXpIIeM0uQwLqubaADfYvXHdsDi4z2RtQ_QhLPpM76pVLuuzUg-oq0pU9eSAqTC7U6vX_EUHnR5Bt4gbCV4cw==",
-      zoneId: "Ze006815b18d04414aeb598b5befc6450",
-      graphData: "in_humid",
-      time1: 1632762000000,
-      time2: 1632841023498,
-    };
-    //console.log(testreqdata);
-    const datapoint = await axios
-      .post(
-        `http://203.151.136.127:10002/api/tsdb/service/Ff4440d10ee0e49b299ec379f76fa5a84/Nfa7d193b520e46e187af39e8c15f8910`,
-        testreqdata
-      )
-      .catch((error) => {
-        //localStorage.clear();
-        //window.location.assign("/login");
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      });
-    //console.log(datapoint);
     setnodeInfo(nodeInfores);
     setzoneIDlist(nodeInfores.zoneIDlist);
     setrelayIDlist(nodeInfores.relayIDlist);
@@ -384,6 +438,7 @@ export default function node(props) {
           /*
           localStorage.clear();
           window.location.assign("/login");*/
+
           console.log(error.response.data);
           console.log(error.response.status);
           console.log(error.response.headers);
@@ -400,7 +455,7 @@ export default function node(props) {
     setzoneContent(z_cont);
     setzoneList(z_list);
     var datalist = z_list;
-    console.log(z_list);
+    //console.log(z_list);
 
     setdataList(datalist);
     let r_list = [];
@@ -413,9 +468,10 @@ export default function node(props) {
           relayId: relayID,
         }
       );
+
       // set ค่า timefunction และ datafunction ด้วยตัวเอง
-      relay.data.dataFunction = true;
-      relay.data.timeFunction = true;
+      //relay.data.dataFunction = true;
+      //relay.data.timeFunction = true;
       //=========================================
       r_list.push(relay.data);
     }
@@ -431,109 +487,31 @@ export default function node(props) {
 
   useEffect(() => {
     client.on("message", function (topic, message) {
-      const memtopic = mqttopic;
       const msgJson = JSON.parse(message.toString());
       const _topic = topic.toString();
-      setdeviceTopic(topic.toString());
-      setdevicemsg(message.toString());
-      setmqttStat(!mqttStat);
-      var R_list = relayList;
-      console.log(
-        "#########============================================##########"
-      );
-      console.log("get message from: " + _topic);
-      console.log("massage is :");
-      console.log(message.toString());
+      const _relayID = _topic.substring(_topic.length - 33, _topic.length);
+      //console.log("relayID is  => " + _relayID);
+      //console.log(message.toString());
+      const waitingstatus = document.getElementById("Waiting").style.display;
 
-      if (_topic.startsWith("/front/control/")) {
-        const msgfarmID = _topic.substring(15, 48);
-        const msgrelayID = _topic.substring(49, 88);
-        for (let i = 0; i < R_list.length; i++) {
-          var relay = R_list[i];
-          const relayindex = i + 1;
-          //console.log("db relay id");
-          //console.log(relay.relayID);
-          // console.log("device relay id");
-          // console.log(msgrelayID);
-          if (relay.relayID == msgrelayID) {
-            if (msgJson.status == "success") {
-              document.getElementById("status" + relayindex).checked = true;
-              R_list[i].status = true;
-              setrelayList(R_list);
-              console.log(relayList[i]); /*
-              if (onmsg > 0) {
-                setonmsg(0);
-              }*/
-              setonmsg(0);
-              break;
-            } else if (msgJson.status == "fail") {
-              document.getElementById("status" + relayindex).checked = false;
-              R_list[i].status = false;
-              setrelayList(R_list);
-              console.log(relayList[i]); /*
-              if (onmsg > 0) {
-                setonmsg(0);
-              }*/
-              setonmsg(0);
-              break;
-            } else {
-              console.log(relayList[i]); /*
-              if (onmsg > 0) {
-                setonmsg(0);
-              }*/
-              setonmsg(0);
-              break;
-            }
-          }
+      if (waitingstatus == "block") {
+        if (msgJson.status == "success") {
+          updateRelay();
+          //reloadData();
         }
-        //
-      } else if (_topic.startsWith("/front/time_fn/")) {
-        const msgfarmID = _topic.substring(15, 48);
-        const msgrelayID = _topic.substring(49, 88);
-        console.log("============================================");
-        console.log(_topic);
-        console.log("farm id is " + msgfarmID);
-        console.log("relay id is " + msgrelayID);
-        console.log(message.toString());
-      } else if (_topic.startsWith("/front/set_time1/")) {
-        const msgfarmID = _topic.substring(17, 50);
-        const msgrelayID = _topic.substring(51, 90);
-        console.log("============================================");
-        console.log(_topic);
-        console.log("farm id is " + msgfarmID);
-        console.log("relay id is " + msgrelayID);
-        console.log(message.toString());
-      } else if (_topic.startsWith("/front/set_time2/")) {
-        const msgfarmID = _topic.substring(17, 50);
-        const msgrelayID = _topic.substring(51, 90);
-        console.log("============================================");
-        console.log(_topic);
-        console.log("farm id is " + msgfarmID);
-        console.log("relay id is " + msgrelayID);
-        console.log(message.toString());
-      } else if (_topic.startsWith("/front/set_time3/")) {
-        const msgfarmID = _topic.substring(17, 50);
-        const msgrelayID = _topic.substring(51, 90);
-        console.log("============================================");
-        console.log(_topic);
-        console.log("farm id is " + msgfarmID);
-        console.log("relay id is " + msgrelayID);
-        console.log(message.toString());
-      } else if (_topic.startsWith("/front/set_data1/")) {
-        const msgfarmID = _topic.substring(17, 50);
-        const msgrelayID = _topic.substring(51, 90);
-        console.log("============================================");
-        console.log(_topic);
-        console.log("farm id is " + msgfarmID);
-        console.log("relay id is " + msgrelayID);
-        console.log(message.toString());
+        setwait(false);
+        setsuccess(true);
+        setmqttsending(false);
+        //setonmsg(onmsg + 1);
       } else {
-        console.log("!!!============================================!!!");
-        console.log(_topic);
-        console.log(message.toString());
+        if (msgJson.status == "success") {
+          updateRelay();
+          //reloadData();
+        }
+        setonmsg(onmsg + 1);
       }
     });
-  }, [onmsg]);
+  }, []);
 
   function putData(data, relayID, method) {
     const _farmID = localStorage.getItem("_farmID");
@@ -656,7 +634,7 @@ export default function node(props) {
       },
     };
     const putmethod = "data";
-    putData(_putdata, relayID, putmethod);
+    //putData(_putdata, relayID, putmethod);
     modalOff("modalstyleData" + relayIndex);
   }
   function putminiData(relayIndex, relayID, dataIndex) {
@@ -676,56 +654,67 @@ export default function node(props) {
         "d" + dataIndex + "Status" + relayIndex
       ).checked;
       if (_dataCheck) {
-        var _dataStatus = true;
+        var _dataStatus = "true";
       } else {
-        var _dataStatus = false;
+        var _dataStatus = "false";
       }
       const _dataSelect = document.getElementById(
         "dataSelect" + dataIndex + relayIndex
       ).value;
-      console.log("data index" + _dataSelect);
+
       if (_dataSelect == -1) {
         setfail(true);
         setfailTxt("กรุณาเลือกชนิดข้อมูล");
       } else {
-        const _datamin = dataValue[0];
-        const _datamax = dataValue[1];
-        if (_datamin >= _datamax) {
+        const _compareSelect = document.getElementById(
+          "compare" + relayIndex
+        ).value;
+        if (_compareSelect == -1) {
           setfail(true);
-          setfailTxt("ข้อมูลไม่ถูกต้อง");
+          setfailTxt("กรุณาเลือกรูปแบบการทำงาน");
         } else {
-          const putmethod = "data";
-          if (dataIndex == 1) {
-            const _putdata = {
-              data1: {
-                status: _dataStatus.toString(),
-                data: _dataSelect,
-                max: parseInt(_datamax),
-                min: parseInt(_datamin),
-                zoneId: zoneID,
-                conpare: "low",
-              },
-            };
-            console.log(zoneIDlist);
-            console.log(_putdata);
-            client.publish(
-              "/set_data1/farmId/relayId",
-              JSON.stringify(_putdata),
-              function (err) {
-                if (!err) {
-                  setwait(true);
-                  setmqttopic("/front/set_data1/farmId/relayId");
-                  setmsgSend(JSON.stringify(_putdata));
-                  setmqttsending(true);
-                } else {
-                  console.log(err);
-                }
-              }
-            );
-            //console.log(_putData);
-            //putData(_putdata, relayID, putmethod);
+          const _datamin = dataValue[0];
+          const _datamax = dataValue[1];
+          if (_datamin >= _datamax) {
+            setfail(true);
+            setfailTxt("ข้อมูลไม่ถูกต้อง");
           } else {
-            console.log("put data error");
+            const putmethod = "data";
+            if (dataIndex == 1) {
+              const _putdata = {
+                data1: {
+                  status: _dataStatus,
+                  data: _dataSelect,
+                  max: parseInt(_datamax),
+                  min: parseInt(_datamin),
+                  zoneId: zoneID,
+                  compare: _compareSelect,
+                },
+              };
+              console.log(_putdata);
+              client.publish(
+                `/set_data1/${_farmID}/${relayID}`,
+                JSON.stringify(_putdata),
+                function (err) {
+                  if (!err) {
+                    console.log("!!****=Publiching Data=****!!");
+                    console.log(_putdata);
+                    console.log("=============================");
+                    setwait(true);
+                    setmqttopic(`/front/set_data1/${_farmID}/${relayID}`);
+                    setmsgSend(JSON.stringify(_putdata));
+                    setonmsg(onmsg + 1);
+                    setmqttsending(true);
+                  } else {
+                    console.log(err);
+                  }
+                }
+              );
+              //console.log(_putData);
+              //putData(_putdata, relayID, putmethod);
+            } else {
+              console.log("put data error");
+            }
           }
         }
       }
@@ -805,7 +794,7 @@ export default function node(props) {
       time2: time2,
       time3: time3,
     };
-    putData(_putdata, relayID, putmethod);
+    //putData(_putdata, relayID, putmethod);
     modalOff("modalstyleTime" + relayIndex);
   }
 
@@ -922,6 +911,9 @@ export default function node(props) {
       }
     }
   }
+  function deleteGraph(id) {
+    setgarphDataList(graphDataList.filter((value) => value.id !== id));
+  }
 
   async function putminitime(relayIndex, relayID, timeIndex) {
     const _farmID = localStorage.getItem("_farmID");
@@ -932,9 +924,9 @@ export default function node(props) {
     ).checked;
 
     if (timecheck) {
-      var _status = true;
+      var _status = "true";
     } else {
-      var _status = false;
+      var _status = "false";
     }
     const timeon = document.getElementById(
       "time" + timeIndex + "on" + relayIndex
@@ -978,13 +970,18 @@ export default function node(props) {
             },
           };
           client.publish(
-            "/set_time1/farmId/relayId",
+            `/set_time1/${_farmID}/${relayID}`,
             JSON.stringify(_putdata),
             function (err) {
               if (!err) {
+                console.log("!!****=Publiching Data=****!!");
+                console.log(_putdata);
+                console.log("=============================");
+                console.log(_putdata);
                 setwait(true);
                 setmqttopic(`/front/set_time1/${_farmID}/${relayID}`);
                 setmsgSend(JSON.stringify(_putdata));
+                setonmsg(onmsg + 1);
                 setmqttsending(true);
               } else {
                 console.log(err);
@@ -1017,10 +1014,16 @@ export default function node(props) {
             JSON.stringify(_putdata),
             function (err) {
               if (!err) {
+                console.log(
+                  "$******Publich to :" +
+                    `/front/set_time1/${_farmID}/${relayID}`
+                );
+                console.log(_putdata);
                 setwait(true);
                 setmsgSend(JSON.stringify(_putdata));
-                setmqttopic("/front/set_time2/farmId/relayId");
+                setmqttopic(`/front/set_time2/${_farmID}/${relayID}`);
                 setmqttsending(true);
+                setonmsg(onmsg + 1);
               } else {
                 console.log(err);
               }
@@ -1052,10 +1055,16 @@ export default function node(props) {
             JSON.stringify(_putdata),
             function (err) {
               if (!err) {
+                console.log(
+                  "$******Publich to :" +
+                    `/front/set_time1/${_farmID}/${relayID}`
+                );
+                console.log(_putdata);
                 setwait(true);
                 setmsgSend(JSON.stringify(_putdata));
-                setmqttopic("/front/set_time3/farmId/relayId");
+                setmqttopic(`/front/set_time3/${_farmID}/${relayID}`);
                 setmqttsending(true);
+                setonmsg(onmsg + 1);
               } else {
                 console.log(err);
               }
@@ -1076,19 +1085,38 @@ export default function node(props) {
     const _orgId = localStorage.getItem("_orgID");
     const check = document.getElementById(id).checked;
     if (check) {
-      var _putdata = { dataFunction: true };
+      var _putdata = { dataFunction: "true" };
+      var _timeFn = { timeFunction: "false" };
     } else {
-      var _putdata = { dataFunction: false };
+      var _putdata = { dataFunction: "false" };
+      var _timeFn = { timeFunction: "false" };
     }
     client.publish(
       `/data_fn/${_farmID}/${relayID}`,
       JSON.stringify(_putdata),
       function (err) {
         if (!err) {
+          console.log("!!****=Publiching Data=****!!");
+          console.log(_putdata);
           setwait(true);
           setmqttopic(`/front/data_fn/${_farmID}/${relayID}`);
           setmsgSend(JSON.stringify(_putdata));
+          setonmsg(onmsg + 1);
           setmqttsending(true);
+        } else {
+          console.log(err);
+        }
+      }
+    );
+    client.publish(
+      `/time_fn/${_farmID}/${relayID}`,
+      JSON.stringify(_timeFn),
+      function (err) {
+        if (!err) {
+          console.log("!!****and****!!");
+          console.log(_timeFn);
+          console.log("=============================");
+          setwait(true);
         } else {
           console.log(err);
         }
@@ -1100,19 +1128,38 @@ export default function node(props) {
     const _orgId = localStorage.getItem("_orgID");
     const check = document.getElementById(id).checked;
     if (check) {
-      var _putdata = { timeFunction: true };
+      var _putdata = { timeFunction: "true" };
+      var _datafn = { dataFunction: "false" };
     } else {
-      var _putdata = { timeFunction: false };
+      var _putdata = { timeFunction: "false" };
+      var _datafn = { dataFunction: "false" };
     }
     client.publish(
       `/time_fn/${_farmID}/${relayID}`,
       JSON.stringify(_putdata),
       function (err) {
         if (!err) {
+          console.log("!!****=Publiching Data=****!!");
+          console.log(_putdata);
           setwait(true);
           setmqttopic(`/front/time_fn/${_farmID}/${relayID}`);
           setmsgSend(JSON.stringify(_putdata));
           setmqttsending(true);
+          setonmsg(onmsg + 1);
+        } else {
+          console.log(err);
+        }
+      }
+    );
+    client.publish(
+      `/data_fn/${_farmID}/${relayID}`,
+      JSON.stringify(_datafn),
+      function (err) {
+        if (!err) {
+          console.log("!!****and****!!");
+          console.log(_datafn);
+          console.log("=============================");
+          setwait(true);
         } else {
           console.log(err);
         }
@@ -1120,33 +1167,36 @@ export default function node(props) {
     );
   }
   function changeStatus(id, relayID) {
-    /*
-    //const _orgId = localStorage.getItem("_orgID");
-    //const check = document.getElementById(id).checked;
-    /*if (check) {
+    const _orgId = localStorage.getItem("_orgID");
+    const _farmID = localStorage.getItem("_farmID");
+    const check = document.getElementById(id).checked;
+
+    if (check) {
       var status = "true";
     } else {
       var status = "false";
     }
     const _putdata = {
-      orgId: _orgId,
       status: status,
-    }; 
+    };
     client.publish(
-      "/control/farmId/relayId",
+      `/control/${_farmID}/${relayID}`,
       JSON.stringify(_putdata),
       function (err) {
         if (!err) {
+          console.log("!!****=Publiching Data=****!!");
+          console.log(_putdata);
+          console.log("=============================");
           setwait(true);
           setmsgSend(JSON.stringify(_putdata));
-          setmqttopic("/front/control/farmId/relayId");
+          setmqttopic(`/front/control/${_farmID}/${relayID}`);
+          setonmsg(onmsg + 1);
           setmqttsending(true);
         } else {
           console.log(err);
         }
       }
-    );*/
-    //putData(_putdata, relayID, "status");
+    );
   }
   useEffect(() => {
     const interval = setInterval(function () {
@@ -1166,15 +1216,6 @@ export default function node(props) {
           <div className={styles.lds_dual_ring}></div>
           <div></div>
           <div className="color-blue">กำลังดำเนินการ</div>
-          <div>
-            <button
-              className="btn btn-primary"
-              onClick={() => setwait(false)}
-            // style={{ fontSize: "16px", height: "24px" }}
-            >
-              ตกลง
-            </button>
-          </div>
         </div>
       </div>
       <div
@@ -1322,9 +1363,7 @@ export default function node(props) {
                     }
                   >
                     <option value="volvo">เลือกเวลาอัพเดตข้อมูล</option>
-                    <option value={3000}>ทุก 3 วินาที</option>
                     <option value={5000}>ทุก 5 วินาที</option>
-                    <option value={10000}>ทุก 10 วินาที</option>
                     <option value={300000}>ทุก 5 นาที</option>
                     <option value={600000}>ทุก 10 นาที</option>
                     <option value={900000}>ทุก 15 นาที</option>
@@ -1362,13 +1401,130 @@ export default function node(props) {
             style={{
               display: graph ? "flex" : "none",
               justifyContent: "center",
+              flexDirection: "column",
             }}
           >
-            <Scatter
-              data={data}
-              option={options}
-              style={{ maxWidth: "650px", maxHeight: "350px" }}
-            />
+            {graphDataList.map((graphdata, graphindex) => {
+              return (
+                <div
+                  key={graphdata.id}
+                  id={"graph" + graphindex}
+                  style={{
+                    border: "solid 0.5px",
+                    marginBottom: "10px",
+                    borderRadius: "10px",
+                    borderColor: "#BEBEBE",
+                    padding: "10px",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      fontSize: "16px",
+                    }}
+                  >
+                    {graphindex}เลือกโซน :{" "}
+                    <select
+                      id={"selectzone_graph" + graphindex}
+                      style={{
+                        color: "#73879C",
+                        height: "30px",
+                        marginLeft: "10px",
+                        borderColor: "#BEBEBE",
+                        borderRadius: "5px",
+                      }}
+                      onChange={() =>
+                        updategraphZone(
+                          graphindex,
+                          "selectzone_graph" + graphindex
+                        )
+                      }
+                    >
+                      <option value={-1}>เลือกโซน</option>
+                      {zoneIDlist.map((zone, index) => {
+                        return (
+                          <option key={index} value={index}>
+                            โซนที่ {index + 1}
+                          </option>
+                        );
+                      })}
+                    </select>
+                    <div style={{ marginLeft: "10px" }}>ข้อมูล :</div>
+                    {dataList.map((_data, index) => {
+                      return (
+                        <select
+                          key={index}
+                          id={"dataSelect_graph" + graphindex}
+                          style={
+                            graphZone[graphindex]
+                              ? graphZone[graphindex].index == index
+                                ? {
+                                    color: "#73879C",
+                                    height: "30px",
+                                    marginLeft: "10px",
+                                    borderColor: "#BEBEBE",
+                                    borderRadius: "5px",
+                                  }
+                                : { display: "none" }
+                              : { display: "none" }
+                          }
+                          onChange={() =>
+                            getGraphData(
+                              document.getElementById(
+                                "selectzone_graph" + graphindex
+                              ).value,
+                              document.getElementById(
+                                "dataSelect_graph" + graphindex
+                              ).value,
+                              graphindex
+                            )
+                          }
+                        >
+                          <option value={-1}>เลือกข้อมูล</option>
+                          {_data.map((data, index) => {
+                            if (data[1] != null) {
+                              return (
+                                <option key={index} value={data[0]}>
+                                  {getTHsensor(data[0]).name}
+                                </option>
+                              );
+                            }
+                          })}
+                        </select>
+                      );
+                    })}
+                    <button
+                      className="btn btn-danger"
+                      style={{
+                        marginLeft: "auto",
+                        border: "none",
+                        backgroundColor: "white",
+                        outline: "none",
+                        color: "grey",
+                      }}
+                      onClick={() => deleteGraph(graphdata.id)}
+                    >
+                      x
+                    </button>
+                  </div>
+
+                  <Line
+                    data={graphdata}
+                    style={{ maxWidth: "100%", maxHeight: "350px" }}
+                  />
+                </div>
+              );
+            })}{" "}
+            <button
+              className="btn btn-primary"
+              style={{
+                borderRadius: "10px",
+              }}
+              onClick={() => addgraph(genid)}
+            >
+              เพิ่มกราฟข้อมูล
+            </button>
           </div>
         </div>
       </div>
@@ -1415,29 +1571,41 @@ export default function node(props) {
                     }}
                   >
                     {zone.map((data, _index) => {
-                      return (
-                        <div
-                          key={_index}
-                          className="well profile_view"
-                          style={{ width: "350px", minWidth: "300px" }}
-                        >
-                          <div className="col">
-                            <div
-                              style={{
-                                display: "flex",
-                                width: "100%",
-                                flexDirection: "column",
-                              }}
-                            >
-                              <h2 className="brief">
-                                <i className="fa fa-sun-o"></i>{" "}
-                                {getTHsensor(data[0])}{" "}
-                              </h2>
-                              <h4>{data[1]}</h4>
+                      if (data[1] != null) {
+                        return (
+                          <div
+                            key={_index}
+                            className="well profile_view"
+                            style={{ width: "350px", minWidth: "300px" }}
+                          >
+                            <div className="col">
+                              <div
+                                style={{
+                                  display: "flex",
+                                  width: "100%",
+                                  flexDirection: "column",
+                                }}
+                              >
+                                <h2 className="brief">
+                                  <i className="fa fa-sun-o"></i>{" "}
+                                  {getTHsensor(data[0]).name}{" "}
+                                </h2>
+                                <h4>
+                                  {data[1]}{" "}
+                                  <label
+                                    style={{
+                                      fontWeight: "bold",
+                                      color: "#AAB6AA",
+                                    }}
+                                  >
+                                    {getTHsensor(data[0]).vocabulary}
+                                  </label>
+                                </h4>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      );
+                        );
+                      }
                     })}
                   </div>
                 </div>
@@ -1529,25 +1697,6 @@ export default function node(props) {
                               </label>
 
                               <h4> ตั้งค่าข้อมูล {"relay " + relayIndex}</h4>
-                              <label style={{ marginLeft: "auto" }}>
-                                สถานะ
-                              </label>
-                              <label className={styles.switch2}>
-                                <input
-                                  onClick={() =>
-                                    setdataFunction(
-                                      "dStatus" + relayIndex,
-                                      relay.relayID
-                                    )
-                                  }
-                                  id={"dStatus" + relayIndex}
-                                  type="checkbox"
-                                  defaultChecked={
-                                    relay.dataFunction ? true : false
-                                  }
-                                />
-                                <span className={styles.slider}></span>
-                              </label>
                             </div>
 
                             <div
@@ -1613,16 +1762,24 @@ export default function node(props) {
                                               }
                                               : { display: "none" }
                                           }
+                                          disabled={
+                                            relay.dataFunction ? false : true
+                                          }
                                         >
                                           <option value={-1}>
                                             เลือกข้อมูล
                                           </option>
                                           {_data.map((data, index) => {
-                                            return (
-                                              <option key={index} value={data}>
-                                                {getTHsensor(data[0])}
-                                              </option>
-                                            );
+                                            if (data[1] != null) {
+                                              return (
+                                                <option
+                                                  key={index}
+                                                  value={data[0]}
+                                                >
+                                                  {getTHsensor(data[0]).name}
+                                                </option>
+                                              );
+                                            }
                                           })}
                                         </select>
                                       );
@@ -1634,6 +1791,7 @@ export default function node(props) {
                                   style={{ marginLeft: "auto" }}
                                 >
                                   <input
+                                    key={relay.dataFunction}
                                     id={"d1Status" + relayIndex}
                                     type="checkbox"
                                     defaultChecked={
@@ -1643,19 +1801,53 @@ export default function node(props) {
                                           : false
                                         : false
                                     }
+                                    disabled={relay.dataFunction ? false : true}
                                   />
                                   <span className={styles.slider}></span>
                                 </label>
                               </div>
+                              <label>
+                                <h4>
+                                  การทำงาน:{" "}
+                                  <select
+                                    id={"compare" + relayIndex}
+                                    style={{
+                                      color: "#73879C",
+                                      height: "30px",
+                                      marginLeft: "10px",
+                                      borderColor: "#BEBEBE",
+                                    }}
+                                    disabled={relay.dataFunction ? false : true}
+                                  >
+                                    <option value={-1}>เลือกการทำงาน</option>
+                                    <option value={"high"}>
+                                      เปิดเมื่อค่ามากกว่า
+                                    </option>
+                                    <option value={"low"}>
+                                      เปิดเมื่อค่าน้อยกว่า
+                                    </option>
+                                  </select>
+                                </h4>
+                              </label>
                               <label id={"data1" + relayIndex + "text"}>
-                                <h2 className={relay.status ? "brief2" : ""}>
+                                <h2
+                                  className={relay.dataFunction ? "brief2" : ""}
+                                >
                                   ค่าน้อยสุด:{" "}
-                                  <strong className={relay.status ? "minvalue" : ""}>
+                                  <strong
+                                    className={
+                                      relay.dataFunction ? "minvalue" : ""
+                                    }
+                                  >
                                     {dataValue[0]}{" "}
                                     <i className="fa fa-long-arrow-down"></i>
                                   </strong>{" "}
                                   | ค่ามากสุด:{" "}
-                                  <strong className={relay.status ? "maxvalue" : ""}>
+                                  <strong
+                                    className={
+                                      relay.dataFunction ? "maxvalue" : ""
+                                    }
+                                  >
                                     {dataValue[1]}{" "}
                                     <i className="fa fa-long-arrow-up"></i>
                                   </strong>
@@ -1665,6 +1857,10 @@ export default function node(props) {
                               </label>
 
                               <Slider
+                                key={`slider-${[
+                                  relay.data1.min,
+                                  relay.data1.max,
+                                ]}`}
                                 id="data1"
                                 defaultValue={[
                                   relay.data1.min,
@@ -1777,26 +1973,7 @@ export default function node(props) {
                                 />
                               </label>
 
-                              <h4 className="brief2">ตั้งค่าเวลา {relayIndex}</h4>
-                              <label className="brief2" style={{ marginLeft: "auto" }}>
-                                สถานะ
-                              </label>
-                              <label className={styles.switch2}>
-                                <input
-                                  id={"tStatus" + relayIndex}
-                                  type="checkbox"
-                                  onClick={() =>
-                                    settimeFunction(
-                                      "tStatus" + relayIndex,
-                                      relay.relayID
-                                    )
-                                  }
-                                  defaultChecked={
-                                    relay.timeFunction ? true : false
-                                  }
-                                />
-                                <span className={styles.slider}></span>
-                              </label>
+                              <h4>ตั้งค่าเวลา {relayIndex}</h4>
                             </div>
                             <div
                               style={{
@@ -1836,14 +2013,11 @@ export default function node(props) {
                                   style={{ marginLeft: "auto" }}
                                 >
                                   <input
+                                    key={relay.time1.status}
                                     id={"t1Status" + relayIndex}
                                     type="checkbox"
                                     defaultChecked={
-                                      relay.timeFunction
-                                        ? relay.time1.status
-                                          ? true
-                                          : false
-                                        : false
+                                      relay.time1.status ? true : false
                                     }
                                     disabled={relay.timeFunction ? false : true}
                                   />
@@ -2078,14 +2252,11 @@ export default function node(props) {
                                   style={{ marginLeft: "auto" }}
                                 >
                                   <input
+                                    key={relay.time2.status}
                                     id={"t2Status" + relayIndex}
                                     type="checkbox"
                                     defaultChecked={
-                                      relay.timeFunction
-                                        ? relay.time1.status
-                                          ? true
-                                          : false
-                                        : false
+                                      relay.time1.status ? true : false
                                     }
                                     disabled={relay.timeFunction ? false : true}
                                   />
@@ -2119,6 +2290,7 @@ export default function node(props) {
                                 </label>
                                 <label>
                                   <input
+                                    key={relay.time2.date[1]}
                                     type="checkbox"
                                     id={"t2day1" + relayIndex}
                                     defaultChecked={
@@ -2321,6 +2493,7 @@ export default function node(props) {
                                   style={{ marginLeft: "auto" }}
                                 >
                                   <input
+                                    key={relay.time3.status}
                                     id={"t3Status" + relayIndex}
                                     type="checkbox"
                                     defaultChecked={
@@ -2549,66 +2722,76 @@ export default function node(props) {
                       style={{ display: "none" }}
                     ></div>
                     <div key={index} className="">
-                      <div
-                        className="x_panel"
-                        style={{
-                          backgroundColor: !relay.status ? "#eaeaea" : "white",
-                        }}
-                      >
-                        <div className="x_title">
+                      <div className="x_panel">
+                        <div className="x_title" style={{ display: "flex" }}>
                           <h2>รีเลย์ที่ {relayIndex}</h2>
-                          <ul className="nav navbar-right panel_toolbox">
-                            <li
-                              className={setting ? "dropdown show" : "dropdown"}
+
+                          <label
+                            className={styles.switch2}
+                            style={{ marginLeft: "auto" }}
+                          >
+                            <input
+                              key={relay.status}
+                              id={"status" + relayIndex}
+                              type="checkbox"
+                              style={{
+                                width: "30px",
+                                height: "30px",
+                                display: "block",
+                              }}
+                              checked={relay.status ? true : false}
+                              onChange={() =>
+                                changeStatus(
+                                  "status" + relayIndex,
+                                  relay.relayID
+                                )
+                              }
+                            />
+                            <span className={styles.slider}></span>
+                          </label>
+
+                          <div className="clearfix"></div>
+                        </div>
+                        <div
+                          className="x_content"
+                          style={{
+                            display: " block",
+                          }}
+                        >
+                          <h2
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            <label>
+                              <i className="fa fa-clock-o"></i> ตั้งค่าเวลา :{" "}
+                              {relay.timeFunction ? "เปิด" : "ปิด"}
+                            </label>
+                            <ul
+                              className="nav navbar-right panel_toolbox"
+                              style={{ marginLeft: "auto" }}
                             >
-                              <a
-                                className="dropdown-toggle"
-                                data-toggle="dropdown"
-                                role="button"
-                                aria-expanded={setting ? "true" : "false"}
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                }}
-                                onClick={
-                                  !relay.status
-                                    ? () => relaysetting(relayIndex)
-                                    : () => { }
-                                }
-                              >
-                                <i className="fa fa-wrench"></i>
-                              </a>
-                              <div
-                                id={"rlSetting" + relayIndex}
-                                className={"dropdown-menu"}
-                                aria-labelledby="dropdownMenuButton"
-                              >
+                              <li style={{ marginRight: "5px" }}>
                                 <a
-                                  className="dropdown-item"
-                                  onClick={() => {
-                                    modalOn("modalstyleTime" + relayIndex);
-                                    relaysetting(relayIndex);
+                                  role="button"
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
                                   }}
+                                  onClick={
+                                    relay.timeFunction
+                                      ? () => {
+                                          modalOn(
+                                            "modalstyleTime" + relayIndex
+                                          );
+                                        }
+                                      : () => {}
+                                  }
                                 >
-                                  <i className="fa fa-clock-o"></i> ตั้งค่าเวลา
+                                  <i className="fa fa-wrench"></i>
                                 </a>
-                                <a
-                                  className="dropdown-item"
-                                  onClick={() => {
-                                    modalOn("modalstyleData" + relayIndex);
-                                    relaysetting(relayIndex);
-                                    setdataValue([
-                                      relay.data1.min,
-                                      relay.data1.max,
-                                    ]);
-                                  }}
-                                >
-                                  <i className="fa fa-database"></i>{" "}
-                                  ตั้งค่าข้อมูล
-                                </a>
-                              </div>
-                            </li>
-                            <li>
+                              </li>
                               <a
                                 style={{
                                   display: "flex",
@@ -2617,41 +2800,32 @@ export default function node(props) {
                               >
                                 <label className={styles.switch2}>
                                   <input
-                                    id={"status" + relayIndex}
+                                    key={relay.timeFunction}
+                                    id={"tStatus" + relayIndex}
                                     type="checkbox"
+                                    onClick={() =>
+                                      settimeFunction(
+                                        "tStatus" + relayIndex,
+                                        relay.relayID
+                                      )
+                                    }
                                     style={{
                                       width: "30px",
                                       height: "30px",
                                       display: "block",
                                     }}
-                                    defaultChecked={relay.status ? true : false}
-                                    onChange={() =>
-                                      changeStatus(
-                                        "status" + relayIndex,
-                                        relay.relayID
-                                      )
-                                    }
+                                    checked={relay.timeFunction ? true : false}
+                                    onChange={() => {}}
                                   />
                                   <span className={styles.slider}></span>
                                 </label>
                               </a>
-                            </li>
-                          </ul>
-
-                          <div className="clearfix"></div>
-                        </div>
-                        <div
-                          className="x_content"
-                          style={{ display: " block" }}
-                        >
-                          <h2>
-                            <i className="fa fa-clock-o"></i> ตั้งค่าเวลา :{" "}
-                            {relay.timeFunction ? "เปิด" : "ปิด"}
+                            </ul>
                           </h2>
                           <h2>
                             รอบที่ 1 : {relay.time1.status ? "เปิด" : "ปิด"}
                           </h2>
-                          <h2 className={relay.status ? "brief" : ""}>
+                          <h2 className={relay.timeFunction ? "brief" : ""}>
                             เปิด : <i className="fa fa-clock-o"></i>{" "}
                             {relay.time1.time_on} | ปิด:{" "}
                             <i className="fa fa-clock-o"></i>{" "}
@@ -2661,7 +2835,7 @@ export default function node(props) {
                             <label>วัน </label>{" "}
                             <label
                               style={
-                                relay.status
+                                relay.timeFunction
                                   ? relay.time1.date[0] == 1
                                     ? dayactive
                                     : dayunactive
@@ -2672,7 +2846,7 @@ export default function node(props) {
                             </label>{" "}
                             <label
                               style={
-                                relay.status
+                                relay.timeFunction
                                   ? relay.time1.date[1] == 1
                                     ? dayactive
                                     : dayunactive
@@ -2683,7 +2857,7 @@ export default function node(props) {
                             </label>{" "}
                             <label
                               style={
-                                relay.status
+                                relay.timeFunction
                                   ? relay.time1.date[2] == 1
                                     ? dayactive
                                     : dayunactive
@@ -2694,7 +2868,7 @@ export default function node(props) {
                             </label>{" "}
                             <label
                               style={
-                                relay.status
+                                relay.timeFunction
                                   ? relay.time1.date[3] == 1
                                     ? dayactive
                                     : dayunactive
@@ -2705,7 +2879,7 @@ export default function node(props) {
                             </label>{" "}
                             <label
                               style={
-                                relay.status
+                                relay.timeFunction
                                   ? relay.time1.date[4] == 1
                                     ? dayactive
                                     : dayunactive
@@ -2716,7 +2890,7 @@ export default function node(props) {
                             </label>{" "}
                             <label
                               style={
-                                relay.status
+                                relay.timeFunction
                                   ? relay.time1.date[5] == 1
                                     ? dayactive
                                     : dayunactive
@@ -2727,7 +2901,7 @@ export default function node(props) {
                             </label>{" "}
                             <label
                               style={
-                                relay.status
+                                relay.timeFunction
                                   ? relay.time1.date[6] == 1
                                     ? dayactive
                                     : dayunactive
@@ -2741,7 +2915,7 @@ export default function node(props) {
                             รอบที่ 2 :{" "}
                             {relay.time2.status == 1 ? "เปิด" : "ปิด"}
                           </h2>
-                          <h2 className={relay.status ? "brief" : ""}>
+                          <h2 className={relay.timeFunction ? "brief" : ""}>
                             เปิด : <i className="fa fa-clock-o"></i>{" "}
                             {relay.time2.time_on} | ปิด:{" "}
                             <i className="fa fa-clock-o"></i>{" "}
@@ -2751,7 +2925,7 @@ export default function node(props) {
                             <label>วัน </label>{" "}
                             <label
                               style={
-                                relay.status
+                                relay.timeFunction
                                   ? relay.time2.date[0] == 1
                                     ? dayactive
                                     : dayunactive
@@ -2762,7 +2936,7 @@ export default function node(props) {
                             </label>{" "}
                             <label
                               style={
-                                relay.status
+                                relay.timeFunction
                                   ? relay.time2.date[1] == 1
                                     ? dayactive
                                     : dayunactive
@@ -2773,7 +2947,7 @@ export default function node(props) {
                             </label>{" "}
                             <label
                               style={
-                                relay.status
+                                relay.timeFunction
                                   ? relay.time2.date[2] == 1
                                     ? dayactive
                                     : dayunactive
@@ -2784,7 +2958,7 @@ export default function node(props) {
                             </label>{" "}
                             <label
                               style={
-                                relay.status
+                                relay.timeFunction
                                   ? relay.time2.date[3] == 1
                                     ? dayactive
                                     : dayunactive
@@ -2795,7 +2969,7 @@ export default function node(props) {
                             </label>{" "}
                             <label
                               style={
-                                relay.status
+                                relay.timeFunction
                                   ? relay.time2.date[4] == 1
                                     ? dayactive
                                     : dayunactive
@@ -2806,7 +2980,7 @@ export default function node(props) {
                             </label>{" "}
                             <label
                               style={
-                                relay.status
+                                relay.timeFunction
                                   ? relay.time2.date[5] == 1
                                     ? dayactive
                                     : dayunactive
@@ -2817,7 +2991,7 @@ export default function node(props) {
                             </label>{" "}
                             <label
                               style={
-                                relay.status
+                                relay.timeFunction
                                   ? relay.time2.date[6] == 1
                                     ? dayactive
                                     : dayunactive
@@ -2831,7 +3005,7 @@ export default function node(props) {
                             รอบที่ 3 :{" "}
                             {relay.time3.status == 1 ? "เปิด" : "ปิด"}
                           </h2>
-                          <h2 className={relay.status ? "brief" : ""}>
+                          <h2 className={relay.timeFunction ? "brief" : ""}>
                             เปิด : <i className="fa fa-clock-o"></i>{" "}
                             {relay.time3.time_on} | ปิด:{" "}
                             <i className="fa fa-clock-o"></i>{" "}
@@ -2841,7 +3015,7 @@ export default function node(props) {
                             <label>วัน </label>{" "}
                             <label
                               style={
-                                relay.status
+                                relay.timeFunction
                                   ? relay.time3.date[0] == 1
                                     ? dayactive
                                     : dayunactive
@@ -2852,7 +3026,7 @@ export default function node(props) {
                             </label>{" "}
                             <label
                               style={
-                                relay.status
+                                relay.timeFunction
                                   ? relay.time3.date[1] == 1
                                     ? dayactive
                                     : dayunactive
@@ -2863,7 +3037,7 @@ export default function node(props) {
                             </label>{" "}
                             <label
                               style={
-                                relay.status
+                                relay.timeFunction
                                   ? relay.time3.date[2] == 1
                                     ? dayactive
                                     : dayunactive
@@ -2874,7 +3048,7 @@ export default function node(props) {
                             </label>{" "}
                             <label
                               style={
-                                relay.status
+                                relay.timeFunction
                                   ? relay.time3.date[3] == 1
                                     ? dayactive
                                     : dayunactive
@@ -2885,7 +3059,7 @@ export default function node(props) {
                             </label>{" "}
                             <label
                               style={
-                                relay.status
+                                relay.timeFunction
                                   ? relay.time3.date[4] == 1
                                     ? dayactive
                                     : dayunactive
@@ -2896,7 +3070,7 @@ export default function node(props) {
                             </label>{" "}
                             <label
                               style={
-                                relay.status
+                                relay.timeFunction
                                   ? relay.time3.date[5] == 1
                                     ? dayactive
                                     : dayunactive
@@ -2907,7 +3081,7 @@ export default function node(props) {
                             </label>{" "}
                             <label
                               style={
-                                relay.status
+                                relay.timeFunction
                                   ? relay.time3.date[6] == 1
                                     ? dayactive
                                     : dayunactive
@@ -2918,27 +3092,104 @@ export default function node(props) {
                             </label>
                           </h2>
                           <div className="x_title"></div>
-
-                          <h2>
-                            <i className="fa fa-database"></i> ตั้งค่าข้อมูล{" "}
-                            {relay.dataFunction ? "เปิด" : "ปิด"}
-                          </h2>
-                          <h2>
-                            <i className="fa fa-sun-o"></i> {relay.data1.data}{" "}
-                            {relay.data1.status ? "เปิด" : "ปิด"}
-                          </h2>
-                          <h2 className={relay.status ? "brief" : ""}>
-                            ค่าน้อยสุด:{" "}
-                            <strong className={relay.status ? "minvalue" : ""}>
-                              {relay.data1.min}{" "}
-                              <i className="fa fa-long-arrow-down"></i>
-                            </strong>{" "}
-                            | ค่ามากสุด:{" "}
-                            <strong className={relay.status ? "maxvalue" : ""}>
-                              {relay.data1.max}{" "}
-                              <i className="fa fa-long-arrow-up"></i>
-                            </strong>
-                          </h2>
+                          <div>
+                            <h2
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                              }}
+                            >
+                              <label>
+                                <i className="fa fa-database"></i> ตั้งค่าข้อมูล{" "}
+                                {relay.dataFunction ? "เปิด" : "ปิด"}
+                              </label>
+                              <ul
+                                className="nav navbar-right panel_toolbox"
+                                style={{ marginLeft: "auto" }}
+                              >
+                                <li style={{ marginRight: "5px" }}>
+                                  <a
+                                    role="button"
+                                    style={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                    }}
+                                    onClick={
+                                      relay.dataFunction
+                                        ? () => {
+                                            modalOn(
+                                              "modalstyleData" + relayIndex
+                                            );
+                                            setdataValue([
+                                              relay.data1.min,
+                                              relay.data1.max,
+                                            ]);
+                                          }
+                                        : () => {}
+                                    }
+                                  >
+                                    <i className="fa fa-wrench"></i>
+                                  </a>
+                                </li>
+                                <a
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <label className={styles.switch2}>
+                                    <input
+                                      key={relay.dataFunction}
+                                      onClick={() =>
+                                        setdataFunction(
+                                          "dStatus" + relayIndex,
+                                          relay.relayID
+                                        )
+                                      }
+                                      id={"dStatus" + relayIndex}
+                                      type="checkbox"
+                                      style={{
+                                        width: "30px",
+                                        height: "30px",
+                                        display: "block",
+                                      }}
+                                      checked={
+                                        relay.dataFunction ? true : false
+                                      }
+                                      onChange={() => {}}
+                                    />
+                                    <span className={styles.slider}></span>
+                                  </label>
+                                </a>
+                              </ul>
+                            </h2>
+                            <h2>
+                              <i className="fa fa-sun-o"></i> {relay.data1.data}{" "}
+                              {relay.data1.status ? "เปิด" : "ปิด"}
+                            </h2>
+                            <h2>
+                              เปิดเมื่อค่า
+                              {relay.data1.compare == "high"
+                                ? "มากกว่า"
+                                : "น้อยกว่า"}
+                            </h2>
+                            <h2 className={relay.dataFunction ? "brief" : ""}>
+                              ค่าน้อยสุด:{" "}
+                              <strong
+                                className={relay.dataFunction ? "minvalue" : ""}
+                              >
+                                {relay.data1.min}{" "}
+                                <i className="fa fa-long-arrow-down"></i>
+                              </strong>{" "}
+                              | ค่ามากสุด:{" "}
+                              <strong
+                                className={relay.dataFunction ? "maxvalue" : ""}
+                              >
+                                {relay.data1.max}{" "}
+                                <i className="fa fa-long-arrow-up"></i>
+                              </strong>
+                            </h2>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -2954,6 +3205,8 @@ export default function node(props) {
         <button onClick={() => setsuccess(true)}>SUCCESS</button>
         <button onClick={() => setwait(true)}>WAITING</button>
         <button onClick={() => setfail(true)}>ERROR</button>
+
+        <button onClick={() => reloadData()}>Reload</button>
       </div>
     </>
   );
